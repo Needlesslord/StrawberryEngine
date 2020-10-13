@@ -19,6 +19,12 @@
     <Filter Include="Sources\Modules\Game">
       <UniqueIdentifier>{83f46af7-e02f-40c0-9e56-41d76082527b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\Tools\Libs">
+      <UniqueIdentifier>{6c30a1e3-8479-43e4-a38e-f3a9d7fed055}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Tools\Libs\ImGUI">
+      <UniqueIdentifier>{82185ec9-c3df-4dc8-bac6-12375c913866}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Module.h">
@@ -78,6 +84,33 @@
     <ClInclude Include="PhysVehicle3D.h">
       <Filter>Sources\Helpers</Filter>
     </ClInclude>
+    <ClInclude Include="ModuleUI.h">
+      <Filter>Sources\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="Libs\ImGUI\imconfig.h">
+      <Filter>Sources\Tools\Libs\ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Libs\ImGUI\imgui.h">
+      <Filter>Sources\Tools\Libs\ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Libs\ImGUI\imgui_impl_opengl3.h">
+      <Filter>Sources\Tools\Libs\ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Libs\ImGUI\imgui_impl_sdl.h">
+      <Filter>Sources\Tools\Libs\ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Libs\ImGUI\imgui_internal.h">
+      <Filter>Sources\Tools\Libs\ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Libs\ImGUI\imstb_rectpack.h">
+      <Filter>Sources\Tools\Libs\ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Libs\ImGUI\imstb_textedit.h">
+      <Filter>Sources\Tools\Libs\ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Libs\ImGUI\imstb_truetype.h">
+      <Filter>Sources\Tools\Libs\ImGUI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleAudio.cpp">
@@ -127,6 +160,27 @@
     </ClCompile>
     <ClCompile Include="PhysVehicle3D.cpp">
       <Filter>Sources\Helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleUI.cpp">
+      <Filter>Sources\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="Libs\ImGUI\imgui.cpp">
+      <Filter>Sources\Tools\Libs\ImGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="Libs\ImGUI\imgui_demo.cpp">
+      <Filter>Sources\Tools\Libs\ImGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="Libs\ImGUI\imgui_draw.cpp">
+      <Filter>Sources\Tools\Libs\ImGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="Libs\ImGUI\imgui_impl_opengl3.cpp">
+      <Filter>Sources\Tools\Libs\ImGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="Libs\ImGUI\imgui_impl_sdl.cpp">
+      <Filter>Sources\Tools\Libs\ImGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="Libs\ImGUI\imgui_widgets.cpp">
+      <Filter>Sources\Tools\Libs\ImGUI</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

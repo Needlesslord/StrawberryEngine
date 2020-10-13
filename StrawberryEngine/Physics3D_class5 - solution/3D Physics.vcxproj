@@ -47,11 +47,15 @@
       <SDLCheck>false</SDLCheck>
       <ExceptionHandling>false</ExceptionHandling>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <AdditionalIncludeDirectories>.\Libs\SDL\include;.\Libs\SDL_mixer\include;.\Libs\Glew\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WINDOWS_IGNORE_PACKING_MISMATCH;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
+      <AdditionalLibraryDirectories>.\Libs\Glew\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>glew32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -77,9 +81,18 @@
     <ClInclude Include="Color.h" />
     <ClInclude Include="glmath.h" />
     <ClInclude Include="Globals.h" />
+    <ClInclude Include="Libs\ImGUI\imconfig.h" />
+    <ClInclude Include="Libs\ImGUI\imgui.h" />
+    <ClInclude Include="Libs\ImGUI\imgui_impl_opengl3.h" />
+    <ClInclude Include="Libs\ImGUI\imgui_impl_sdl.h" />
+    <ClInclude Include="Libs\ImGUI\imgui_internal.h" />
+    <ClInclude Include="Libs\ImGUI\imstb_rectpack.h" />
+    <ClInclude Include="Libs\ImGUI\imstb_textedit.h" />
+    <ClInclude Include="Libs\ImGUI\imstb_truetype.h" />
     <ClInclude Include="Light.h" />
     <ClInclude Include="ModuleCamera3D.h" />
     <ClInclude Include="ModuleRenderer3D.h" />
+    <ClInclude Include="ModuleUI.h" />
     <ClInclude Include="p2List.h" />
     <ClInclude Include="Module.h" />
     <ClInclude Include="ModuleAudio.h" />
@@ -97,6 +110,12 @@
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="Color.cpp" />
     <ClCompile Include="glmath.cpp" />
+    <ClCompile Include="Libs\ImGUI\imgui.cpp" />
+    <ClCompile Include="Libs\ImGUI\imgui_demo.cpp" />
+    <ClCompile Include="Libs\ImGUI\imgui_draw.cpp" />
+    <ClCompile Include="Libs\ImGUI\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="Libs\ImGUI\imgui_impl_sdl.cpp" />
+    <ClCompile Include="Libs\ImGUI\imgui_widgets.cpp" />
     <ClCompile Include="Light.cpp" />
     <ClCompile Include="log.cpp" />
     <ClCompile Include="Main.cpp" />
@@ -105,6 +124,7 @@
     <ClCompile Include="ModuleInput.cpp" />
     <ClCompile Include="ModuleRenderer3D.cpp" />
     <ClCompile Include="ModuleSceneIntro.cpp" />
+    <ClCompile Include="ModuleUI.cpp" />
     <ClCompile Include="ModuleWindow.cpp" />
     <ClCompile Include="PhysBody3D.cpp" />
     <ClCompile Include="PhysVehicle3D.cpp" />
