@@ -1,7 +1,9 @@
 #include "Globals.h"
 #include "Application.h"
 #include "ModuleRenderer3D.h"
-#include "Libs\SDL\include\SDL_opengl.h"
+#include "ModuleUI.h"
+#include "Libs/Glew/include/GL/glew.h"
+#include "Libs/SDL/include/SDL_opengl.h"
 #include <gl/GL.h>
 #include <gl/GLU.h>
 
@@ -35,6 +37,12 @@ bool ModuleRenderer3D::Init()
 		//Use Vsync
 		if(VSYNC && SDL_GL_SetSwapInterval(1) < 0)
 			LOG("Warning: Unable to set VSync! SDL Error: %s\n", SDL_GetError());
+
+
+		//Initialize Glew
+		GLenum err = glewInit();
+		LOG("Using Glew %s", glewGetString(GLEW_VERSION));
+
 
 		//Initialize Projection Matrix
 		glMatrixMode(GL_PROJECTION);

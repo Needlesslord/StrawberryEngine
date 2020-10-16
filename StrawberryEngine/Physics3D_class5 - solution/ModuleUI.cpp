@@ -1,15 +1,15 @@
 #include "Globals.h"
 #include "Application.h"
-#include "ModuleRenderer3D.h"
 #include "ModuleUI.h"
+#include "ModuleRenderer3D.h"
 #include "ModuleWindow.h"
 
 #include <GL/glew.h>
 
-#include "Libs/ImGUI/imgui.h"
-#include "Libs/ImGUI/imgui_impl_sdl.h"
-#include "Libs/ImGUI/imgui_impl_opengl3.h"
-#include "Libs/ImGUI/imgui_internal.h"
+#include "Libs/ImGui/imgui.h"
+#include "Libs/ImGui/imgui_impl_sdl.h"
+#include "Libs/ImGui/imgui_impl_opengl3.h"
+#include "Libs/ImGui/imgui_internal.h"
 
 ModuleUI::ModuleUI(Application* app, bool start_enabled) : Module(app, start_enabled)
 {

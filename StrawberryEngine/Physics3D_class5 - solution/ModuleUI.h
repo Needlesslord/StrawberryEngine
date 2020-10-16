@@ -2,7 +2,13 @@
 #define __ModuleUI_H__
 
 #include "Module.h"
-#include "Libs/ImGUI/imgui.h"
+#include "Libs/SDL/include/SDL.h"
+
+#include <GL/glew.h>
+
+#include "Libs/ImGui/imgui.h"
+#include "Libs/ImGui/imgui_impl_sdl.h"
+#include "Libs/ImGui/imgui_impl_opengl3.h"
 
 class Application;
 
