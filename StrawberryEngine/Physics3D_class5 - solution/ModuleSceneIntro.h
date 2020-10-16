@@ -21,6 +21,8 @@ public:
 
 	void OnCollision(PhysBody3D* body1, PhysBody3D* body2);
 
+	void Draw();
+
 public:
 	/*
 	PhysBody3D* pb_snake[MAX_SNAKE];
@@ -41,4 +43,6 @@ public:
 
 	PhysMotor3D* left_wheel;
 	PhysMotor3D* right_wheel;
+
+	Plane p;
 };

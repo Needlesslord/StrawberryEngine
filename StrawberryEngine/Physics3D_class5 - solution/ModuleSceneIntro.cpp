@@ -38,9 +38,9 @@ bool ModuleSceneIntro::CleanUp()
 // Update
 update_status ModuleSceneIntro::Update(float dt)
 {
-	Plane p(0, 1, 0, 0);
+	
+	p = { 0.0, 1.0, 0.0, 0.0 };
 	p.axis = true;
-	p.Render();
 
 	return UPDATE_CONTINUE;
 }
@@ -49,3 +49,7 @@ void ModuleSceneIntro::OnCollision(PhysBody3D* body1, PhysBody3D* body2)
 {
 }
 
+void ModuleSceneIntro::Draw()
+{
+	p.Render();
+}

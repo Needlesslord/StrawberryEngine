@@ -1,12 +1,15 @@
 #include "Globals.h"
 #include "Application.h"
+#include "ModuleRenderer3D.h"
 #include "ModuleUI.h"
+#include "ModuleWindow.h"
 
 #include <GL/glew.h>
 
 #include "Libs/ImGUI/imgui.h"
 #include "Libs/ImGUI/imgui_impl_sdl.h"
 #include "Libs/ImGUI/imgui_impl_opengl3.h"
+#include "Libs/ImGUI/imgui_internal.h"
 
 ModuleUI::ModuleUI(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
@@ -18,72 +21,62 @@ ModuleUI::~ModuleUI()
 
 }
 
+bool ModuleUI::Init()
+{
+	IMGUI_CHECKVERSION();
+
+	return true;
+}
+
 bool ModuleUI::Start()
 {
-	LOG("Setting up the ui");
 	bool ret = true;
 
-	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
-	//ImGuiIO& io = ImGui::GetIO(); (void)io;
-	////io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
-	////io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
+	ImGuiIO& io = ImGui::GetIO(); (void)io;
 
-	//// Setup Dear ImGui style
-	////ImGui::StyleColorsDark();
-	//ImGui::StyleColorsClassic();
+	ImGui::StyleColorsDark();
 
-	//SDL_GLContext gl_context = SDL_GL_CreateContext(App->window->window);
+	ImGui_ImplSDL2_InitForOpenGL(App->window->window, App->renderer3D->context);
+	ImGui_ImplOpenGL3_Init("#version 130");
 
-	//// Setup Platform/Renderer bindings
-	//ImGui_ImplSDL2_InitForOpenGL(App->window->window, gl_context);
-
-	//const char* glsl_version = "#version 130";
-	//ImGui_ImplOpenGL3_Init(glsl_version);
-
-	
 	
 	return ret;
 }
 
 update_status ModuleUI::PreUpdate(float dt)
 {
-	/*SDL_Event event;
+	ImGuiIO& io = ImGui::GetIO(); (void)io;
+
+	SDL_Event event;
 	while (SDL_PollEvent(&event))
 	{
 		ImGui_ImplSDL2_ProcessEvent(&event);
 		if (event.type == SDL_QUIT)
-			done = true;
+			done = UPDATE_CONTINUE;
 		if (event.type == SDL_WINDOWEVENT && event.window.event == SDL_WINDOWEVENT_CLOSE && event.window.windowID == SDL_GetWindowID(App->window->window))
-			done = true;
-	}*/
+			done = UPDATE_CONTINUE;
+	}
+
+	ImGui_ImplOpenGL3_NewFrame();
+	ImGui_ImplSDL2_NewFrame(App->window->window);
+	ImGui::NewFrame();
 
 	return UPDATE_CONTINUE;
 }
 
 update_status ModuleUI::Update(float dt)
 {
-
-	//ImGui_ImplOpenGL3_NewFrame();
-	//ImGui_ImplSDL2_NewFrame(App->window->window);
-	//ImGui::NewFrame();
-
-	//// 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
-	//if (show_demo_window)
-	//	ImGui::ShowDemoWindow(&show_demo_window);
-
-	//ImGui::Render();
-	//ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+	
+	ImGui::Begin("Window");
+	ImGui::End();
 
 	return UPDATE_CONTINUE;
 }
 
 update_status ModuleUI::PostUpdate(float dt)
 {
-	// Rendering
 	
-	//SDL_GL_SwapWindow(App->window->window);
-
 	return UPDATE_CONTINUE;
 }
 
@@ -96,4 +89,12 @@ bool ModuleUI::CleanUp()
 	//ImGui::DestroyContext();
 
 	return true;
+}
+
+void ModuleUI::Draw() 
+{
+	// Rendering
+	ImGui::Render();
+	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
 }

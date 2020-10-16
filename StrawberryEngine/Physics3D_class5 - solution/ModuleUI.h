@@ -12,6 +12,8 @@ public:
 
 	ModuleUI(Application* app, bool start_enabled = true);
 
+	bool Init();
+
 	bool Start();
 
 	update_status PreUpdate(float dt);
@@ -21,6 +23,8 @@ public:
 	update_status PostUpdate(float dt);
 
 	bool CleanUp();
+
+	void Draw();
 
 
 	// Destructor
