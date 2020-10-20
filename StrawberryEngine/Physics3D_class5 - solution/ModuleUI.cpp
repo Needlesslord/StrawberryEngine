@@ -77,8 +77,35 @@ update_status ModuleUI::Update(float dt)
 
 			ImGui::EndMenu();
 		}
+		if (ImGui::BeginMenu("View"))
+		{
+			ImGui::Checkbox("Demo", &show_demo_window);
+			
+			ImGui::EndMenu();
+		}
+		if (ImGui::BeginMenu("Help"))
+		{
+			if (ImGui::MenuItem("Documentation"))
+				App->RequestBrowser("https://github.com/EnricGDV/Kore-Engine/wiki");
+
+			ImGui::EndMenu();
+		}
+		/*
+		if (ImGui::BeginMenu("Project"))
+		{
+			ImGui::EndMenu();
+		}
+		if (ImGui::BeginMenu("Build"))
+		{
+			ImGui::EndMenu();
+		}
+		*/
 	}
 	ImGui::EndMainMenuBar();
+
+	if(show_demo_window)
+		ImGui::ShowDemoWindow();
+
 	return UPDATE_CONTINUE;
 }
 
