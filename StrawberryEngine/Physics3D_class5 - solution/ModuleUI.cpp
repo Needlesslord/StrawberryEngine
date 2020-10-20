@@ -3,6 +3,7 @@
 #include "ModuleUI.h"
 #include "ModuleRenderer3D.h"
 #include "ModuleWindow.h"
+#include "ModuleInput.h"
 
 #include <GL/glew.h>
 
@@ -67,10 +68,17 @@ update_status ModuleUI::PreUpdate(float dt)
 
 update_status ModuleUI::Update(float dt)
 {
-	
-	ImGui::Begin("Window");
-	ImGui::End();
+	ImGui::BeginMainMenuBar();
+	{
+		if (ImGui::BeginMenu("File"))
+		{
+			if (ImGui::MenuItem("Quit"))
+				App->input->quit = true;
 
+			ImGui::EndMenu();
+		}
+	}
+	ImGui::EndMainMenuBar();
 	return UPDATE_CONTINUE;
 }
 
@@ -84,17 +92,15 @@ bool ModuleUI::CleanUp()
 {
 	LOG("Cleaning ui");
 
-	//ImGui_ImplOpenGL3_Shutdown();
-	//ImGui_ImplSDL2_Shutdown();
-	//ImGui::DestroyContext();
+	ImGui_ImplOpenGL3_Shutdown();
+	ImGui_ImplSDL2_Shutdown();
+	ImGui::DestroyContext();
 
 	return true;
 }
 
 void ModuleUI::Draw() 
 {
-	// Rendering
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-
 }
