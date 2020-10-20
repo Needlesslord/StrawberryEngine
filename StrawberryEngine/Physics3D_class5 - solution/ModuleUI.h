@@ -43,7 +43,7 @@ public:
 	// Windows shown bools
 	bool isDemoShown = false;
 	bool isConfigShown = true;
-	bool isAboutShown = false;
+	bool isAboutShown = true;
 
 	// Config data
 	char* name;
@@ -51,10 +51,10 @@ public:
 			// Temporary vars
 	bool isActive = false;
 	float brightness = 1.0f;
-	bool winFullscreen;
-	bool winResizable;
-	bool winBorderless;
-	bool winFullscreenDesktop;
+	bool isWinFullscreen;
+	bool isWinResizable;
+	bool isWinBorderless;
+	bool isWinFullscreenDesktop;
 	
 
 	ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);

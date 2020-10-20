@@ -55,7 +55,6 @@ bool ModuleWindow::Init()
 		{
 			flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
 		}
-		
 		window = SDL_CreateWindow(TITLE, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, flags);
 
 		if(window == NULL)
@@ -70,6 +69,8 @@ bool ModuleWindow::Init()
 		}
 	}
 
+	SDL_SetWindowMinimumSize(window, 700, 500);
+	
 	return ret;
 }
 
@@ -97,8 +98,64 @@ void ModuleWindow::SetTitle(const char* title)
 void ModuleWindow::SetFullscreen(bool *fullscreen)
 {
 	if (*fullscreen)
+	{
+		App->ui->isWinFullscreenDesktop = false;
 		SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN);
-	else if (!*fullscreen) {
-		SDL_SetWindowFullscreen(window, !SDL_WINDOW_FULLSCREEN);
 	}
+
+	else if (!*fullscreen)
+		SDL_SetWindowFullscreen(window, !SDL_WINDOW_FULLSCREEN);
+}
+
+void ModuleWindow::SetResizable(bool* resizable)
+{
+	SDL_bool sdlResizable;
+
+	if (*resizable)
+	{
+		sdlResizable = SDL_TRUE;
+		SDL_SetWindowResizable(window, sdlResizable);
+	}
+	else if (!*resizable) 
+	{
+		sdlResizable = SDL_FALSE;
+		SDL_SetWindowResizable(window, sdlResizable);
+	}
+}
+
+void ModuleWindow::SetBorderless(bool* borderless)
+{
+	SDL_bool sdlBorderless;
+
+	if (*borderless)
+	{
+		sdlBorderless = SDL_FALSE;	// REMEMBER: The function says bordeRED not borderLESS
+		SDL_SetWindowBordered(window, sdlBorderless);
+	}
+	else if (!*borderless)
+	{
+		sdlBorderless = SDL_TRUE;	// REMEMBER: The function says bordeRED not borderLESS
+		SDL_SetWindowBordered(window, sdlBorderless);
+	}
+}
+
+void ModuleWindow::SetFullDesktop(bool* fullDesktop)
+{
+	if (*fullDesktop)
+	{
+		App->ui->isWinFullscreen = false;
+		SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN_DESKTOP);
+	}
+	else if (!*fullDesktop)
+		SDL_SetWindowFullscreen(window, !SDL_WINDOW_FULLSCREEN_DESKTOP);
+}
+
+void ModuleWindow::ResizeScreen() 
+{
+	SDL_SetWindowSize(window, screen_surface->w, screen_surface->h);
+}
+
+void ModuleWindow::SetBrightness(float* brightness)
+{
+	SDL_SetWindowBrightness(window, *brightness);
 }

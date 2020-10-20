@@ -5,6 +5,7 @@
 #include "ModuleWindow.h"
 #include "ModuleInput.h"
 
+
 #include <GL/glew.h>
 
 #include "Libs/ImGui/imgui.h"
@@ -44,10 +45,10 @@ bool ModuleUI::Start()
 	name = TITLE;
 	organization = "UPC CITM";
 
-	winFullscreen = WIN_FULLSCREEN;
-	winResizable = WIN_RESIZABLE;
-	winBorderless = WIN_BORDERLESS;
-	winFullscreenDesktop = WIN_FULLSCREEN_DESKTOP;
+	isWinFullscreen = WIN_FULLSCREEN;
+	isWinResizable = WIN_RESIZABLE;
+	isWinBorderless = WIN_BORDERLESS;
+	isWinFullscreenDesktop = WIN_FULLSCREEN_DESKTOP;
 	
 	return ret;
 }
@@ -131,6 +132,9 @@ update_status ModuleUI::Update(float dt)
 			{
 				ImGui::EndMenu();
 			}
+
+
+
 			if (ImGui::CollapsingHeader("Application"))
 			{
 				ImGui::InputText("Engine Name", name, 32);
@@ -147,26 +151,55 @@ update_status ModuleUI::Update(float dt)
 				sprintf_s(title, 25, "Milliseconds %.1f", App->ms[App->ms.size() - 1]);
 				ImGui::PlotHistogram("##milliseconds", &App->ms[0], App->ms.size(), 0, title, 0.0f, 40.0f, ImVec2(310, 100));
 			}
+
+
+
 			if (ImGui::CollapsingHeader("Window"))
 			{
 				ImGui::Checkbox("Active", &isActive);
 				ImGui::Text("Icon:    *default*");
-				ImGui::SliderFloat("Brightness", &brightness, 1.0f, 100.0f);
-				ImGui::SliderInt("Width", &App->window->screen_surface->w, 0.0f, 1920);
-				ImGui::SliderInt("Height", &App->window->screen_surface->h, 0.0f, 1080);
-
+				if (ImGui::SliderFloat("Brightness", &brightness, 0.01f, 1.0f))
+					App->window->SetBrightness(&brightness);
+				ImGui::SliderInt("Width", &App->window->screen_surface->w, 700.0f, 1550);
+				ImGui::SliderInt("Height", &App->window->screen_surface->h, 500.0f, 800);
 				ImGui::Text("Refresh rate: 59"); // Idk what to put here
+				if (ImGui::Checkbox("Fullscreen", &isWinFullscreen)) 
+					App->window->SetFullscreen(&isWinFullscreen);
+				ImGui::SameLine();
+				if (ImGui::Checkbox("Resizable", &isWinResizable))
+					App->window->SetResizable(&isWinResizable);
+				if (ImGui::Checkbox("Borderless", &isWinBorderless))
+					App->window->SetBorderless(&isWinBorderless);
+				ImGui::SameLine();
+				if (ImGui::Checkbox("Full Desktop", &isWinFullscreenDesktop))
+					App->window->SetFullDesktop(&isWinFullscreenDesktop);
+			}
 
-				if (ImGui::Checkbox("Fullscreen", &winFullscreen)) 
-				{
-					//winFullscreen = !winFullscreen;
-					App->window->SetFullscreen(&winFullscreen);
-				}
-				ImGui::SameLine();
-				ImGui::Checkbox("Resizable", &winResizable);
-				ImGui::Checkbox("Borderless", &winBorderless);				
-				ImGui::SameLine();
-				ImGui::Checkbox("Full Desktop", &winFullscreenDesktop);
+
+
+			if (ImGui::CollapsingHeader("Hardware"))
+			{
+				ImGui::Text("SDL Version:"); ImGui::SameLine();
+				ImGui::TextColored({ 1,0,1,1 }, "2.0.12");
+				ImGui::Separator();
+				ImGui::Text("CPU's:"); ImGui::SameLine();
+				ImGui::TextColored({ 1,0,1,1 }, "%d (Cache: %dKb)", SDL_GetCPUCount(), SDL_GetCPUCacheLineSize());
+				ImGui::Text("System RAM:"); ImGui::SameLine();
+				ImGui::TextColored({ 1,0,1,1 }, "%dGb", SDL_GetSystemRAM()/1000);
+				ImGui::Text("Caps:"); ImGui::SameLine();
+				if (SDL_Has3DNow()) ImGui::TextColored({ 1,0,1,1 }, "3DNow,"); ImGui::SameLine();
+				if (SDL_HasAVX())ImGui::TextColored({ 1,0,1,1 }, "AVX,"); ImGui::SameLine();
+				if (SDL_HasAltiVec())ImGui::TextColored({ 1,0,1,1 }, "AltiVec,"); ImGui::SameLine();
+				if (SDL_HasMMX())ImGui::TextColored({ 1,0,1,1 }, "MMX,"); ImGui::SameLine();
+				if (SDL_HasRDTSC())ImGui::TextColored({ 1,0,1,1 }, "RDTSC,"); 
+				if (SDL_HasSSE()) ImGui::TextColored({ 1,0,1,1 }, "SSE,"); ImGui::SameLine();
+				if (SDL_HasSSE2())ImGui::TextColored({ 1,0,1,1 }, "SSE2,"); ImGui::SameLine();
+				if (SDL_HasSSE3())ImGui::TextColored({ 1,0,1,1 }, "SSE3,"); ImGui::SameLine();
+				if (SDL_HasSSE41())ImGui::TextColored({ 1,0,1,1 }, "SSE41,"); ImGui::SameLine();
+				if (SDL_HasSSE42())ImGui::TextColored({ 1,0,1,1 }, "SSE42,");
+				ImGui::Separator();
+				
+
 			}
 		}
 		ImGui::End();
@@ -177,6 +210,36 @@ update_status ModuleUI::Update(float dt)
 		ImGui::Begin("About");
 		{
 			ImGui::Text("Strawberry Engine");
+			ImGui::Text("The sweetest 3D Engine");
+			ImGui::Spacing();
+			ImGui::Spacing();
+			ImGui::Text("By Tomas Carreras and Nuria Lamonja. Supervised by professor Marc Garrigo");
+			ImGui::Spacing();
+			ImGui::Spacing();
+			if (ImGui::MenuItem("GitHub"))
+				App->RequestBrowser("https://github.com/Needlesslord/StrawberryEngine");
+			ImGui::Spacing();
+			ImGui::Text("3rd Party Libraries used:");
+
+			SDL_version compiled;
+			SDL_VERSION(&compiled);
+			ImGui::BulletText("SDL version %d.%d.%d", compiled.major, compiled.minor, compiled.patch);
+
+
+
+			char* versionGL = "\0";
+			versionGL = (char*)(glGetString(GL_VERSION));
+			
+			
+
+
+			ImGui::BulletText("Glew 2.1.0");
+			ImGui::BulletText("ImGui 1.79");
+			ImGui::BulletText("%d", versionGL);
+			ImGui::Spacing();
+			ImGui::Spacing();
+
+			//licencia
 		}
 		ImGui::End();
 	}
@@ -186,7 +249,7 @@ update_status ModuleUI::Update(float dt)
 
 update_status ModuleUI::PostUpdate(float dt)
 {
-	
+	App->window->ResizeScreen();
 	return UPDATE_CONTINUE;
 }
 

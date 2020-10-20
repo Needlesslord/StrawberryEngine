@@ -6,6 +6,8 @@
 
 #include <windows.h>
 #include <stdio.h>
+#include <string>
+
 
 #define LOG(format, ...) log(__FILE__, __LINE__, format, __VA_ARGS__);
 
@@ -31,7 +33,7 @@ enum update_status
 #define SCREEN_WIDTH 1280
 #define SCREEN_HEIGHT 720
 #define SCREEN_SIZE 1
-#define WIN_FULLSCREEN true
+#define WIN_FULLSCREEN false
 #define WIN_RESIZABLE true
 #define WIN_BORDERLESS false
 #define WIN_FULLSCREEN_DESKTOP false

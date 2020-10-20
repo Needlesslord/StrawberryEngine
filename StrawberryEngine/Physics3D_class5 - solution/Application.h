@@ -52,7 +52,7 @@ private:
 
 public:
 
-	int maxFps = 100;
+	int maxFps = 60;
 	std::vector<float> fps;
 	std::vector<float> ms;
 
