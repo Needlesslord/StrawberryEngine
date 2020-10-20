@@ -1,5 +1,6 @@
 #include "Application.h"
-
+#include <iostream>
+#include <list>
 Application::Application()
 {
 	window = new ModuleWindow(this);
@@ -69,6 +70,18 @@ bool Application::Init()
 void Application::PrepareUpdate()
 {
 	dt = (float)ms_timer.Read() / 1000.0f;
+
+	fps.push_back(1.0f / dt);
+	if (fps.size() > 100)
+	{
+		fps.erase(fps.begin());
+	}
+	ms.push_back(ms_timer.Read());
+	if (ms.size() > 100)
+	{
+		ms.erase(ms.begin());
+	}
+
 	ms_timer.Start();
 }
 

@@ -40,9 +40,22 @@ public:
 
 	bool done = false;
 
-	bool show_demo_window = false;
+	// Windows shown bools
+	bool isDemoShown = false;
+	bool isConfigShown = true;
+	bool isAboutShown = false;
 
-	bool show_another_window = false;
+	// Config data
+	char* name;
+	char* organization;
+			// Temporary vars
+	bool isActive = false;
+	float brightness = 1.0f;
+	bool winFullscreen = WIN_FULLSCREEN;
+	bool winResizable = WIN_RESIZABLE;
+	bool winBorderless = WIN_BORDERLESS;
+	bool winFullscreenDesktop = WIN_FULLSCREEN_DESKTOP;
+	
 
 	ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 

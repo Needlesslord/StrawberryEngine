@@ -12,6 +12,10 @@
 #include "ModuleCamera3D.h"
 #include "ModuleUI.h"
 
+#include <iostream>
+#include <list>
+#include <vector>
+
 class Application
 {
 public:
@@ -45,4 +49,14 @@ private:
 	void AddModule(Module* mod);
 	void PrepareUpdate();
 	void FinishUpdate();
+
+public:
+
+	int maxFps = 100;
+	std::vector<float> fps;
+	std::vector<float> ms;
+
+
+
+
 };

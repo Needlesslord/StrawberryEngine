@@ -54,7 +54,7 @@ bool ModuleWindow::Init()
 		{
 			flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
 		}
-
+		
 		window = SDL_CreateWindow(TITLE, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, flags);
 
 		if(window == NULL)
@@ -91,4 +91,15 @@ bool ModuleWindow::CleanUp()
 void ModuleWindow::SetTitle(const char* title)
 {
 	SDL_SetWindowTitle(window, title);
+}
+
+void ModuleWindow::SetFullscreen(bool *fullscreen)
+{
+	if (fullscreen)
+		SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN);
+	else if (!fullscreen) {
+		SDL_SetWindowFullscreen(window, !SDL_WINDOW_FULLSCREEN);
+		int a = 1;
+		a++;
+	}
 }
