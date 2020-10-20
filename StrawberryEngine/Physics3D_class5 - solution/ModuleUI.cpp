@@ -221,21 +221,15 @@ update_status ModuleUI::Update(float dt)
 			ImGui::Spacing();
 			ImGui::Text("3rd Party Libraries used:");
 
-			SDL_version compiled;
-			SDL_VERSION(&compiled);
-			ImGui::BulletText("SDL version %d.%d.%d", compiled.major, compiled.minor, compiled.patch);
+			SDL_version version;
+			SDL_VERSION(&version);
+			ImGui::BulletText("SDL %d.%d.%d", version.major, version.minor, version.patch);
+			SDL_MIXER_VERSION(&version);
+			ImGui::BulletText("SDL Mixer %d.%d.%d", version.major, version.minor, version.patch);
 
-
-
-			char* versionGL = "\0";
-			versionGL = (char*)(glGetString(GL_VERSION));
-			
-			
-
-
-			ImGui::BulletText("Glew 2.1.0");
-			ImGui::BulletText("ImGui 1.79");
-			ImGui::BulletText("%d", versionGL);
+			ImGui::BulletText("Glew %s.%s.%s", glewGetString(GLEW_VERSION_MAJOR), glewGetString(GLEW_VERSION_MINOR), glewGetString(GLEW_VERSION_MICRO));
+			ImGui::BulletText("ImGui %s", ImGui::GetVersion());
+			ImGui::BulletText("OpenGl %s", glGetString(GL_VERSION));
 			ImGui::Spacing();
 			ImGui::Spacing();
 
