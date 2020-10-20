@@ -1,6 +1,7 @@
 #include "Globals.h"
 #include "Application.h"
 #include "ModuleWindow.h"
+#include "ModuleUI.h"
 
 ModuleWindow::ModuleWindow(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
@@ -95,11 +96,9 @@ void ModuleWindow::SetTitle(const char* title)
 
 void ModuleWindow::SetFullscreen(bool *fullscreen)
 {
-	if (fullscreen)
+	if (*fullscreen)
 		SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN);
-	else if (!fullscreen) {
+	else if (!*fullscreen) {
 		SDL_SetWindowFullscreen(window, !SDL_WINDOW_FULLSCREEN);
-		int a = 1;
-		a++;
 	}
 }

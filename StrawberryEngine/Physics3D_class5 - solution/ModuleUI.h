@@ -51,10 +51,10 @@ public:
 			// Temporary vars
 	bool isActive = false;
 	float brightness = 1.0f;
-	bool winFullscreen = WIN_FULLSCREEN;
-	bool winResizable = WIN_RESIZABLE;
-	bool winBorderless = WIN_BORDERLESS;
-	bool winFullscreenDesktop = WIN_FULLSCREEN_DESKTOP;
+	bool winFullscreen;
+	bool winResizable;
+	bool winBorderless;
+	bool winFullscreenDesktop;
 	
 
 	ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);

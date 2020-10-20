@@ -43,6 +43,11 @@ bool ModuleUI::Start()
 
 	name = TITLE;
 	organization = "UPC CITM";
+
+	winFullscreen = WIN_FULLSCREEN;
+	winResizable = WIN_RESIZABLE;
+	winBorderless = WIN_BORDERLESS;
+	winFullscreenDesktop = WIN_FULLSCREEN_DESKTOP;
 	
 	return ret;
 }
@@ -152,8 +157,11 @@ update_status ModuleUI::Update(float dt)
 
 				ImGui::Text("Refresh rate: 59"); // Idk what to put here
 
-				if (ImGui::Checkbox("Fullscreen", &winFullscreen))
+				if (ImGui::Checkbox("Fullscreen", &winFullscreen)) 
+				{
+					//winFullscreen = !winFullscreen;
 					App->window->SetFullscreen(&winFullscreen);
+				}
 				ImGui::SameLine();
 				ImGui::Checkbox("Resizable", &winResizable);
 				ImGui::Checkbox("Borderless", &winBorderless);				
