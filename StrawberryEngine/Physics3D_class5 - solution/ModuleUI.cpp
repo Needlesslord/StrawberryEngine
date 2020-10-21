@@ -233,7 +233,7 @@ update_status ModuleUI::Update(float dt)
 			ImGui::Spacing();
 			ImGui::Spacing();
 
-			//licencia
+			// TODO: licencia
 		}
 		ImGui::End();
 	}

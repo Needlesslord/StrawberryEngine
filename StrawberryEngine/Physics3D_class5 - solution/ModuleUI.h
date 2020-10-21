@@ -42,7 +42,7 @@ public:
 
 	// Windows shown bools
 	bool isDemoShown = false;
-	bool isConfigShown = true;
+	bool isConfigShown = false;
 	bool isAboutShown = false;
 
 	// Config data

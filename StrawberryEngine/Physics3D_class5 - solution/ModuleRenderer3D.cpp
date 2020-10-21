@@ -2,6 +2,7 @@
 #include "Application.h"
 #include "ModuleRenderer3D.h"
 #include "ModuleUI.h"
+#include "ModuleWindow.h"
 #include "Libs/Glew/include/GL/glew.h"
 #include "Libs/SDL/include/SDL_opengl.h"
 #include <gl/GL.h>
@@ -73,6 +74,7 @@ bool ModuleRenderer3D::Init()
 		
 		//Initialize clear color
 		glClearColor(0.f, 0.f, 0.f, 1.f);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 		//Check for error
 		error = glGetError();
@@ -102,10 +104,11 @@ bool ModuleRenderer3D::Init()
 		lights[0].Active(true);
 		glEnable(GL_LIGHTING);
 		glEnable(GL_COLOR_MATERIAL);
+		glEnable(GL_TEXTURE_2D);
 	}
 
 	// Projection matrix for
-	OnResize(SCREEN_WIDTH, SCREEN_HEIGHT);
+	OnResize(App->window->screen_surface->w, App->window->screen_surface->h);
 
 	return ret;
 }
@@ -113,11 +116,88 @@ bool ModuleRenderer3D::Init()
 // PreUpdate: clear buffer
 update_status ModuleRenderer3D::PreUpdate(float dt)
 {
+	background = Black;
+	glClearColor(background.r, background.g, background.b, background.a);
+
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadMatrixf(App->camera->GetViewMatrix());
+
+
+	//1
+	glBegin(GL_POLYGON);
+	glColor3b(100, 100, 100);
+	glVertex3f(0.f, 0.f, 0.f);
+	glColor3b(100, 100, 100);
+	glVertex3f(1.f, 0.f, 0.f);
+	glColor3b(100, 100, 100);
+	glVertex3f(1.f, 0.f, 1.f);
+	glColor3b(100, 100, 100);
+	glVertex3f(0.f, 0.f, 1.f);
+	glEnd();
+
+	//2
+	glBegin(GL_POLYGON);
+	glColor3b(100, 100, 100);
+	glVertex3f(0.f, 0.f, 0.f);
+	glColor3b(100, 100, 100);
+	glVertex3f(0.f, 0.f, 1.f);
+	glColor3b(100, 100, 100);
+	glVertex3f(0.f, 1.f, 1.f);
+	glColor3b(100, 100, 100);
+	glVertex3f(0.f, 1.f, 0.f);
+	glEnd();
+
+	//3
+	glBegin(GL_POLYGON);
+	glColor3b(100, 100, 100);
+	glVertex3f(0.f, 0.f, 0.f);
+	glColor3b(100, 100, 100);
+	glVertex3f(0.f, 1.f, 0.f);
+	glColor3b(100, 100, 100);
+	glVertex3f(1.f, 1.f, 0.f);
+	glColor3b(100, 100, 100);
+	glVertex3f(1.f, 0.f, 0.f);
+	glEnd();
+
+	//4
+	glBegin(GL_POLYGON);
+	glColor3b(100, 100, 100);
+	glVertex3f(0.f, 0.f, 1.f);
+	glColor3b(100, 100, 100);
+	glVertex3f(1.f, 0.f, 1.f);
+	glColor3b(100, 100, 100);
+	glVertex3f(1.f, 1.f, 1.f);
+	glColor3b(100, 100, 100);
+	glVertex3f(0.f, 1.f, 1.f);
+	glEnd();
+
+	//5
+	glBegin(GL_POLYGON);
+	glColor3b(100, 100, 100);
+	glVertex3f(1.f, 0.f, 0.f);
+	glColor3b(100, 100, 100);
+	glVertex3f(1.f, 1.f, 0.f);
+	glColor3b(100, 100, 100);
+	glVertex3f(1.f, 1.f, 1.f);
+	glColor3b(100, 100, 100);
+	glVertex3f(1.f, 0.f, 1.f);
+	glEnd();
+
+	//6
+	glBegin(GL_POLYGON);
+	glColor3b(100, 100, 100);
+	glVertex3f(0.f, 1.f, 0.f);
+	glColor3b(100, 100, 100);
+	glVertex3f(0.f, 1.f, 1.f);
+	glColor3b(100, 100, 100);
+	glVertex3f(1.f, 1.f, 1.f);
+	glColor3b(100, 100, 100);
+	glVertex3f(1.f, 1.f, 0.f);
+	glEnd();
+
 
 	// light 0 on cam pos
 	lights[0].SetPos(App->camera->Position.x, App->camera->Position.y, App->camera->Position.z);
@@ -133,6 +213,7 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 {
 
 	App->scene_intro->Draw();
+
 	App->ui->Draw();
 
 	SDL_GL_SwapWindow(App->window->window);

@@ -25,4 +25,11 @@ public:
 	SDL_GLContext context;
 	mat3x3 NormalMatrix;
 	mat4x4 ModelMatrix, ViewMatrix, ProjectionMatrix;
+
+	Color background;
+
+
+	uint cube_id;
+	uint index_id;
+	uint color_id;
 };
