@@ -35,6 +35,12 @@ bool ModuleRenderer3D::Init()
 	
 	if(ret == true)
 	{
+		//LOG GL Properties
+		LOG("Vendor: %s", glGetString(GL_VENDOR));
+		LOG("Renderer: %s", glGetString(GL_RENDERER));
+		LOG("OpenGL version supported %s", glGetString(GL_VERSION));
+		LOG("GLSL: %s\n", glGetString(GL_SHADING_LANGUAGE_VERSION));
+
 		//Use Vsync
 		if(VSYNC && SDL_GL_SetSwapInterval(1) < 0)
 			LOG("Warning: Unable to set VSync! SDL Error: %s\n", SDL_GetError());
@@ -113,6 +119,27 @@ bool ModuleRenderer3D::Init()
 	return ret;
 }
 
+bool ModuleRenderer3D::Start()
+{
+	float vertices[] = { 0.f, 0.f, 0.f,   1.f, 0.f, 0.f,   1.f, 0.f, 1.f,   0.f, 0.f, 1.f,   0.f, 1.f, 1.f,   1.f, 1.f, 1.f,   1.f, 1.f, 0.f,   0.f, 1.f, 0.f };
+
+
+	/*float cubeArray[] = { 0.f, 0.f, 0.f,   1.f, 0.f, 0.f,   1.f, 0.f, 1.f,   0.f, 0.f, 1.f,   0.f, 0.f, 0.f,   0.f, 0.f, 1.f,   0.f, 1.f, 1.f,   0.f, 1.f, 0.f,
+						  0.f, 0.f, 0.f,   0.f, 1.f, 0.f,   1.f, 1.f, 0.f,   1.f, 0.f, 0.f,   0.f, 0.f, 1.f,   1.f, 0.f, 1.f,   1.f, 1.f, 1.f,   0.f, 1.f, 1.f,
+						  1.f, 0.f, 0.f,   1.f, 1.f, 0.f,   1.f, 1.f, 1.f,   1.f, 0.f, 1.f,   0.f, 1.f, 0.f,   0.f, 1.f, 1.f,   1.f, 1.f, 1.f,   1.f, 1.f, 0.f };*/
+
+	float cubeArray[] = { 0.f, 0.f, 0.f,  };
+
+						  
+	my_id = 0;
+	glGenBuffers(1, (GLuint*) & (my_id));
+	glBindBuffer(GL_ARRAY_BUFFER, my_id);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 24, vertices, GL_STATIC_DRAW);
+
+
+
+	return true;
+}
 // PreUpdate: clear buffer
 update_status ModuleRenderer3D::PreUpdate(float dt)
 {
@@ -125,7 +152,8 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 	glMatrixMode(GL_MODELVIEW);
 	glLoadMatrixf(App->camera->GetViewMatrix());
 
-
+	/*
+	// CUBE
 	//1
 	glBegin(GL_POLYGON);
 	glColor3b(100, 100, 100);
@@ -197,7 +225,9 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 	glColor3b(100, 100, 100);
 	glVertex3f(1.f, 1.f, 0.f);
 	glEnd();
+	*/
 
+	
 
 	// light 0 on cam pos
 	lights[0].SetPos(App->camera->Position.x, App->camera->Position.y, App->camera->Position.z);
@@ -211,8 +241,17 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 // PostUpdate present buffer to screen
 update_status ModuleRenderer3D::PostUpdate(float dt)
 {
-
 	App->scene_intro->Draw();
+
+
+
+	//glEnableClientState(GL_VERTEX_ARRAY);
+	//glBindBuffer(GL_ARRAY_BUFFER, my_id);
+	//glVertexPointer(3, GL_FLOAT, 0, NULL);
+	//// … bind and use other buffers
+	//glDrawArrays(GL_TRIANGLES, 0, 36);
+	//glDisableClientState(GL_VERTEX_ARRAY);
+
 
 	App->ui->Draw();
 

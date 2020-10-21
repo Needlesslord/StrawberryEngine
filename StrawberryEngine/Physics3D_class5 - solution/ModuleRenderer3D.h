@@ -13,6 +13,7 @@ public:
 	~ModuleRenderer3D();
 
 	bool Init();
+	bool Start();
 	update_status PreUpdate(float dt);
 	update_status PostUpdate(float dt);
 	bool CleanUp();
@@ -29,7 +30,5 @@ public:
 	Color background;
 
 
-	uint cube_id;
-	uint index_id;
-	uint color_id;
+	uint my_id;
 };
