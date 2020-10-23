@@ -10,6 +10,7 @@ Application::Application()
 	renderer3D = new ModuleRenderer3D(this);
 	camera = new ModuleCamera3D(this);
 	ui = new ModuleUI(this);
+	importer = new ModuleImporter(this);
 
 	// Modules will Init() Start() and Update in this order
 	// They will CleanUp() in reverse order
@@ -19,6 +20,7 @@ Application::Application()
 	AddModule(camera);
 	AddModule(input);
 	AddModule(audio);
+	AddModule(importer);
 	
 	// Scenes
 	AddModule(scene_intro);

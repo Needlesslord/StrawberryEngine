@@ -111,6 +111,9 @@
     <ClInclude Include="Libs\ImGUI\imstb_truetype.h">
       <Filter>Sources\Tools\Libs\ImGUI</Filter>
     </ClInclude>
+    <ClInclude Include="ModuleImporter.h">
+      <Filter>Sources\Modules</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleAudio.cpp">
@@ -181,6 +184,9 @@
     </ClCompile>
     <ClCompile Include="Libs\ImGUI\imgui_widgets.cpp">
       <Filter>Sources\Tools\Libs\ImGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleImporter.cpp">
+      <Filter>Sources\Modules</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
