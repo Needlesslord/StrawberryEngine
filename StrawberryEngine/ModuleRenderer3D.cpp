@@ -4,6 +4,7 @@
 #include "ModuleUI.h"
 #include "ModuleWindow.h"
 #include "ModuleSceneIntro.h"
+#include "ModuleImporter.h"
 
 #include "Geometry.h"
 #include "Libs/Glew/include/GL/glew.h"
@@ -139,6 +140,7 @@ bool ModuleRenderer3D::Start()
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, myIndeces);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * 36, cubeIndices, GL_STATIC_DRAW);
 
+	GenerateMeshes();
 
 	return true;
 }
@@ -300,9 +302,9 @@ void ModuleRenderer3D::DrawCubeIndices()
 	glDisableClientState(GL_VERTEX_ARRAY);
 }
 
-void ModuleRenderer3D::GenerateMeshes(std::list<Mesh*> list)
+void ModuleRenderer3D::GenerateMeshes()
 {
-	std::list<Mesh*>::iterator meshIterator = list.begin();
+	std::list<Mesh*>::iterator meshIterator = App->scene_intro->meshesList.begin();
 
 	for (;meshIterator != App->scene_intro->meshesList.end(); meshIterator++)
 	{

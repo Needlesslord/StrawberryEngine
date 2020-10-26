@@ -41,7 +41,7 @@ bool ModuleImporter::CleanUp()
 	return true;
 }
 
-void ModuleImporter::Load(char* path, std::list<Mesh*>* list)
+void ModuleImporter::Load(char* path)
 {
 	//std::list<Mesh*> ret;
 
@@ -52,17 +52,17 @@ void ModuleImporter::Load(char* path, std::list<Mesh*>* list)
 		// Use scene->mNumMeshes to iterate on scene->mMeshes array
 		for (int i = 0; i < scene->mNumMeshes; i++)
 		{
-			Mesh ourMesh;
-			ourMesh.num_vertex = scene->mMeshes[i]->mNumVertices;
-			ourMesh.vertex = new float[ourMesh.num_vertex * 3];
-			memcpy(ourMesh.vertex, scene->mMeshes[i]->mVertices, sizeof(float) * ourMesh.num_vertex * 3);
-			LOG("New mesh with %d vertices", ourMesh.num_vertex);
+			Mesh* ourMesh = new Mesh;
+			ourMesh->num_vertex = scene->mMeshes[i]->mNumVertices;
+			ourMesh->vertex = new float[ourMesh->num_vertex * 3];
+			memcpy(ourMesh->vertex, scene->mMeshes[i]->mVertices, sizeof(float) * ourMesh->num_vertex * 3);
+			LOG("New mesh with %d vertices", ourMesh->num_vertex);
 
 			// copy faces
 			if (scene->mMeshes[i]->HasFaces())
 			{
-				ourMesh.num_index = scene->mMeshes[i]->mNumFaces * 3;
-				ourMesh.index = new uint[ourMesh.num_index]; // assume each face is a triangle
+				ourMesh->num_index = scene->mMeshes[i]->mNumFaces * 3;
+				ourMesh->index = new uint[ourMesh->num_index]; // assume each face is a triangle
 				for (uint j = 0; j < scene->mMeshes[i]->mNumFaces; j++)
 				{
 					if (scene->mMeshes[i]->mFaces[j].mNumIndices != 3)
@@ -71,11 +71,11 @@ void ModuleImporter::Load(char* path, std::list<Mesh*>* list)
 					}
 					else
 					{
-						memcpy(&ourMesh.index[j * 3], scene->mMeshes[i]->mFaces[j].mIndices, 3 * sizeof(uint));
+						memcpy(&ourMesh->index[j * 3], scene->mMeshes[i]->mFaces[j].mIndices, 3 * sizeof(uint));
 					}
 				}
 			}
-			list->push_back(&ourMesh);
+			App->scene_intro->meshesList.push_back(ourMesh);
 		}
 		aiReleaseImport(scene);
 	}

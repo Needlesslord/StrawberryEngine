@@ -26,7 +26,7 @@ public:
 	void DrawCubeArray();
 	void DrawCubeIndices();
 
-	void GenerateMeshes(std::list<Mesh*> list);
+	void GenerateMeshes();
 	void Draw(Mesh* mesh);
 
 public:

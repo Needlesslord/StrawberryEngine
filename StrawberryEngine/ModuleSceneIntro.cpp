@@ -22,8 +22,8 @@ bool ModuleSceneIntro::Start()
 	App->camera->Move(vec3(1.0f, 1.0f, 0.0f));
 	App->camera->LookAt(vec3(0, 0, 0));
 
-	App->importer->Load("Assets/warrior.fbx", &meshesList);
-	App->renderer3D->GenerateMeshes(App->scene_intro->meshesList);
+	App->importer->Load("Assets/warrior.fbx");
+	
 
 	return ret;
 }

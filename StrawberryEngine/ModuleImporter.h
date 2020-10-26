@@ -25,7 +25,7 @@ public:
 	bool Start();
 	bool CleanUp();
 
-	void Load(char* path, std::list<Mesh*>* list);
+	void Load(char* path);
 
 };
 
