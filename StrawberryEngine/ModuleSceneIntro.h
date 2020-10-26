@@ -8,6 +8,7 @@
 
 struct PhysBody3D;
 struct PhysMotor3D;
+class Mesh;
 
 class ModuleSceneIntro : public Module
 {
@@ -24,25 +25,9 @@ public:
 	void Draw();
 
 public:
-	/*
-	PhysBody3D* pb_snake[MAX_SNAKE];
-	Sphere s_snake[MAX_SNAKE];
-
-	PhysBody3D* pb_snake2[MAX_SNAKE];
-	Sphere s_snake2[MAX_SNAKE];
-	*/
-
-	PhysBody3D* pb_chassis;
-	Cube p_chassis;
-
-	PhysBody3D* pb_wheel;
-	Cylinder p_wheel;
-
-	PhysBody3D* pb_wheel2;
-	Cylinder p_wheel2;
-
-	PhysMotor3D* left_wheel;
-	PhysMotor3D* right_wheel;
-
+	
 	Plane p;
+
+	std::list<Mesh*> meshesList;
+
 };

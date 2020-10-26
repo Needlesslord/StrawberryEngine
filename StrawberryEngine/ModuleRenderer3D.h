@@ -6,6 +6,8 @@
 
 #define MAX_LIGHTS 8
 
+class Mesh;
+
 class ModuleRenderer3D : public Module
 {
 public:
@@ -20,6 +22,13 @@ public:
 
 	void OnResize(int width, int height);
 
+	void DrawCubeDirect();
+	void DrawCubeArray();
+	void DrawCubeIndices();
+
+	void GenerateMeshes(std::list<Mesh*> list);
+	void Draw(Mesh* mesh);
+
 public:
 
 	Light lights[MAX_LIGHTS];
@@ -29,6 +38,9 @@ public:
 
 	Color background;
 
-
 	uint my_id;
+	uint myId;
+	uint myIndeces;
+
+	
 };
