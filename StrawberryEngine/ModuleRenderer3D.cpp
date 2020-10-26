@@ -120,6 +120,8 @@ bool ModuleRenderer3D::Init()
 	// Projection matrix for
 	OnResize(App->window->screen_surface->w, App->window->screen_surface->h);
 
+	isTexturesShown = true;
+
 	return ret;
 }
 
@@ -140,7 +142,7 @@ bool ModuleRenderer3D::Start()
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, myIndeces);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * 36, cubeIndices, GL_STATIC_DRAW);
 
-	GenerateMeshes();
+	GenerateBuffers();
 
 	return true;
 }
@@ -180,11 +182,12 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 
 	//DrawCubeDirect();
 	//DrawCubeArray();
-	DrawCubeIndices();
+	//DrawCubeIndices();
 	
 	App->ui->Draw();
 
 	SDL_GL_SwapWindow(App->window->window);
+
 	return UPDATE_CONTINUE;
 }
 
@@ -295,14 +298,14 @@ void ModuleRenderer3D::DrawCubeArray()
 void ModuleRenderer3D::DrawCubeIndices()
 {
 	glEnableClientState(GL_VERTEX_ARRAY);
-	glVertexPointer(3, GL_FLOAT, 0, NULL);
 	glBindBuffer(GL_ARRAY_BUFFER, myId);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, myIndeces);
+	glVertexPointer(3, GL_FLOAT, 0, NULL); 
 	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, NULL);
 	glDisableClientState(GL_VERTEX_ARRAY);
 }
 
-void ModuleRenderer3D::GenerateMeshes()
+void ModuleRenderer3D::GenerateBuffers()
 {
 	std::list<Mesh*>::iterator meshIterator = App->scene_intro->meshesList.begin();
 
@@ -310,7 +313,7 @@ void ModuleRenderer3D::GenerateMeshes()
 	{
 		glGenBuffers(1, (GLuint*) & ((*meshIterator)->id_vertex));
 		glBindBuffer(GL_ARRAY_BUFFER, (*meshIterator)->id_vertex);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * (*meshIterator)->num_vertex, (*meshIterator)->vertex, GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * (*meshIterator)->num_vertex * 3, (*meshIterator)->vertex, GL_STATIC_DRAW);
 
 		glGenBuffers(1, (GLuint*) & ((*meshIterator)->id_index));
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, (*meshIterator)->id_index);
@@ -322,10 +325,10 @@ void ModuleRenderer3D::GenerateMeshes()
 void ModuleRenderer3D::Draw(Mesh* mesh)
 {
 	glEnableClientState(GL_VERTEX_ARRAY);
+
 	glBindBuffer(GL_ARRAY_BUFFER, mesh->id_vertex);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->id_index);
 	glVertexPointer(3, GL_FLOAT, 0, NULL);
-	glTexCoord2f(0.0f, 0.0f);
 	glDrawElements(GL_TRIANGLES, mesh->num_index, GL_UNSIGNED_INT, NULL);
 	glDisableClientState(GL_VERTEX_ARRAY);
 }

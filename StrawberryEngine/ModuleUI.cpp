@@ -198,9 +198,17 @@ update_status ModuleUI::Update(float dt)
 				if (SDL_HasSSE41())ImGui::TextColored({ 1,0,1,1 }, "SSE41,"); ImGui::SameLine();
 				if (SDL_HasSSE42())ImGui::TextColored({ 1,0,1,1 }, "SSE42,");
 				ImGui::Separator();
-				
-
 			}
+
+
+
+			if (ImGui::CollapsingHeader("Textures"))
+			{
+				ImGui::Checkbox("Show textures", &App->renderer3D->isTexturesShown);
+			}
+
+
+
 		}
 		ImGui::End();
 	}

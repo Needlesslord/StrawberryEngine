@@ -26,10 +26,12 @@ public:
 	void DrawCubeArray();
 	void DrawCubeIndices();
 
-	void GenerateMeshes();
+	void GenerateBuffers();
 	void Draw(Mesh* mesh);
 
 public:
+
+	bool isTexturesShown;
 
 	Light lights[MAX_LIGHTS];
 	SDL_GLContext context;
