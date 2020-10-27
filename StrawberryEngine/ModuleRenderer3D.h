@@ -41,6 +41,7 @@ public:
 	Color background;
 
 	uint my_id;
+	uint textureID;
 	uint myId;
 	uint myIndeces;
 

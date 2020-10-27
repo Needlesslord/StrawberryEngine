@@ -1,24 +1,9 @@
 #pragma once
 #include "Module.h"
-#include "p2DynArray.h"
-#include "Globals.h"
 #include "Primitive.h"
 
-#define MAX_SNAKE 2
-
-struct PhysBody3D;
-struct PhysMotor3D;
 class Mesh;
-
-class GameObject
-{
-	GameObject();
-	~GameObject();
-
-	char* name;
-	Mesh* goMesh; // Game Object Mesh
-	std::list<Mesh*> childrenMeshes;
-};
+class GameObject;
 
 class ModuleSceneIntro : public Module
 {
@@ -34,10 +19,15 @@ public:
 
 	void Draw();
 
+	GameObject* AddGameObject(char* n);
+
 public:
 	
 	Plane p;
 
 	std::list<Mesh*> meshesList;
+	std::list<GameObject*> gameObjectList;
+
+	GameObject* house;
 
 };
