@@ -42,8 +42,9 @@ public:
 
 	// Windows shown bools
 	bool isDemoShown = false;
-	bool isConfigShown = false;
+	bool isConfigShown = true;
 	bool isAboutShown = false;
+	bool isHierarchyShown = true;
 
 	// Config data
 	char* name;

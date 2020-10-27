@@ -143,6 +143,19 @@ bool ModuleRenderer3D::Start()
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * 36, cubeIndices, GL_STATIC_DRAW);
 
 	GenerateBuffers();
+	
+	//(*App->scene_intro->meshesList.begin())->name = "Casa";// Test
+
+	GLubyte checkerImage[4][4][4];
+	for (int i = 0; i < 4; i++) {
+		for (int j = 0; j < 4; j++) {
+			int c = ((((i & 0x8) == 0) ^ (((j & 0x8)) == 0))) * 255;
+			checkerImage[i][j][0] = (GLubyte)c;
+			checkerImage[i][j][1] = (GLubyte)c;
+			checkerImage[i][j][2] = (GLubyte)c;
+			checkerImage[i][j][3] = (GLubyte)255;
+		}
+	}
 
 	return true;
 }

@@ -10,6 +10,16 @@ struct PhysBody3D;
 struct PhysMotor3D;
 class Mesh;
 
+class GameObject
+{
+	GameObject();
+	~GameObject();
+
+	char* name;
+	Mesh* goMesh; // Game Object Mesh
+	std::list<Mesh*> childrenMeshes;
+};
+
 class ModuleSceneIntro : public Module
 {
 public:

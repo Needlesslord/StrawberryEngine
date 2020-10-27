@@ -4,7 +4,8 @@
 #include "ModuleRenderer3D.h"
 #include "ModuleWindow.h"
 #include "ModuleInput.h"
-
+#include "ModuleSceneIntro.h"
+#include "ModuleImporter.h"
 
 #include <GL/glew.h>
 
@@ -88,7 +89,11 @@ update_status ModuleUI::Update(float dt)
 		if (ImGui::BeginMenu("View"))
 		{
 			ImGui::Checkbox("Demo", &isDemoShown);
-			ImGui::Checkbox("Config", &isConfigShown);
+			if(ImGui::Button("Config"))
+			{
+				isConfigShown = true;
+			}
+			ImGui::Checkbox("Hierarchy", &isHierarchyShown);
 
 			ImGui::EndMenu();
 		}
@@ -126,14 +131,10 @@ update_status ModuleUI::Update(float dt)
 
 	if (isConfigShown)
 	{
-		ImGui::Begin("Configuration");
+		ImGui::SetNextWindowPos({ 920, 20 });
+		ImGui::SetNextWindowSize({ 350,600 });
+		ImGui::Begin("Configuration", &isConfigShown);
 		{
-			if (ImGui::BeginMenu("Options"))
-			{
-				ImGui::EndMenu();
-			}
-
-
 
 			if (ImGui::CollapsingHeader("Application"))
 			{
@@ -213,6 +214,32 @@ update_status ModuleUI::Update(float dt)
 		ImGui::End();
 	}
 
+
+
+	if (isHierarchyShown)
+	{
+		ImGui::SetNextWindowPos({ 20, 20 });
+		ImGui::SetNextWindowSize({ 300, 700 });
+		ImGui::Begin("Hierarchy");
+
+		if (App->scene_intro->meshesList.size() > 0) {
+
+			int i = 0;
+			for (std::list<Mesh*>::iterator meshIterator = App->scene_intro->meshesList.begin(); meshIterator != App->scene_intro->meshesList.end(); meshIterator++)
+			{
+				if ((*meshIterator)->name == "Default") {
+					ImGui::Text("%s_%d", (*meshIterator)->name, i);
+					i++;
+				}
+				else ImGui::Text("%s", (*meshIterator)->name);
+			}
+		}
+
+		ImGui::End();
+	}
+
+
+
 	if (isAboutShown) 
 	{
 		ImGui::Begin("About");
@@ -232,8 +259,7 @@ update_status ModuleUI::Update(float dt)
 			SDL_version version;
 			SDL_VERSION(&version);
 			ImGui::BulletText("SDL %d.%d.%d", version.major, version.minor, version.patch);
-			SDL_MIXER_VERSION(&version);
-			ImGui::BulletText("SDL Mixer %d.%d.%d", version.major, version.minor, version.patch);
+			//ImGui::BulletText("SDL Mixer %d.%d.%d", version.major, version.minor, version.patch);
 
 			ImGui::BulletText("Glew %s.%s.%s", glewGetString(GLEW_VERSION_MAJOR), glewGetString(GLEW_VERSION_MINOR), glewGetString(GLEW_VERSION_MICRO));
 			ImGui::BulletText("ImGui %s", ImGui::GetVersion());
