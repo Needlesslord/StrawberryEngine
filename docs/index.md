@@ -17,11 +17,11 @@ This is Strawberry Engine's base. It includes basic features such as:
 
 It is developed under the MIT License.
 
-- _To go to the Engine's **RELEASES** click [here](https://github.com/Needlesslord/StrawberryEngine/releases)._
+To go to the Engine's **RELEASES** click [here](https://github.com/Needlesslord/StrawberryEngine/releases).
 
-- _To go to the **GITHUB REPOSITORY** click [here](https://github.com/Needlesslord/StrawberryEngine)._
+To go to the **GITHUB REPOSITORY** click [here](https://github.com/Needlesslord/StrawberryEngine).
 
-- _To go to the **WEB PAGE** click [here](https://needlesslord.github.io/StrawberryEngine/)._
+To go to the **WEB PAGE** click [here *(under construction)*]().
 
 
 
