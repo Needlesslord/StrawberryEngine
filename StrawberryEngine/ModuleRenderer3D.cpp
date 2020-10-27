@@ -120,7 +120,6 @@ bool ModuleRenderer3D::Init()
 	// Projection matrix for
 	OnResize(App->window->screen_surface->w, App->window->screen_surface->h);
 
-	isTexturesShown = true;
 
 	
 
@@ -206,12 +205,17 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 {
 	App->scene_intro->Draw();
 
-	glBindTexture(GL_TEXTURE_2D, textureID);
-
+	if (App->ui->isTexturesEnabled)
+	{
+		glBindTexture(GL_TEXTURE_2D, textureID);
+	}
 	
 	for (std::list<Mesh*>::iterator meshIterator = App->scene_intro->meshesList.begin(); meshIterator != App->scene_intro->meshesList.end(); meshIterator++)
 	{
-		Draw(*meshIterator);
+		if (App->ui->isDrawEnabled)
+		{
+			Draw(*meshIterator);
+		}
 	}
 
 	
@@ -219,7 +223,7 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	
 	//DrawCubeDirect();
 	//DrawCubeArray();
-	DrawCubeIndices();
+	//DrawCubeIndices();
 	
 	glBindTexture(GL_TEXTURE_2D, 0);
 

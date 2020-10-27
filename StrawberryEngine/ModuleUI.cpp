@@ -52,6 +52,9 @@ bool ModuleUI::Start()
 	isWinBorderless = WIN_BORDERLESS;
 	isWinFullscreenDesktop = WIN_FULLSCREEN_DESKTOP;
 	
+	isTexturesEnabled = true;
+	isDrawEnabled = true;
+
 	return ret;
 }
 
@@ -204,9 +207,16 @@ update_status ModuleUI::Update(float dt)
 
 
 
+			if (ImGui::CollapsingHeader("Render"))
+			{
+				ImGui::Checkbox("Draw Meshes", &isDrawEnabled);
+			}
+
+
+
 			if (ImGui::CollapsingHeader("Textures"))
 			{
-				ImGui::Checkbox("Show textures", &App->renderer3D->isTexturesShown);
+				ImGui::Checkbox("Show textures", &isTexturesEnabled);
 			}
 
 
