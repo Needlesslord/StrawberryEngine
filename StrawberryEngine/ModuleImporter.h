@@ -4,11 +4,16 @@
 #include "Module.h"
 #include "Globals.h"
 
+class GameObject;
+
 class Mesh
 {
 public:
+	Mesh(char* n = GAME_MESH_NAME) { name = n; };
+	~Mesh() {};
+public:
 
-	char* name = "Default";
+	char* name;
 	uint id_index = 0; // index in VRAM
 	uint num_index = 0;
 	uint* index = nullptr;
@@ -27,7 +32,7 @@ public:
 	bool Start();
 	bool CleanUp();
 
-	void Load(char* path);
+	GameObject* Load(char* path, char* name = GAME_OBJECT_DEFAULT_NAME);
 
 };
 

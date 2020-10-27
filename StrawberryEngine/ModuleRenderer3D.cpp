@@ -120,7 +120,8 @@ bool ModuleRenderer3D::Init()
 	// Projection matrix for
 	OnResize(App->window->screen_surface->w, App->window->screen_surface->h);
 
-	isTexturesShown = true;
+
+	
 
 	return ret;
 }
@@ -142,13 +143,17 @@ bool ModuleRenderer3D::Start()
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, myIndeces);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * 36, cubeIndices, GL_STATIC_DRAW);
 
+	
+	//glBufferData(GL_TEXTURE_2D, sizeof(float) * 72, cubeUV, GL_STATIC_DRAW);
+	//GL_TEXCOORD2_BIT_PGI   GL_TEXTURE_BINDING_2D_ARRAY   GL_TEXTURE_2D_ARRAY	 GL_TEXTURE_COORD_ARRAY
+
 	GenerateBuffers();
 	
 	//(*App->scene_intro->meshesList.begin())->name = "Casa";// Test
 
-	GLubyte checkerImage[4][4][4];
-	for (int i = 0; i < 4; i++) {
-		for (int j = 0; j < 4; j++) {
+	GLubyte checkerImage[32][32][4];
+	for (int i = 0; i < 32; i++) {
+		for (int j = 0; j < 32; j++) {
 			int c = ((((i & 0x8) == 0) ^ (((j & 0x8)) == 0))) * 255;
 			checkerImage[i][j][0] = (GLubyte)c;
 			checkerImage[i][j][1] = (GLubyte)c;
@@ -156,6 +161,19 @@ bool ModuleRenderer3D::Start()
 			checkerImage[i][j][3] = (GLubyte)255;
 		}
 	}
+	
+	textureID = 0;
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+	glGenTextures(1, &textureID);
+	glBindTexture(GL_TEXTURE_2D, textureID);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 32, 32, 0, GL_RGBA, GL_UNSIGNED_BYTE, checkerImage);
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	//glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textureID, 0);
 
 	return true;
 }
@@ -187,16 +205,29 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 {
 	App->scene_intro->Draw();
 
-	std::list<Mesh*>::iterator meshIterator = App->scene_intro->meshesList.begin();
-	for (; meshIterator != App->scene_intro->meshesList.end(); meshIterator++)
+	if (App->ui->isTexturesEnabled)
 	{
-		Draw(*meshIterator);
+		glBindTexture(GL_TEXTURE_2D, textureID);
+	}
+	
+	for (std::list<Mesh*>::iterator meshIterator = App->scene_intro->meshesList.begin(); meshIterator != App->scene_intro->meshesList.end(); meshIterator++)
+	{
+		if (App->ui->isDrawEnabled)
+		{
+			Draw(*meshIterator);
+		}
 	}
 
+	
+	
+	
 	//DrawCubeDirect();
 	//DrawCubeArray();
 	//DrawCubeIndices();
 	
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+
 	App->ui->Draw();
 
 	SDL_GL_SwapWindow(App->window->window);
@@ -213,7 +244,6 @@ bool ModuleRenderer3D::CleanUp()
 
 	return true;
 }
-
 
 void ModuleRenderer3D::OnResize(int width, int height)
 {
@@ -320,9 +350,7 @@ void ModuleRenderer3D::DrawCubeIndices()
 
 void ModuleRenderer3D::GenerateBuffers()
 {
-	std::list<Mesh*>::iterator meshIterator = App->scene_intro->meshesList.begin();
-
-	for (;meshIterator != App->scene_intro->meshesList.end(); meshIterator++)
+	for (std::list<Mesh*>::iterator meshIterator = App->scene_intro->meshesList.begin(); meshIterator != App->scene_intro->meshesList.end(); meshIterator++)
 	{
 		glGenBuffers(1, (GLuint*) & ((*meshIterator)->id_vertex));
 		glBindBuffer(GL_ARRAY_BUFFER, (*meshIterator)->id_vertex);
@@ -332,13 +360,11 @@ void ModuleRenderer3D::GenerateBuffers()
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, (*meshIterator)->id_index);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * (*meshIterator)->num_index, (*meshIterator)->index, GL_STATIC_DRAW);
 	}
-
 }
 
 void ModuleRenderer3D::Draw(Mesh* mesh)
 {
 	glEnableClientState(GL_VERTEX_ARRAY);
-
 	glBindBuffer(GL_ARRAY_BUFFER, mesh->id_vertex);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->id_index);
 	glVertexPointer(3, GL_FLOAT, 0, NULL);

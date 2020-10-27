@@ -6,6 +6,7 @@
 #include "ModuleInput.h"
 #include "ModuleSceneIntro.h"
 #include "ModuleImporter.h"
+#include "GameObject.h"
 
 #include <GL/glew.h>
 
@@ -51,6 +52,9 @@ bool ModuleUI::Start()
 	isWinBorderless = WIN_BORDERLESS;
 	isWinFullscreenDesktop = WIN_FULLSCREEN_DESKTOP;
 	
+	isTexturesEnabled = true;
+	isDrawEnabled = true;
+
 	return ret;
 }
 
@@ -203,9 +207,16 @@ update_status ModuleUI::Update(float dt)
 
 
 
+			if (ImGui::CollapsingHeader("Render"))
+			{
+				ImGui::Checkbox("Draw Meshes", &isDrawEnabled);
+			}
+
+
+
 			if (ImGui::CollapsingHeader("Textures"))
 			{
-				ImGui::Checkbox("Show textures", &App->renderer3D->isTexturesShown);
+				ImGui::Checkbox("Show textures", &isTexturesEnabled);
 			}
 
 
@@ -222,16 +233,23 @@ update_status ModuleUI::Update(float dt)
 		ImGui::SetNextWindowSize({ 300, 700 });
 		ImGui::Begin("Hierarchy");
 
-		if (App->scene_intro->meshesList.size() > 0) {
+		if (App->scene_intro->gameObjectList.size() > 0) {
 
-			int i = 0;
-			for (std::list<Mesh*>::iterator meshIterator = App->scene_intro->meshesList.begin(); meshIterator != App->scene_intro->meshesList.end(); meshIterator++)
+			for (std::list<GameObject*>::iterator gameObjectIterator = App->scene_intro->gameObjectList.begin(); gameObjectIterator != App->scene_intro->gameObjectList.end(); gameObjectIterator++)
 			{
-				if ((*meshIterator)->name == "Default") {
-					ImGui::Text("%s_%d", (*meshIterator)->name, i);
-					i++;
+
+				if (ImGui::CollapsingHeader((*gameObjectIterator)->name))
+				{
+
+					if (!(*gameObjectIterator)->childrenMeshes.empty())
+					{
+						
+						for (std::list<Mesh*>::iterator meshIterator = (*gameObjectIterator)->childrenMeshes.begin(); meshIterator != (*gameObjectIterator)->childrenMeshes.end(); meshIterator++)
+						{
+							ImGui::Text((*meshIterator)->name);
+						}
+					}
 				}
-				else ImGui::Text("%s", (*meshIterator)->name);
 			}
 		}
 

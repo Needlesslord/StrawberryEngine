@@ -42,9 +42,9 @@ public:
 
 	// Windows shown bools
 	bool isDemoShown = false;
-	bool isConfigShown = true;
+	bool isConfigShown = false;
 	bool isAboutShown = false;
-	bool isHierarchyShown = true;
+	bool isHierarchyShown = false;
 
 	// Config data
 	char* name;
@@ -56,7 +56,9 @@ public:
 	bool isWinResizable;
 	bool isWinBorderless;
 	bool isWinFullscreenDesktop;
-	
+
+	bool isDrawEnabled;
+	bool isTexturesEnabled;
 
 	ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 

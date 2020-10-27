@@ -40,3 +40,6 @@ enum update_status
 #define WIN_FULLSCREEN_DESKTOP false
 #define VSYNC true
 #define TITLE "Strawberry Engine"
+
+#define GAME_OBJECT_DEFAULT_NAME "Default Game Object"
+#define GAME_MESH_NAME "Default Mesh"

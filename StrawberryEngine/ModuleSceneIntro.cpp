@@ -4,7 +4,7 @@
 #include "ModuleImporter.h"
 #include "Primitive.h"
 #include "PhysBody3D.h"
-
+#include "GameObject.h"
 
 ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
@@ -22,8 +22,10 @@ bool ModuleSceneIntro::Start()
 	App->camera->Move(vec3(1.0f, 1.0f, 0.0f));
 	App->camera->LookAt(vec3(0, 0, 0));
 
+	house = App->importer->Load("Assets/BakerHouse.fbx");
 	//App->importer->Load("Assets/warrior.fbx");
-	App->importer->Load("Assets/BakerHouse.fbx");
+
+	
 
 	return ret;
 }
@@ -55,4 +57,15 @@ void ModuleSceneIntro::OnCollision(PhysBody3D* body1, PhysBody3D* body2)
 void ModuleSceneIntro::Draw()
 {
 	p.Render();
+}
+
+GameObject* ModuleSceneIntro::AddGameObject(char* n)
+{
+	GameObject* ret;
+
+	ret = new GameObject(n);
+
+	gameObjectList.push_back(ret);
+
+	return ret;
 }
