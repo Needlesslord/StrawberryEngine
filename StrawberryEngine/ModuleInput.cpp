@@ -129,9 +129,14 @@ update_status ModuleInput::PreUpdate(float dt)
 						App->importer->Load(dropped_filedir);
 						App->renderer3D->GenerateBuffers();
 					}
-					else if (fileType == ".png" || fileType == ".PNG" || fileType == ".dds" || fileType == ".DDS")
+					else if (fileType == ".png" || fileType == ".PNG")
 					{
 						LOG("Loading .png");
+						App->importer->LoadTexture(dropped_filedir);
+					}
+					else if (fileType == ".dds" || fileType == ".DDS")
+					{
+						LOG("Loading .dds");
 						App->importer->LoadTexture(dropped_filedir);
 					}
 					else
