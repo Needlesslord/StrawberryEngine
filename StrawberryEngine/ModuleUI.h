@@ -45,10 +45,12 @@ public:
 	bool isConfigShown = false;
 	bool isAboutShown = false;
 	bool isHierarchyShown = false;
+	bool isInspectorShown = false;
 
 	// Config data
-	char* name;
-	char* organization;
+	char* name = nullptr;
+	char* organization = nullptr;
+
 			// Temporary vars
 	bool isActive = false;
 	float brightness = 1.0f;

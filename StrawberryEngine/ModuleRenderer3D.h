@@ -38,10 +38,10 @@ public:
 
 	Color background;
 
-	uint my_id;
-	uint textureID;
-	uint myId;
-	uint myIndeces;
+	uint my_id = 0;
+	uint textureID = 0;
+	uint myId = 0;
+	uint myIndeces = 0;
 
 	
 };

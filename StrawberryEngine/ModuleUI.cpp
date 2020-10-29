@@ -103,30 +103,26 @@ update_status ModuleUI::Update(float dt)
 		}
 		if (ImGui::BeginMenu("Help"))
 		{
-			if (ImGui::MenuItem("Documentation")) {}
-				//App->RequestBrowser("https://github.com/");
+			if (ImGui::MenuItem("Documentation"))
+			{
+				App->RequestBrowser("https://github.com/");
+			}
 
-			if (ImGui::MenuItem("Download latest")) {}
-				//App->RequestBrowser("https://github.com/");
+			if (ImGui::MenuItem("Download latest"))
+			{
+				App->RequestBrowser("https://github.com/");
+			}
 
-			if (ImGui::MenuItem("Report a bug")) {}
-				//App->RequestBrowser("https://github.com/");
+			if (ImGui::MenuItem("Report a bug")) 
+			{
+				App->RequestBrowser("https://github.com/");
+			}
 
 			if (ImGui::MenuItem("About"))
 				isAboutShown = !isAboutShown;
 
 			ImGui::EndMenu();
 		}
-		/*
-		if (ImGui::BeginMenu("Project"))
-		{
-			ImGui::EndMenu();
-		}
-		if (ImGui::BeginMenu("Build"))
-		{
-			ImGui::EndMenu();
-		}
-		*/
 	}
 	ImGui::EndMainMenuBar();
 
@@ -209,14 +205,24 @@ update_status ModuleUI::Update(float dt)
 
 			if (ImGui::CollapsingHeader("Render"))
 			{
-				ImGui::Checkbox("Draw Meshes", &isDrawEnabled);
+				if (ImGui::Checkbox("Draw Meshes", &isDrawEnabled))
+				{
+					char* a = "on";
+					char* b = "off";
+					LOG("Turning rendering: %s", isDrawEnabled ? a : b);
+				}
 			}
 
 
 
 			if (ImGui::CollapsingHeader("Textures"))
 			{
-				ImGui::Checkbox("Show textures", &isTexturesEnabled);
+				if (ImGui::Checkbox("Show textures", &isTexturesEnabled))
+				{
+					char* a = "on";
+					char* b = "off";
+					LOG("Turning textures: %s", isTexturesEnabled ? a : b);
+				}
 			}
 
 
@@ -227,7 +233,22 @@ update_status ModuleUI::Update(float dt)
 
 
 
-	if (isHierarchyShown)
+	if (isInspectorShown)
+	{
+		
+		ImGui::Begin("Inspector", &isInspectorShown);
+		{
+
+			if (ImGui::MenuItem("GitHub"))
+			{
+
+			}
+		}
+	}
+
+
+
+	if (isHierarchyShown) //  ImGui::IsWindowHovered() !!!
 	{
 		ImGui::SetNextWindowPos({ 20, 20 });
 		ImGui::SetNextWindowSize({ 300, 700 });

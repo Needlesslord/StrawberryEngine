@@ -15,8 +15,9 @@ public:
 
 public:
 
-	char* name;
-	Mesh* goMesh; // Game Object Mesh
+	char* name = nullptr;
+	Mesh* goMesh = nullptr; // Game Object Mesh
 	std::list<Mesh*> childrenMeshes;
+	bool selected = false;
 
 };

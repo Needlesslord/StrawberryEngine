@@ -149,7 +149,7 @@ bool ModuleRenderer3D::Start()
 
 	GenerateBuffers();
 	
-	//(*App->scene_intro->meshesList.begin())->name = "Casa";// Test
+	//(*App->scene_intro->meshesList.begin())->name = "Casa"; // Test
 
 	GLubyte checkerImage[32][32][4];
 	for (int i = 0; i < 32; i++) {
@@ -205,10 +205,6 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 {
 	App->scene_intro->Draw();
 
-	if (App->ui->isTexturesEnabled)
-	{
-		glBindTexture(GL_TEXTURE_2D, textureID);
-	}
 	
 	for (std::list<Mesh*>::iterator meshIterator = App->scene_intro->meshesList.begin(); meshIterator != App->scene_intro->meshesList.end(); meshIterator++)
 	{
@@ -225,7 +221,6 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	//DrawCubeArray();
 	//DrawCubeIndices();
 	
-	glBindTexture(GL_TEXTURE_2D, 0);
 
 
 	App->ui->Draw();
@@ -341,10 +336,13 @@ void ModuleRenderer3D::DrawCubeArray()
 void ModuleRenderer3D::DrawCubeIndices()
 {
 	glEnableClientState(GL_VERTEX_ARRAY);
+
 	glBindBuffer(GL_ARRAY_BUFFER, myId);
+	glVertexPointer(3, GL_FLOAT, 0, NULL);
+
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, myIndeces);
-	glVertexPointer(3, GL_FLOAT, 0, NULL); 
 	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, NULL);
+
 	glDisableClientState(GL_VERTEX_ARRAY);
 }
 
@@ -365,9 +363,27 @@ void ModuleRenderer3D::GenerateBuffers()
 void ModuleRenderer3D::Draw(Mesh* mesh)
 {
 	glEnableClientState(GL_VERTEX_ARRAY);
+	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+
 	glBindBuffer(GL_ARRAY_BUFFER, mesh->id_vertex);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->id_index);
 	glVertexPointer(3, GL_FLOAT, 0, NULL);
+
+
+	if (App->ui->isTexturesEnabled)
+	{
+		glBindTexture(GL_TEXTURE_2D, App->importer->houseTexture->id);
+		glBindBuffer(GL_ARRAY_BUFFER, App->importer->houseTexture->id);
+		glTexCoordPointer(2, GL_FLOAT, 0, NULL);
+	}
+
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->id_index);
 	glDrawElements(GL_TRIANGLES, mesh->num_index, GL_UNSIGNED_INT, NULL);
+
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+	glBindTexture(GL_TEXTURE_2D, 0);
+
 	glDisableClientState(GL_VERTEX_ARRAY);
+	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 }
