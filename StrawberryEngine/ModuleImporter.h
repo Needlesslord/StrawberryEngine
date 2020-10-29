@@ -22,7 +22,6 @@ public:
 	uint num_vertex = 0;
 	float* vertex = nullptr;
 	uint id_tex_coord = 0;
-	uint num_tex_coord = 0;
 	float* tex_coord = nullptr;
 	bool selected = false;
 

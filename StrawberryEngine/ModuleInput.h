@@ -61,6 +61,8 @@ public:
 public:
 
 	bool quit = false;
+	char* dropped_filedir = nullptr;
+	std::string fileType;
 
 private:
 	KEY_STATE* keyboard;

@@ -5,6 +5,7 @@
 #include "ModuleWindow.h"
 #include "ModuleSceneIntro.h"
 #include "ModuleImporter.h"
+#include "GameObject.h"
 
 #include "Geometry.h"
 #include "Libs/Glew/include/GL/glew.h"
@@ -204,17 +205,16 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 update_status ModuleRenderer3D::PostUpdate(float dt)
 {
 	App->scene_intro->Draw();
-
-	
-	for (std::list<Mesh*>::iterator meshIterator = App->scene_intro->meshesList.begin(); meshIterator != App->scene_intro->meshesList.end(); meshIterator++)
+	if (App->ui->isDrawEnabled)
 	{
-		if (App->ui->isDrawEnabled)
+		for (std::list<GameObject*>::iterator goIterator = App->scene_intro->gameObjectList.begin(); goIterator != App->scene_intro->gameObjectList.end(); goIterator++)
 		{
-			Draw(*meshIterator);
+			for (std::list<Mesh*>::iterator meshIterator = (*goIterator)->childrenMeshes.begin(); meshIterator != (*goIterator)->childrenMeshes.end(); meshIterator++)
+			{
+				Draw(*meshIterator);
+			}
 		}
 	}
-
-	
 	
 	
 	//DrawCubeDirect();
@@ -371,8 +371,8 @@ void ModuleRenderer3D::Draw(Mesh* mesh)
 
 	if (App->ui->isTexturesEnabled)
 	{
+		glBindBuffer(GL_ARRAY_BUFFER, mesh->id_tex_coord);
 		glBindTexture(GL_TEXTURE_2D, App->importer->houseTexture->id);
-		glBindBuffer(GL_ARRAY_BUFFER, App->importer->houseTexture->id);
 		glTexCoordPointer(2, GL_FLOAT, 0, NULL);
 	}
 
@@ -381,8 +381,8 @@ void ModuleRenderer3D::Draw(Mesh* mesh)
 	glDrawElements(GL_TRIANGLES, mesh->num_index, GL_UNSIGNED_INT, NULL);
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	glBindTexture(GL_TEXTURE_2D, 0);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);

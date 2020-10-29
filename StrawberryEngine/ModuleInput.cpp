@@ -84,7 +84,8 @@ update_status ModuleInput::PreUpdate(float dt)
 
 	mouse_x_motion = mouse_y_motion = 0;
 
-	
+	SDL_EventState(SDL_DROPFILE, SDL_ENABLE);
+
 	SDL_Event e;
 	while(SDL_PollEvent(&e))
 	{
@@ -110,6 +111,37 @@ update_status ModuleInput::PreUpdate(float dt)
 			{
 				if(e.window.event == SDL_WINDOWEVENT_RESIZED)
 					App->renderer3D->OnResize(e.window.data1, e.window.data2);
+			}
+
+			case SDL_DROPFILE:
+			{
+				if (e.type == SDL_DROPFILE)
+				{
+					dropped_filedir = e.drop.file;
+					LOG("%s dropped", dropped_filedir);
+
+					fileType = dropped_filedir;
+					fileType.erase(0, fileType.find_last_of('.'));
+
+					if (fileType == ".fbx" || fileType == ".FBX")
+					{
+						LOG("Loading .fbx");
+						App->importer->Load(dropped_filedir);
+						App->renderer3D->GenerateBuffers();
+					}
+					else if (fileType == ".png")
+					{
+						LOG("Loading .png");
+						App->importer->LoadTexture(dropped_filedir);
+					}
+					else
+					{
+						LOG("No support for that extension!");
+					}
+
+					SDL_free(dropped_filedir);
+					break;
+				}
 			}
 		}
 	}

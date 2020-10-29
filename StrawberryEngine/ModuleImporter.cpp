@@ -106,10 +106,9 @@ GameObject* ModuleImporter::Load(char* path, char* name)
 
 			if (scene->mMeshes[i]->HasTextureCoords(0))
 			{
-				ourMesh->num_tex_coord = ourMesh->num_vertex;
-				ourMesh->tex_coord = new float[ourMesh->num_tex_coord * 2];
+				ourMesh->tex_coord = new float[ourMesh->num_vertex * 2];
 
-				for (int j = 0; j < ourMesh->num_tex_coord; j++)
+				for (int j = 0; j < ourMesh->num_vertex; j++)
 				{
 					ourMesh->tex_coord[j * 2] = scene->mMeshes[i]->mTextureCoords[0][j].x;
 					ourMesh->tex_coord[(j * 2) + 1] = scene->mMeshes[i]->mTextureCoords[0][j].y;
@@ -117,7 +116,7 @@ GameObject* ModuleImporter::Load(char* path, char* name)
 
 				glGenBuffers(1, (GLuint*) & (ourMesh->id_tex_coord));
 				glBindBuffer(GL_ARRAY_BUFFER, ourMesh->id_tex_coord);
-				glBufferData(GL_ARRAY_BUFFER, sizeof(float) * ourMesh->num_tex_coord * 2, ourMesh->tex_coord, GL_STATIC_DRAW);
+				glBufferData(GL_ARRAY_BUFFER, sizeof(float) * ourMesh->num_vertex * 2, ourMesh->tex_coord, GL_STATIC_DRAW);
 				glBindBuffer(GL_ARRAY_BUFFER, 0);
 			}
 
