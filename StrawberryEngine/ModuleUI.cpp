@@ -103,20 +103,21 @@ update_status ModuleUI::Update(float dt)
 		}
 		if (ImGui::BeginMenu("Help"))
 		{
-			if (ImGui::MenuItem("Documentation"))
-			{
-				App->RequestBrowser("https://github.com/");
-			}
 
-			if (ImGui::MenuItem("Download latest"))
-			{
-				App->RequestBrowser("https://github.com/");
-			}
+			if (ImGui::MenuItem("Documentation")) {}
+				//App->RequestBrowser("https://needlesslord.github.io/StrawberryEngine/");
 
-			if (ImGui::MenuItem("Report a bug")) 
-			{
-				App->RequestBrowser("https://github.com/");
-			}
+			if (ImGui::MenuItem("Download latest release")) {}
+				//App->RequestBrowser("https://github.com/Needlesslord/StrawberryEngine/releases/tag/v0.2");
+
+			if (ImGui::MenuItem("Current release")) {}
+				//App->RequestBrowser("https://github.com/Needlesslord/StrawberryEngine/releases/tag/v0.2");
+
+			if (ImGui::MenuItem("All the releases")) {}
+				//App->RequestBrowser("https://github.com/Needlesslord/StrawberryEngine/releases");
+
+			if (ImGui::MenuItem("Report a bug")) {}
+				//App->RequestBrowser("https://github.com/Needlesslord/StrawberryEngine/issues");
 
 			if (ImGui::MenuItem("About"))
 				isAboutShown = !isAboutShown;
@@ -281,7 +282,7 @@ update_status ModuleUI::Update(float dt)
 
 	if (isAboutShown) 
 	{
-		ImGui::Begin("About");
+		ImGui::Begin("About", &isAboutShown);
 		{
 			ImGui::Text("Strawberry Engine");
 			ImGui::Text("The sweetest 3D Engine");
@@ -290,7 +291,7 @@ update_status ModuleUI::Update(float dt)
 			ImGui::Text("By Tomas Carreras and Nuria Lamonja. Supervised by professor Marc Garrigo");
 			ImGui::Spacing();
 			ImGui::Spacing();
-			if (ImGui::MenuItem("GitHub"))
+			if (ImGui::MenuItem("GitHub Web Page"))
 				App->RequestBrowser("https://github.com/Needlesslord/StrawberryEngine");
 			ImGui::Spacing();
 			ImGui::Text("3rd Party Libraries used:");
@@ -305,8 +306,38 @@ update_status ModuleUI::Update(float dt)
 			ImGui::BulletText("OpenGl %s", glGetString(GL_VERSION));
 			ImGui::Spacing();
 			ImGui::Spacing();
+			ImGui::Spacing();
+			ImGui::Spacing();
 
+			ImGui::Text("MIT License");
+			ImGui::Spacing();
+			ImGui::Spacing();
+			ImGui::Text("     Copyright(c) 2020 Nuria Lamonja @needlesslord + Tomas Carreras @tomascarreras1000");
+			ImGui::Spacing();
+			ImGui::Spacing();
+			ImGui::Text("     Permission is hereby granted, free of charge, to any person obtaining a copy");
+			ImGui::Text("        of this softwareand associated documentation files(the 'Software'), to deal");
+			ImGui::Text("        in the Software without restriction, including without limitation the rights");
+			ImGui::Text("        to use, copy, modify, merge, publish, distribute, sublicense, and /or sell");
+			ImGui::Text("        copies of the Software, and to permit persons to whom the Software is");
+			ImGui::Text("        furnished to do so, subject to the following conditions :");
+			ImGui::Spacing();
+			ImGui::Spacing();
+			ImGui::Text("     The above copyright noticeand this permission notice shall be included in all");
+			ImGui::Text("        copies or substantial portions of the Software.");
+			ImGui::Spacing();
+			ImGui::Spacing();
+			ImGui::Text("     THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR");
+			ImGui::Text("        IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,");
+			ImGui::Text("        FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE");
+			ImGui::Text("        AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER");
+			ImGui::Text("        LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,");
+			ImGui::Text("        OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE");
+			ImGui::Text("        SOFTWARE.");
+			ImGui::Spacing();
+			ImGui::Spacing();
 			// TODO: licencia
+
 		}
 		ImGui::End();
 	}
