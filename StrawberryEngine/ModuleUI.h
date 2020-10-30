@@ -59,8 +59,10 @@ public:
 	bool isWinBorderless;
 	bool isWinFullscreenDesktop;
 
-	bool isDrawEnabled;
-	bool isTexturesEnabled;
+	bool isDrawEnabled = true;
+	bool isTexturesEnabled = true;
+
+	bool isMeshSelected = false;
 
 	ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 

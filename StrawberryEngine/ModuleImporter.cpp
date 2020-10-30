@@ -54,6 +54,7 @@ bool ModuleImporter::Start()
 {
 	bool ret = true;
 
+	defaultTexture = App->renderer3D->CreateCheckersTexture();
 	houseTexture = LoadTexture("Assets/Baker_House.png");
 
 	return ret;
@@ -119,6 +120,11 @@ GameObject* ModuleImporter::Load(char* path, char* name)
 				glBufferData(GL_ARRAY_BUFFER, sizeof(float) * ourMesh->num_vertex * 2, ourMesh->tex_coord, GL_STATIC_DRAW);
 				glBindBuffer(GL_ARRAY_BUFFER, 0);
 			}
+			char* charName = new char[12];
+			std::string stringName = ("New Mesh "+ std::to_string(meshIterator));
+			strcpy(charName, stringName.c_str());
+			ourMesh->name = charName;
+			meshIterator++;
 
 			ret->AddChild(ourMesh);
 			LOG("%s is now a child of %s", ourMesh->name, ret->name);
@@ -176,6 +182,15 @@ Texture* ModuleImporter::LoadTexture(char* path)
 	glBindTexture(GL_TEXTURE_2D, 0);
 
 	ret->id = id_texture;
+
+	ret->textureIterator = textureIterator;
+
+	char* charName = new char[15];
+	std::string stringName = ("New Texture " + std::to_string(textureIterator));
+	strcpy(charName, stringName.c_str());
+	ret->name = charName;
+
+	textureIterator++;
 
 	textureList.push_back(ret);
 

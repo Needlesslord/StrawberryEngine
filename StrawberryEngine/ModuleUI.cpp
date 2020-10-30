@@ -55,6 +55,9 @@ bool ModuleUI::Start()
 	isTexturesEnabled = true;
 	isDrawEnabled = true;
 
+	isHierarchyShown = true;
+	isInspectorShown = true;
+
 	return ret;
 }
 
@@ -98,6 +101,7 @@ update_status ModuleUI::Update(float dt)
 				isConfigShown = true;
 			}
 			ImGui::Checkbox("Hierarchy", &isHierarchyShown);
+			ImGui::Checkbox("Inspector", &isInspectorShown);
 
 			ImGui::EndMenu();
 		}
@@ -132,8 +136,7 @@ update_status ModuleUI::Update(float dt)
 
 	if (isConfigShown)
 	{
-		ImGui::SetNextWindowPos({ 920, 20 });
-		ImGui::SetNextWindowSize({ 350,600 });
+		
 		ImGui::Begin("Configuration", &isConfigShown);
 		{
 
@@ -234,20 +237,6 @@ update_status ModuleUI::Update(float dt)
 
 
 
-	if (isInspectorShown)
-	{
-		
-		ImGui::Begin("Inspector", &isInspectorShown);
-		{
-
-			if (ImGui::MenuItem("GitHub"))
-			{
-
-			}
-		}
-	}
-
-
 
 	if (isHierarchyShown) //  ImGui::IsWindowHovered() !!!
 	{
@@ -268,7 +257,15 @@ update_status ModuleUI::Update(float dt)
 						
 						for (std::list<Mesh*>::iterator meshIterator = (*gameObjectIterator)->childrenMeshes.begin(); meshIterator != (*gameObjectIterator)->childrenMeshes.end(); meshIterator++)
 						{
-							ImGui::Text((*meshIterator)->name);
+							bool separator = (*meshIterator)->selected;
+							if (ImGui::Checkbox((*meshIterator)->name, &separator))
+							{
+								(*meshIterator)->selected = separator;
+							}
+								//(*meshIterator)->selected = true;
+								//App->scene_intro->meshesSelected.push_back(*meshIterator);
+							
+							//ImGui::Text((*meshIterator)->name);
 						}
 					}
 				}
@@ -277,6 +274,60 @@ update_status ModuleUI::Update(float dt)
 
 		ImGui::End();
 	}
+
+
+
+
+	if (isInspectorShown)
+	{
+		ImGui::SetNextWindowPos({ 920, 20 });
+		ImGui::SetNextWindowSize({ 350,600 });
+
+		ImGui::Begin("Inspector", &isInspectorShown);
+		{
+
+			if (ImGui::MenuItem("GitHub"))
+			{
+
+			}
+
+			if (!App->scene_intro->meshesSelected.empty())
+			{
+				if (ImGui::CollapsingHeader("Texture selection"))
+				{
+
+					std::list<Texture*>::iterator textureIterator = App->importer->textureList.begin();
+
+					int i = 0;
+					while (textureIterator != App->importer->textureList.end())
+					{
+						if (ImGui::Button((*textureIterator)->name))
+						{
+							for (std::list<Mesh*>::iterator meshesToChangeTexture = App->scene_intro->meshesSelected.begin(); meshesToChangeTexture != App->scene_intro->meshesSelected.end(); meshesToChangeTexture++)
+							{
+								(*meshesToChangeTexture)->textureNumber = i;
+							}
+						}
+						i++;
+						textureIterator++;
+
+					}
+					if (ImGui::Button("No texture"))
+					{
+						for (std::list<Mesh*>::iterator meshesToChangeTexture = App->scene_intro->meshesSelected.begin(); meshesToChangeTexture != App->scene_intro->meshesSelected.end(); meshesToChangeTexture++)
+						{
+							(*meshesToChangeTexture)->textureNumber = 999;
+						}
+					}
+				}
+
+				
+			}
+		}
+		ImGui::End();
+	}
+
+
 
 
 
@@ -341,6 +392,10 @@ update_status ModuleUI::Update(float dt)
 		}
 		ImGui::End();
 	}
+
+
+
+	
 
 	return UPDATE_CONTINUE;
 }

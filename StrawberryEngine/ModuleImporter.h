@@ -23,17 +23,22 @@ public:
 	float* vertex = nullptr;
 	uint id_tex_coord = 0;
 	float* tex_coord = nullptr;
+
 	bool selected = false;
 
+	uint textureNumber = 999;
 };
 
 class Texture
 {
 public:
 	char* path = nullptr;
+	char* name = nullptr;
 	uint id;
 	uint w;
 	uint h;
+
+	uint textureIterator;
 };
 
 class ModuleImporter : public Module
@@ -52,8 +57,12 @@ public:
 
 public:
 
+	Texture* defaultTexture = nullptr;
 	Texture* houseTexture = nullptr;
 	std::list<Texture*> textureList;
+
+	int textureIterator = 1;
+	int meshIterator = 0;
 
 };
 

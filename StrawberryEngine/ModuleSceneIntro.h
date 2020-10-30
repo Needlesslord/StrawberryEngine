@@ -12,6 +12,7 @@ public:
 	~ModuleSceneIntro();
 
 	bool Start();
+	update_status PreUpdate(float dt);
 	update_status Update(float dt);
 	bool CleanUp();
 
@@ -26,6 +27,7 @@ public:
 	Plane p;
 
 	std::list<Mesh*> meshesList;
+	std::list<Mesh*> meshesSelected;
 	std::list<GameObject*> gameObjectList;
 
 	GameObject* house;

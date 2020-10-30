@@ -122,7 +122,7 @@ bool ModuleRenderer3D::Init()
 	OnResize(App->window->screen_surface->w, App->window->screen_surface->h);
 
 
-	
+
 
 	return ret;
 }
@@ -152,27 +152,6 @@ bool ModuleRenderer3D::Start()
 	
 	//(*App->scene_intro->meshesList.begin())->name = "Casa"; // Test
 
-	GLubyte checkerImage[32][32][4];
-	for (int i = 0; i < 32; i++) {
-		for (int j = 0; j < 32; j++) {
-			int c = ((((i & 0x8) == 0) ^ (((j & 0x8)) == 0))) * 255;
-			checkerImage[i][j][0] = (GLubyte)c;
-			checkerImage[i][j][1] = (GLubyte)c;
-			checkerImage[i][j][2] = (GLubyte)c;
-			checkerImage[i][j][3] = (GLubyte)255;
-		}
-	}
-	
-	textureID = 0;
-	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-	glGenTextures(1, &textureID);
-	glBindTexture(GL_TEXTURE_2D, textureID);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 32, 32, 0, GL_RGBA, GL_UNSIGNED_BYTE, checkerImage);
-	glBindTexture(GL_TEXTURE_2D, 0);
 
 	//glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textureID, 0);
 
@@ -205,6 +184,7 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 update_status ModuleRenderer3D::PostUpdate(float dt)
 {
 	App->scene_intro->Draw();
+
 	if (App->ui->isDrawEnabled)
 	{
 		for (std::list<GameObject*>::iterator goIterator = App->scene_intro->gameObjectList.begin(); goIterator != App->scene_intro->gameObjectList.end(); goIterator++)
@@ -369,11 +349,19 @@ void ModuleRenderer3D::Draw(Mesh* mesh)
 	glVertexPointer(3, GL_FLOAT, 0, NULL);
 
 
-	if (App->ui->isTexturesEnabled)
+	if (App->ui->isTexturesEnabled && mesh->textureNumber != 999)
 	{
 		glBindBuffer(GL_ARRAY_BUFFER, mesh->id_tex_coord);
-		glBindTexture(GL_TEXTURE_2D, App->importer->houseTexture->id);
-		glTexCoordPointer(2, GL_FLOAT, 0, NULL);
+
+		for (std::list<Texture*>::iterator textureIterator = App->importer->textureList.begin(); textureIterator != App->importer->textureList.end(); textureIterator++)
+		{
+			if (mesh->textureNumber == (*textureIterator)->textureIterator )
+			{
+				glBindTexture(GL_TEXTURE_2D, (*textureIterator)->id);
+				glTexCoordPointer(2, GL_FLOAT, 0, NULL);
+				break;
+			}
+		}
 	}
 
 
@@ -386,4 +374,38 @@ void ModuleRenderer3D::Draw(Mesh* mesh)
 
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+}
+
+Texture* ModuleRenderer3D::CreateCheckersTexture()
+{
+	Texture* ret = new Texture;
+
+	ret->name = "Default Texture";
+
+	GLubyte checkerImage[32][32][4];
+	for (int i = 0; i < 32; i++) {
+		for (int j = 0; j < 32; j++) {
+			int c = ((((i & 0x8) == 0) ^ (((j & 0x8)) == 0))) * 255;
+			checkerImage[i][j][0] = (GLubyte)c;
+			checkerImage[i][j][1] = (GLubyte)c;
+			checkerImage[i][j][2] = (GLubyte)c;
+			checkerImage[i][j][3] = (GLubyte)255;
+		}
+	}
+
+	ret->id = 0;
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+	glGenTextures(1, &ret->id);
+	glBindTexture(GL_TEXTURE_2D, ret->id);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 32, 32, 0, GL_RGBA, GL_UNSIGNED_BYTE, checkerImage);
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	ret->textureIterator = 0;
+	App->importer->textureList.push_back(ret);
+
+	return ret;
 }

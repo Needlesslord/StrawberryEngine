@@ -7,6 +7,7 @@
 #define MAX_LIGHTS 8
 
 class Mesh;
+class Texture;
 
 class ModuleRenderer3D : public Module
 {
@@ -29,6 +30,9 @@ public:
 	void GenerateBuffers();
 	void Draw(Mesh* mesh);
 
+	Texture* CreateCheckersTexture();
+
+
 public:
 
 	Light lights[MAX_LIGHTS];
@@ -39,7 +43,6 @@ public:
 	Color background;
 
 	uint my_id = 0;
-	uint textureID = 0;
 	uint myId = 0;
 	uint myIndeces = 0;
 
