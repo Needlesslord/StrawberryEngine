@@ -2,7 +2,6 @@
 #include "GameObject.h"
 #include "ModuleImporter.h"
 #include "ModuleSceneIntro.h"
-
 GameObject::GameObject(char* name)
 {
 	this->name = name;
@@ -11,7 +10,7 @@ GameObject::GameObject(char* name)
 
 GameObject::~GameObject()
 {
-
+	
 }
 
 void GameObject::ChangeName(char* newName)

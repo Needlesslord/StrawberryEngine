@@ -8,6 +8,13 @@
 #include "ModuleImporter.h"
 #include "GameObject.h"
 
+#include "Libs/DevIL/include/IL/il.h"
+#include "Libs/DevIL/include/IL/ilu.h"
+#include "Libs/DevIL/include/IL/ilut.h"
+
+#include "Libs/Assimp/include/version.h"
+
+
 #include <GL/glew.h>
 
 #include "Libs/ImGui/imgui.h"
@@ -17,7 +24,7 @@
 
 ModuleUI::ModuleUI(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
-	
+		
 }
 
 ModuleUI::~ModuleUI()
@@ -185,12 +192,11 @@ update_status ModuleUI::Update(float dt)
 			if (ImGui::CollapsingHeader("Hardware"))
 			{
 				ImGui::Text("SDL Version:"); ImGui::SameLine();
-				ImGui::TextColored({ 1,0,1,1 }, "2.0.12");
-				ImGui::Separator();
+				ImGui::TextColored({ 1,0,1,1 }, "2.0.12"); ImGui::Separator();
 				ImGui::Text("CPU's:"); ImGui::SameLine();
 				ImGui::TextColored({ 1,0,1,1 }, "%d (Cache: %dKb)", SDL_GetCPUCount(), SDL_GetCPUCacheLineSize());
 				ImGui::Text("System RAM:"); ImGui::SameLine();
-				ImGui::TextColored({ 1,0,1,1 }, "%dGb", SDL_GetSystemRAM()/1000);
+				ImGui::TextColored({ 1,0,1,1 }, "%dGb", SDL_GetSystemRAM() / 1000);
 				ImGui::Text("Caps:"); ImGui::SameLine();
 				if (SDL_Has3DNow()) ImGui::TextColored({ 1,0,1,1 }, "3DNow,"); ImGui::SameLine();
 				if (SDL_HasAVX())ImGui::TextColored({ 1,0,1,1 }, "AVX,"); ImGui::SameLine();
@@ -201,8 +207,7 @@ update_status ModuleUI::Update(float dt)
 				if (SDL_HasSSE2())ImGui::TextColored({ 1,0,1,1 }, "SSE2,"); ImGui::SameLine();
 				if (SDL_HasSSE3())ImGui::TextColored({ 1,0,1,1 }, "SSE3,"); ImGui::SameLine();
 				if (SDL_HasSSE41())ImGui::TextColored({ 1,0,1,1 }, "SSE41,"); ImGui::SameLine();
-				if (SDL_HasSSE42())ImGui::TextColored({ 1,0,1,1 }, "SSE42,");
-				ImGui::Separator();
+				if (SDL_HasSSE42())ImGui::TextColored({ 1,0,1,1 }, "SSE42,"); ImGui::Separator();
 			}
 
 
@@ -282,19 +287,44 @@ update_status ModuleUI::Update(float dt)
 
 			if (!App->scene_intro->meshesSelected.empty())
 			{
-
+				std::list<Mesh*>::iterator meshIterator = App->scene_intro->meshesSelected.begin();
 				if (ImGui::CollapsingHeader("Transformation"))
 				{
+					float v1[3] = { (*meshIterator)->position.x, (*meshIterator)->position.y, (*meshIterator)->position.z };
+					ImGui::InputFloat3("Position", v1, 2);
 
+					float v2[3] = { (*meshIterator)->rotation.x, (*meshIterator)->rotation.y, (*meshIterator)->rotation.z };
+					ImGui::InputFloat3("Rotation", v2, 2);
+
+					float v3[3] = { (*meshIterator)->scale.x, (*meshIterator)->scale.y, (*meshIterator)->scale.z };
+					ImGui::InputFloat3("Scale", v3, 2);
 				}
 
 				if (ImGui::CollapsingHeader("Render"))
 				{
+					if (ImGui::Checkbox("Draw Meshes", &(*meshIterator)->isDrawEnabled))
+					{
+						char* a = "on";
+						char* b = "off";
+						bool helper = (*meshIterator)->isDrawEnabled;
+						for (meshIterator = App->scene_intro->meshesSelected.begin(); meshIterator != App->scene_intro->meshesSelected.end(); meshIterator++)
+						{
+							if(helper)
+							{
+								(*meshIterator)->isDrawEnabled = true;
+							}
+							else
+							{
+								(*meshIterator)->isDrawEnabled = false;
+							}
 
+							LOG("Turning rendering: %s for %s", (*meshIterator)->isDrawEnabled ? a : b, (*meshIterator)->name);
+						}
+					}
 				}
 
 
-				if (ImGui::CollapsingHeader("Texture selection"))
+				if (ImGui::CollapsingHeader("Textures"))
 				{
 
 					std::list<Texture*>::iterator textureIterator = App->importer->textureList.begin();
@@ -353,11 +383,14 @@ update_status ModuleUI::Update(float dt)
 			SDL_version version;
 			SDL_VERSION(&version);
 			ImGui::BulletText("SDL %d.%d.%d", version.major, version.minor, version.patch);
-			//ImGui::BulletText("SDL Mixer %d.%d.%d", version.major, version.minor, version.patch);
-
 			ImGui::BulletText("Glew %s.%s.%s", glewGetString(GLEW_VERSION_MAJOR), glewGetString(GLEW_VERSION_MINOR), glewGetString(GLEW_VERSION_MICRO));
 			ImGui::BulletText("ImGui %s", ImGui::GetVersion());
 			ImGui::BulletText("OpenGl %s", glGetString(GL_VERSION));
+			ImGui::BulletText("DevIL %d", IL_VERSION);
+			ImGui::BulletText("Assimp %d.%d.%d", aiGetVersionMajor(), aiGetVersionMinor(), aiGetVersionRevision());
+
+
+
 			ImGui::Spacing();
 			ImGui::Spacing();
 			ImGui::Spacing();

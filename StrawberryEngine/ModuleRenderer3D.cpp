@@ -191,7 +191,10 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 		{
 			for (std::list<Mesh*>::iterator meshIterator = (*goIterator)->childrenMeshes.begin(); meshIterator != (*goIterator)->childrenMeshes.end(); meshIterator++)
 			{
-				Draw(*meshIterator);
+				if ((*meshIterator)->isDrawEnabled)
+				{
+					Draw(*meshIterator);
+				}
 			}
 		}
 	}
