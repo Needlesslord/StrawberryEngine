@@ -241,33 +241,27 @@ update_status ModuleUI::Update(float dt)
 	if (isHierarchyShown) //  ImGui::IsWindowHovered() !!!
 	{
 		ImGui::SetNextWindowPos({ 20, 20 });
-		ImGui::SetNextWindowSize({ 300, 700 });
+		ImGui::SetNextWindowSize({ 300, (float)(App->window->screen_surface->h * 8 / 10) });
 		ImGui::Begin("Hierarchy");
 
 		if (App->scene_intro->gameObjectList.size() > 0) {
 
 			for (std::list<GameObject*>::iterator gameObjectIterator = App->scene_intro->gameObjectList.begin(); gameObjectIterator != App->scene_intro->gameObjectList.end(); gameObjectIterator++)
 			{
+				//ImGui::Checkbox((*gameObjectIterator)->name, &(*gameObjectIterator)->selected);
 
-				if (ImGui::CollapsingHeader((*gameObjectIterator)->name))
+				if (ImGui::TreeNode((*gameObjectIterator)->name))
 				{
 
 					if (!(*gameObjectIterator)->childrenMeshes.empty())
 					{
-						
+
 						for (std::list<Mesh*>::iterator meshIterator = (*gameObjectIterator)->childrenMeshes.begin(); meshIterator != (*gameObjectIterator)->childrenMeshes.end(); meshIterator++)
 						{
-							bool separator = (*meshIterator)->selected;
-							if (ImGui::Checkbox((*meshIterator)->name, &separator))
-							{
-								(*meshIterator)->selected = separator;
-							}
-								//(*meshIterator)->selected = true;
-								//App->scene_intro->meshesSelected.push_back(*meshIterator);
-							
-							//ImGui::Text((*meshIterator)->name);
+							ImGui::Checkbox((*meshIterator)->name, &(*meshIterator)->selected);
 						}
 					}
+					ImGui::TreePop();
 				}
 			}
 		}
@@ -280,23 +274,32 @@ update_status ModuleUI::Update(float dt)
 
 	if (isInspectorShown)
 	{
-		ImGui::SetNextWindowPos({ 920, 20 });
-		ImGui::SetNextWindowSize({ 350,600 });
+		ImGui::SetNextWindowPos({ (float)App->window->screen_surface->w - 370, 20 });
+		ImGui::SetNextWindowSize({ 350, (float)(App->window->screen_surface->h * 8 / 10) });
 
 		ImGui::Begin("Inspector", &isInspectorShown);
 		{
 
-			if (ImGui::MenuItem("GitHub"))
-			{
-
-			}
-
 			if (!App->scene_intro->meshesSelected.empty())
 			{
+
+				if (ImGui::CollapsingHeader("Transformation"))
+				{
+
+				}
+
+				if (ImGui::CollapsingHeader("Render"))
+				{
+
+				}
+
+
 				if (ImGui::CollapsingHeader("Texture selection"))
 				{
 
 					std::list<Texture*>::iterator textureIterator = App->importer->textureList.begin();
+
+					//ImGui::BeginCombo("Textures", (*textureIterator)->name); // LOOK UP
 
 					int i = 0;
 					while (textureIterator != App->importer->textureList.end())
@@ -321,7 +324,7 @@ update_status ModuleUI::Update(float dt)
 					}
 				}
 
-				
+
 			}
 		}
 		ImGui::End();

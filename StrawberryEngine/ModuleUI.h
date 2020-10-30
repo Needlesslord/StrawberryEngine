@@ -47,6 +47,8 @@ public:
 	bool isHierarchyShown = false;
 	bool isInspectorShown = false;
 
+	//ImGuiDir direction;
+
 	// Config data
 	char* name = nullptr;
 	char* organization = nullptr;

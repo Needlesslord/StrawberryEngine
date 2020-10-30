@@ -1,6 +1,5 @@
 class Mesh;
 
-
 class GameObject
 {
 
@@ -12,12 +11,13 @@ public:
 	void ChangeName(char* newName);
 	void AddMesh(Mesh* m);
 	void AddChild(Mesh* m);
+	vec3 GetCenter();
 
 public:
 
 	char* name = nullptr;
 	Mesh* goMesh = nullptr; // Game Object Mesh
 	std::list<Mesh*> childrenMeshes;
-	bool selected = false;
+	bool selected;
 
 };

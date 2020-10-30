@@ -69,9 +69,9 @@ bool ModuleImporter::CleanUp()
 	return true;
 }
 
-GameObject* ModuleImporter::Load(char* path, char* name)
+GameObject* ModuleImporter::Load(const char* path)
 {
-	GameObject* ret = new GameObject(name);
+	GameObject* ret = new GameObject();
 	App->scene_intro->gameObjectList.push_back(ret);
 
 	const aiScene* scene = aiImportFile(path, aiProcessPreset_TargetRealtime_MaxQuality);
@@ -120,12 +120,22 @@ GameObject* ModuleImporter::Load(char* path, char* name)
 				glBufferData(GL_ARRAY_BUFFER, sizeof(float) * ourMesh->num_vertex * 2, ourMesh->tex_coord, GL_STATIC_DRAW);
 				glBindBuffer(GL_ARRAY_BUFFER, 0);
 			}
+
+			/*if (scene->HasMaterials())
+			{
+				aiTextureType type = aiTextureType_DIFFUSE;
+				aiString* path = new aiString;
+				scene->mMaterials[scene->mMeshes[i]->mMaterialIndex]->GetTexture(type, ourMesh->id_tex_coord, path);
+				const char* p = path->C_Str();
+				LoadTexture(p);
+			}*/
+
 			char* charName = new char[12];
 			std::string stringName = ("New Mesh "+ std::to_string(meshIterator));
 			strcpy(charName, stringName.c_str());
 			ourMesh->name = charName;
 			meshIterator++;
-
+			
 			ret->AddChild(ourMesh);
 			LOG("%s is now a child of %s", ourMesh->name, ret->name);
 			App->scene_intro->meshesList.push_back(ourMesh);
@@ -141,7 +151,7 @@ GameObject* ModuleImporter::Load(char* path, char* name)
 	return ret;
 }
 
-Texture* ModuleImporter::LoadTexture(char* path)
+Texture* ModuleImporter::LoadTexture(const char* path)
 {
 	Texture* ret = new Texture;
 

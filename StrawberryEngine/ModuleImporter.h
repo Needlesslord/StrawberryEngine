@@ -10,11 +10,11 @@ class GameObject;
 class Mesh
 {
 public:
-	Mesh(char* n = GAME_MESH_NAME) { name = n; };
+	Mesh() {};
 	~Mesh() {};
 public:
 
-	char* name;
+	char* name = nullptr;
 	uint id_index = 0; // index in VRAM
 	uint num_index = 0;
 	uint* index = nullptr;
@@ -27,12 +27,14 @@ public:
 	bool selected = false;
 
 	uint textureNumber = 999;
+
+	vec3 transformation;
 };
 
 class Texture
 {
 public:
-	char* path = nullptr;
+	const char* path = nullptr;
 	char* name = nullptr;
 	uint id;
 	uint w;
@@ -51,9 +53,9 @@ public:
 	bool Start();
 	bool CleanUp();
 
-	Texture* LoadTexture(char* path);
+	Texture* LoadTexture(const char* path);
 
-	GameObject* Load(char* path, char* name = GAME_OBJECT_DEFAULT_NAME);
+	GameObject* Load(const char* path);
 
 public:
 

@@ -24,9 +24,13 @@ bool ModuleSceneIntro::Start()
 	App->camera->LookAt(vec3(0, 0, 0));
 
 	house = App->importer->Load("Assets/BakerHouse.fbx");
-	//App->importer->Load("Assets/warrior.fbx");
-
+	house->ChangeName("Baker house");
 	
+	for (std::list<Mesh*>::iterator meshIterator = house->childrenMeshes.begin(); meshIterator != house->childrenMeshes.end(); meshIterator++)
+	{
+		(*meshIterator)->textureNumber = 1;
+	}
+	//App->importer->Load("Assets/warrior.fbx");
 
 	return ret;
 }
