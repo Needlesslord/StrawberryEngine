@@ -120,7 +120,13 @@ GameObject* ModuleImporter::Load(const char* path)
 				glBufferData(GL_ARRAY_BUFFER, sizeof(float) * ourMesh->num_vertex * 2, ourMesh->tex_coord, GL_STATIC_DRAW);
 				glBindBuffer(GL_ARRAY_BUFFER, 0);
 			}
-
+			
+			if (scene->mMeshes[i]->HasNormals())
+			{
+				ourMesh->normals = scene->mMeshes[i]->mNormals;
+					
+				
+			}
 			/*if (scene->HasMaterials())
 			{
 				aiTextureType type = aiTextureType_DIFFUSE;

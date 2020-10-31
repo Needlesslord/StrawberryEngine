@@ -4,6 +4,7 @@
 #include "Module.h"
 #include "Globals.h"
 #include "Libs/DevIL/include/IL/il.h"
+#include "vector3.h"
 
 class GameObject;
 
@@ -23,8 +24,9 @@ public:
 	float* vertex = nullptr;
 	uint id_tex_coord = 0;
 	float* tex_coord = nullptr;
+	aiVector3D* normals = nullptr;
 
-	bool selected = false;
+	bool isSelected = false;
 
 	uint textureNumber = 999;
 
@@ -33,6 +35,9 @@ public:
 	vec3 scale = { 0,0,0 };
 
 	bool isDrawEnabled = true;
+	bool isFaceNormalsEnabled = false;
+	bool isVertexNormalsEnabled = false;
+
 };
 
 class Texture

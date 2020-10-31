@@ -263,7 +263,7 @@ update_status ModuleUI::Update(float dt)
 
 						for (std::list<Mesh*>::iterator meshIterator = (*gameObjectIterator)->childrenMeshes.begin(); meshIterator != (*gameObjectIterator)->childrenMeshes.end(); meshIterator++)
 						{
-							ImGui::Checkbox((*meshIterator)->name, &(*meshIterator)->selected);
+							ImGui::Checkbox((*meshIterator)->name, &(*meshIterator)->isSelected);
 						}
 					}
 					ImGui::TreePop();
@@ -321,6 +321,12 @@ update_status ModuleUI::Update(float dt)
 							LOG("Turning rendering: %s for %s", (*meshIterator)->isDrawEnabled ? a : b, (*meshIterator)->name);
 						}
 					}
+					
+					meshIterator = App->scene_intro->meshesSelected.begin();
+					ImGui::Checkbox("Draw normals", &(*meshIterator)->isFaceNormalsEnabled);
+					
+						//(*meshIterator)->normals;
+					
 				}
 
 

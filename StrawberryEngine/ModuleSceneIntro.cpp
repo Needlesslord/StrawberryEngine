@@ -69,7 +69,7 @@ update_status ModuleSceneIntro::Update(float dt)
 
 	for (std::list<Mesh*>::iterator meshesToSelect = meshesList.begin(); meshesToSelect != meshesList.end(); meshesToSelect++)
 	{
-		if ((*meshesToSelect)->selected)
+		if ((*meshesToSelect)->isSelected)
 		{
 			meshesSelected.push_back(*meshesToSelect);
 		}

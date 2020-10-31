@@ -367,6 +367,36 @@ void ModuleRenderer3D::Draw(Mesh* mesh)
 		}
 	}
 
+	if (mesh->isFaceNormalsEnabled && mesh->isSelected)
+	{
+		glBegin(GL_LINES);
+
+		
+		//glNormal3f()
+		vec3 from;
+		float to;
+
+		for (int i = 0; i < mesh->num_index; i += 3)
+		{
+			float vX = mesh->vertex[mesh->index[i]];
+			float vY = mesh->vertex[mesh->index[i + 1]];
+			float vZ = mesh->vertex[mesh->index[i + 2]];
+
+			from = (vX + vY + vZ) / 3;
+
+			float edge_a = vY - vX;
+			float edge_b = vZ - vX;
+
+			//to = Cross(edge_a, edge_b);
+			//normal.Normalize();
+
+			glColor3f(1, 0, 1);
+			glVertex3f(mesh->normals->x, mesh->normals->y, mesh->normals->z);
+		}
+
+		glEnd();
+		glColor3f(1, 1, 1);
+	}
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->id_index);
 	glDrawElements(GL_TRIANGLES, mesh->num_index, GL_UNSIGNED_INT, NULL);
