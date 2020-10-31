@@ -38,6 +38,8 @@ public:
 	bool isFaceNormalsEnabled = false;
 	bool isVertexNormalsEnabled = false;
 
+	const char* path = nullptr;
+
 };
 
 class Texture

@@ -367,7 +367,7 @@ void ModuleRenderer3D::Draw(Mesh* mesh)
 		}
 	}
 
-	if (mesh->isFaceNormalsEnabled && mesh->isSelected)
+	if (mesh->isFaceNormalsEnabled && mesh->isSelected) // Not working
 	{
 		glBegin(GL_LINES);
 
@@ -395,7 +395,7 @@ void ModuleRenderer3D::Draw(Mesh* mesh)
 		}
 
 		glEnd();
-		glColor3f(1, 1, 1);
+		glColor3f(0 / 7.0f, 0.6f, 0.6f);
 	}
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->id_index);

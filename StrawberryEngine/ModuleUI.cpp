@@ -245,8 +245,8 @@ update_status ModuleUI::Update(float dt)
 
 	if (isHierarchyShown) //  ImGui::IsWindowHovered() !!!
 	{
-		ImGui::SetNextWindowPos({ 20, 20 });
-		ImGui::SetNextWindowSize({ 300, (float)(App->window->screen_surface->h * 8 / 10) });
+		/*ImGui::SetNextWindowPos({ 20, 20 });
+		ImGui::SetNextWindowSize({ 300, (float)(App->window->screen_surface->h * 8 / 10) });*/
 		ImGui::Begin("Hierarchy");
 
 		if (App->scene_intro->gameObjectList.size() > 0) {
@@ -279,8 +279,8 @@ update_status ModuleUI::Update(float dt)
 
 	if (isInspectorShown)
 	{
-		ImGui::SetNextWindowPos({ (float)App->window->screen_surface->w - 370, 20 });
-		ImGui::SetNextWindowSize({ 350, (float)(App->window->screen_surface->h * 8 / 10) });
+		/*ImGui::SetNextWindowPos({ (float)App->window->screen_surface->w - 370, 20 });
+		ImGui::SetNextWindowSize({ 350, (float)(App->window->screen_surface->h * 8 / 10) });*/
 
 		ImGui::Begin("Inspector", &isInspectorShown);
 		{
@@ -309,7 +309,7 @@ update_status ModuleUI::Update(float dt)
 						bool helper = (*meshIterator)->isDrawEnabled;
 						for (meshIterator = App->scene_intro->meshesSelected.begin(); meshIterator != App->scene_intro->meshesSelected.end(); meshIterator++)
 						{
-							if(helper)
+							if (helper)
 							{
 								(*meshIterator)->isDrawEnabled = true;
 							}
@@ -321,12 +321,13 @@ update_status ModuleUI::Update(float dt)
 							LOG("Turning rendering: %s for %s", (*meshIterator)->isDrawEnabled ? a : b, (*meshIterator)->name);
 						}
 					}
-					
-					meshIterator = App->scene_intro->meshesSelected.begin();
-					ImGui::Checkbox("Draw normals", &(*meshIterator)->isFaceNormalsEnabled);
-					
-						//(*meshIterator)->normals;
-					
+
+
+					for (meshIterator = App->scene_intro->meshesSelected.begin(); meshIterator != App->scene_intro->meshesSelected.end(); meshIterator++)
+					{
+						ImGui::Text("Mesh path for %s:", (*meshIterator)->name); 
+						ImGui::TextColored({ 1,0,1,1 }, (*meshIterator)->path);
+					}
 				}
 
 
@@ -351,11 +352,25 @@ update_status ModuleUI::Update(float dt)
 						textureIterator++;
 
 					}
+
+
+
 					if (ImGui::Button("No texture"))
 					{
 						for (std::list<Mesh*>::iterator meshesToChangeTexture = App->scene_intro->meshesSelected.begin(); meshesToChangeTexture != App->scene_intro->meshesSelected.end(); meshesToChangeTexture++)
 						{
 							(*meshesToChangeTexture)->textureNumber = 999;
+						}
+					}
+
+
+
+					for (textureIterator = App->importer->textureList.begin(); textureIterator != App->importer->textureList.end(); textureIterator++)
+					{
+						if ((*textureIterator)->name != nullptr && (*textureIterator)->path != nullptr)
+						{
+							ImGui::Text("Texture path for %s:", (*textureIterator)->name);
+							ImGui::TextColored({ 1,0,1,1 }, (*textureIterator)->path);
 						}
 					}
 				}

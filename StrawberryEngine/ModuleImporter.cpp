@@ -141,6 +141,8 @@ GameObject* ModuleImporter::Load(const char* path)
 			strcpy(charName, stringName.c_str());
 			ourMesh->name = charName;
 			meshIterator++;
+
+			ourMesh->path = path;
 			
 			ret->AddChild(ourMesh);
 			LOG("%s is now a child of %s", ourMesh->name, ret->name);
