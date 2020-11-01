@@ -33,15 +33,19 @@ bool ModuleImporter::Init()
 	struct aiLogStream stream;
 	stream = aiGetPredefinedLogStream(aiDefaultLogStream_DEBUGGER, nullptr);
 	aiAttachLogStream(&stream);
+	App->ui->pendingOutputs.push_back("Initializing Assimp");
+
 
 	if (ilGetInteger(IL_VERSION_NUM) < IL_VERSION || iluGetInteger(ILU_VERSION_NUM) < ILU_VERSION || ilutGetInteger(ILUT_VERSION_NUM) < ILUT_VERSION)
 	{
 		LOG("DevIL version is different...exiting!");
+		App->ui->pendingOutputs.push_back("DevIL version is different...exiting!");
 		return false;
 	}
 	else
 	{
 		LOG("Initializing DevIL");
+		App->ui->pendingOutputs.push_back("Initializing DevIL");
 
 		ilInit();
 		ilutRenderer(ILUT_OPENGL);
@@ -86,6 +90,8 @@ GameObject* ModuleImporter::Load(const char* path)
 			ourMesh->vertex = new float[ourMesh->num_vertex * 3];
 			memcpy(ourMesh->vertex, scene->mMeshes[i]->mVertices, sizeof(float) * ourMesh->num_vertex * 3);
 			LOG("New mesh with %d vertices", ourMesh->num_vertex);
+			//App->ui->AddConsoleOutput("New mesh with %d vertices", ourMesh->num_vertex);
+			App->ui->pendingOutputs.push_back("New mesh");
 
 			// copy faces
 			if (scene->mMeshes[i]->HasFaces())
@@ -97,6 +103,7 @@ GameObject* ModuleImporter::Load(const char* path)
 					if (scene->mMeshes[i]->mFaces[j].mNumIndices != 3)
 					{
 						LOG("WARNING, geometry face with != 3 indices!");
+						App->ui->pendingOutputs.push_back("WARNING, geometry face with != 3 indices!");
 					}
 					else
 					{
@@ -146,6 +153,7 @@ GameObject* ModuleImporter::Load(const char* path)
 			
 			ret->AddChild(ourMesh);
 			LOG("%s is now a child of %s", ourMesh->name, ret->name);
+			//App->ui->AddConsoleOutput("%s is now a child of %s", ourMesh->name, ret->name);
 			App->scene_intro->meshesList.push_back(ourMesh);
 		}
 		aiReleaseImport(scene);
@@ -153,6 +161,7 @@ GameObject* ModuleImporter::Load(const char* path)
 	else
 	{
 		LOG("Error loading scene % s", path);
+		App->ui->pendingOutputs.push_back("Error loading scene");
 		return nullptr;
 	}
 		
@@ -170,11 +179,14 @@ Texture* ModuleImporter::LoadTexture(const char* path)
 	if (ilLoadImage(path))
 	{
 		LOG("Image path loaded properly");
+		App->ui->pendingOutputs.push_back("Image path loaded properly");
 		ret->path = path;
 	}
 	else
 	{
 		LOG("Couldn't load image");
+		App->ui->pendingOutputs.push_back("Couldn't load image");
+
 		return ret;
 	}
 
@@ -209,6 +221,8 @@ Texture* ModuleImporter::LoadTexture(const char* path)
 	ret->name = charName;
 
 	textureIterator++;
+
+	App->ui->pendingOutputs.push_back("New texture");
 
 	textureList.push_back(ret);
 

@@ -132,11 +132,25 @@ update_status ModuleInput::PreUpdate(float dt)
 					else if (fileType == ".png" || fileType == ".PNG")
 					{
 						LOG("Loading .png");
+						for (std::list<Mesh*>::iterator meshIterator = App->scene_intro->meshesList.begin(); meshIterator != App->scene_intro->meshesList.end(); meshIterator++)
+						{
+							if ((*meshIterator)->isSelected)
+							{
+								(*meshIterator)->textureNumber = App->importer->textureIterator;
+							}
+						}
 						App->importer->LoadTexture(dropped_filedir);
 					}
 					else if (fileType == ".dds" || fileType == ".DDS")
 					{
 						LOG("Loading .dds");
+						for (std::list<Mesh*>::iterator meshIterator = App->scene_intro->meshesList.begin(); meshIterator != App->scene_intro->meshesList.end(); meshIterator++)
+						{
+							if ((*meshIterator)->isSelected)
+							{
+								(*meshIterator)->textureNumber = App->importer->textureIterator;
+							}
+						}
 						App->importer->LoadTexture(dropped_filedir);
 					}
 					else

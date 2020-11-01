@@ -32,7 +32,7 @@ public:
 
 	vec3 position = { 0,0,0 }; 
 	vec3 rotation = { 0,0,0 };
-	vec3 scale = { 0,0,0 };
+	float scale = 1.0f;
 
 	bool isDrawEnabled = true;
 	bool isFaceNormalsEnabled = false;

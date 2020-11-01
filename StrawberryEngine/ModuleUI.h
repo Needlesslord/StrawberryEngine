@@ -32,6 +32,7 @@ public:
 
 	void Draw();
 
+	void AddConsoleOutput(const char* text, ...);
 
 	// Destructor
 	virtual ~ModuleUI();
@@ -82,6 +83,10 @@ public:
 	bool isMeshSelected = false;
 
 	ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+
+	std::list<const char*> pendingOutputs;
+	char* output[30];
+	uint outputIterator = 29;
 
 };
 

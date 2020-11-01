@@ -50,6 +50,7 @@ bool ModuleUI::Start()
 
 	ImGui_ImplSDL2_InitForOpenGL(App->window->window, App->renderer3D->context);
 	ImGui_ImplOpenGL3_Init("#version 130");
+	pendingOutputs.push_back("Initializing ImGui");
 
 	name = TITLE;
 	organization = "UPC CITM";
@@ -220,27 +221,82 @@ update_status ModuleUI::Update(float dt)
 				if (ImGui::Checkbox("Draw Meshes", &isDrawEnabled))
 				{
 					LOG("Turning rendering: %s", isDrawEnabled ? a : b);
+					char* text = nullptr;
+					if (isDrawEnabled)
+					{
+						 text = "Turning rendering: on";
+					}
+					else
+					{
+						text = "Turning rendering: off";
+					}
+
+					pendingOutputs.push_back(text);
 				}
 				if (ImGui::Checkbox("Show depth test", &isDepthTestEnabled))
 				{
 					App->renderer3D->ToggleDepthTest(isDepthTestEnabled);
 					LOG("Turning depth test: %s", isDepthTestEnabled ? a : b);
+
+					char* text = nullptr;
+					if (isDepthTestEnabled)
+					{
+						text = "Turning depth test: on";
+					}
+					else
+					{
+						text = "Turning depth test: off";
+					}
+					pendingOutputs.push_back(text);
 				}
 				if (ImGui::Checkbox("Show lighting", &isLightingEnabled))
 				{
 					App->renderer3D->ToggleLighting(isLightingEnabled);
 					LOG("Turning lighting: %s", isLightingEnabled ? a : b);
+
+					char* text = nullptr;
+					if (isLightingEnabled)
+					{
+						text = "Turning lighting: on";
+					}
+					else
+					{
+						text = "Turning lighting: off";
+					}
+					pendingOutputs.push_back(text);
 				}
 				if (ImGui::Checkbox("Show back face cull", &isBackFaceCullEnabled))
 				{
 					App->renderer3D->ToggleBackFaceCull(isBackFaceCullEnabled);
 					LOG("Turning back face cull: %s", isBackFaceCullEnabled ? a : b);
+
+					char* text = nullptr;
+					if (isBackFaceCullEnabled)
+					{
+						text = "Turning back face cull: on";
+					}
+					else
+					{
+						text = "Turning back face cull: off";
+					}
+					pendingOutputs.push_back(text);
 				}
 				
 				if (ImGui::Checkbox("Show wireframes", &isWireframeEnabled))
 				{
 					App->renderer3D->ToggleWireframe(isWireframeEnabled);
 					LOG("Turning wireframes: %s", isWireframeEnabled ? a : b);
+
+					char* text = nullptr;
+					if (isWireframeEnabled)
+					{
+						text = "Turning wireframes: on";
+					}
+					else
+					{
+						text = "Turning wireframes: off";
+					}
+					pendingOutputs.push_back(text);
 				}
 			}
 
@@ -254,6 +310,17 @@ update_status ModuleUI::Update(float dt)
 				{
 					App->renderer3D->ToggleTextures(&isTexturesEnabled);
 					LOG("Turning textures: %s", isTexturesEnabled ? a : b);
+
+					char* text = nullptr;
+					if (isTexturesEnabled)
+					{
+						text = "Turning textures: on";
+					}
+					else
+					{
+						text = "Turning textures: off";
+					}
+					pendingOutputs.push_back(text);
 				}
 			}
 		}
@@ -273,7 +340,7 @@ update_status ModuleUI::Update(float dt)
 		}
 		/*ImGui::SetNextWindowPos({ 20, 20 });
 		ImGui::SetNextWindowSize({ 300, (float)(App->window->screen_surface->h * 8 / 10) });*/
-		ImGui::Begin("Hierarchy");
+		ImGui::Begin("Hierarchy", &isHierarchyShown);
 
 		if (App->scene_intro->gameObjectList.size() > 0) {
 
@@ -325,8 +392,8 @@ update_status ModuleUI::Update(float dt)
 					float v2[3] = { (*meshIterator)->rotation.x, (*meshIterator)->rotation.y, (*meshIterator)->rotation.z };
 					ImGui::InputFloat3("Rotation", v2, 2);
 
-					float v3[3] = { (*meshIterator)->scale.x, (*meshIterator)->scale.y, (*meshIterator)->scale.z };
-					ImGui::InputFloat3("Scale", v3, 2);
+					float v3 = (*meshIterator)->scale;
+					ImGui::InputFloat("Scale", &v3);
 				}
 
 				if (ImGui::CollapsingHeader("Render"))
@@ -399,7 +466,10 @@ update_status ModuleUI::Update(float dt)
 					{
 						if ((*textureIterator)->name != nullptr && (*textureIterator)->path != nullptr)
 						{
-							ImGui::Text("Texture path for %s:", (*textureIterator)->name);
+							ImGui::Separator();
+							ImGui::Text("%s", (*textureIterator)->name);
+							ImGui::Text("Texture size: %d * %d", (*textureIterator)->w, (*textureIterator)->h);
+							ImGui::Text("Texture path:");
 							ImGui::TextColored({ 1,0,1,1 }, (*textureIterator)->path);
 							ImGui::Separator();
 						}
@@ -490,8 +560,16 @@ update_status ModuleUI::Update(float dt)
 			ImGui::SetNextWindowPos({ 270, (float)(App->window->screen_surface->h - 210) });
 			ImGui::SetNextWindowSize({ (float)(App->window->screen_surface->w - 540), 200 });
 		}
+
 		ImGui::Begin("Console", &isConsoleShown);
-		ImGui::GetWindowPos();
+
+		for (std::list<const char*>::iterator consoleOutputs = pendingOutputs.begin(); consoleOutputs != pendingOutputs.end(); consoleOutputs++)
+		{
+			ImGui::Text((*consoleOutputs));
+			ImGui::Spacing(); ImGui::Spacing(); ImGui::Spacing();
+		}
+
+		ImGui::SetScrollHereY(1.0f);
 		ImGui::End();
 	}
 
@@ -523,4 +601,22 @@ void ModuleUI::Draw()
 {
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+}
+
+void ModuleUI::AddConsoleOutput(const char* text, ...)
+{
+	char tmp_string[4096];
+	char tmp_string2[4096];
+	va_list  ap;
+
+	// Construct the string from variable arguments
+	va_start(ap, text);
+	vsprintf_s(tmp_string, 4096, text, ap);
+	va_end(ap, text);
+	//sprintf_s(tmp_string2, 4096, "\n%s(%d) : %s", "/Debug/logtest.log", 1, tmp_string);
+	//OutputDebugString(tmp_string2);
+	output[outputIterator] = new char;
+	output[outputIterator] = tmp_string2;
+	pendingOutputs.push_back(output[outputIterator]);
+	outputIterator--;
 }
