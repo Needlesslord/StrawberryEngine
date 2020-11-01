@@ -265,6 +265,12 @@ update_status ModuleUI::Update(float dt)
 
 	if (isHierarchyShown) //  ImGui::IsWindowHovered() !!!
 	{
+		if (!isHierarchyInit)
+		{
+			isHierarchyInit = true;
+			ImGui::SetNextWindowPos({ 10, 30 });
+			ImGui::SetNextWindowSize({ 250, (float)(App->window->screen_surface->h - 40) });
+		}
 		/*ImGui::SetNextWindowPos({ 20, 20 });
 		ImGui::SetNextWindowSize({ 300, (float)(App->window->screen_surface->h * 8 / 10) });*/
 		ImGui::Begin("Hierarchy");
@@ -299,9 +305,12 @@ update_status ModuleUI::Update(float dt)
 
 	if (isInspectorShown)
 	{
-		/*ImGui::SetNextWindowPos({ (float)App->window->screen_surface->w - 370, 20 });
-		ImGui::SetNextWindowSize({ 350, (float)(App->window->screen_surface->h * 8 / 10) });*/
-
+		if (!isInspectorInit)
+		{
+			isInspectorInit = true;
+			ImGui::SetNextWindowPos({ (float)App->window->screen_surface->w - 260, 30 });
+			ImGui::SetNextWindowSize({ 250, (float)(App->window->screen_surface->h -  40)});
+		}
 		ImGui::Begin("Inspector", &isInspectorShown);
 		{
 
@@ -465,8 +474,6 @@ update_status ModuleUI::Update(float dt)
 			ImGui::Text("        SOFTWARE.");
 			ImGui::Spacing();
 			ImGui::Spacing();
-			// TODO: licencia
-
 		}
 		ImGui::End();
 	}
@@ -474,6 +481,23 @@ update_status ModuleUI::Update(float dt)
 
 
 	
+	if (isConsoleShown)
+	{
+		
+		if(!isConsoleInit)
+		{
+			isConsoleInit = true;
+			ImGui::SetNextWindowPos({ 270, (float)(App->window->screen_surface->h - 210) });
+			ImGui::SetNextWindowSize({ (float)(App->window->screen_surface->w - 540), 200 });
+		}
+		ImGui::Begin("Console", &isConsoleShown);
+		ImGui::GetWindowPos();
+		ImGui::End();
+	}
+
+
+
+
 
 	return UPDATE_CONTINUE;
 }

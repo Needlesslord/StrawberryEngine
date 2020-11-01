@@ -42,10 +42,21 @@ public:
 
 	// Windows shown bools
 	bool isDemoShown = false;
+
 	bool isConfigShown = false;
+	bool isConfigInit = false;
+
 	bool isAboutShown = false;
+	bool isAboutInit = false;
+
 	bool isHierarchyShown = false;
+	bool isHierarchyInit = false;
+
 	bool isInspectorShown = false;
+	bool isInspectorInit = false;
+
+	bool isConsoleShown = true;
+	bool isConsoleInit = false;
 
 	//ImGuiDir direction;
 
