@@ -38,32 +38,52 @@ bool ModuleCamera3D::CleanUp()
 // -----------------------------------------------------------------
 update_status ModuleCamera3D::Update(float dt)
 {
-	// Implement a debug camera with keys and mouse
 
 	vec3 newPos(0,0,0);
 	float speed = 3.0f * dt;
+
+
+
+
+
+		// Holding SHIFT duplicates movement speed.
 	if(App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT)
 		speed *= 2;
 
 
+
+
+
+
+		// While Right clicking, “WASD” fps-like movement must be enabled.
 	if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_REPEAT)
 	{
 
-		if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) newPos.y += speed; // Go up
-		if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) newPos.y -= speed; // Go down
-
-		if (App->input->GetKey(SDL_SCANCODE_R) == KEY_REPEAT) newPos -= Z * speed; // Zoom in
-		if (App->input->GetKey(SDL_SCANCODE_F) == KEY_REPEAT) newPos += Z * speed; // Zoom out
+		if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) newPos.y += speed; 
+		if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) newPos.y -= speed; 
 
 		if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) newPos -= X * speed;
 		if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) newPos += X * speed;
 	}
 
+
+
+
+
+		// Mouse wheel should zoom in and out
+	float DeltaZ = App->input->GetMouseZ();
+	if (DeltaZ != 0)
+	{
+		newPos -= Z * DeltaZ;
+	}
+
 	Position += newPos;
 	Reference += newPos;
 
-	// Mouse motion ----------------
+	
 
+
+		// While Right clicking, free look around must be enabled.
 	if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_REPEAT)
 	{
 		int dx = -App->input->GetMouseXMotion();
@@ -116,7 +136,7 @@ update_status ModuleCamera3D::Update(float dt)
 
 	
 
-	// Recalculate matrix -------------
+	
 	CalculateViewMatrix();
 
 	return UPDATE_CONTINUE;
@@ -124,12 +144,18 @@ update_status ModuleCamera3D::Update(float dt)
 
 update_status ModuleCamera3D::PostUpdate(float dt)
 {
+
+
+		// Alt+Left click should orbit the object.
 	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_REPEAT && App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT && !App->scene_intro->meshesSelected.empty())
 	{
 		int dx = -App->input->GetMouseXMotion();
 		int dy = -App->input->GetMouseYMotion();
 
 		float Sensitivity = 0.25f;
+
+		Mesh* ref = (*App->scene_intro->meshesSelected.begin());
+		Reference = ref->position;
 
 		Position -= Reference;
 
@@ -156,9 +182,21 @@ update_status ModuleCamera3D::PostUpdate(float dt)
 			}
 		}
 
-		Mesh* ref = (*App->scene_intro->meshesSelected.begin());
-		Position = ref->position + Z * length(Position);
+		
+		Position = Reference + Z * length(Position);
 	}
+
+
+
+
+		// Pressing “f” should focus the camera around the geometry.
+	if (App->input->GetKey(SDL_SCANCODE_F) == KEY_DOWN && !App->scene_intro->meshesSelected.empty())
+	{
+		LookAt((*App->scene_intro->meshesSelected.begin())->position);
+	}
+
+
+
 
 	return UPDATE_CONTINUE;
 }
