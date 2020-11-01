@@ -116,20 +116,20 @@ update_status ModuleUI::Update(float dt)
 		if (ImGui::BeginMenu("Help"))
 		{
 
-			if (ImGui::MenuItem("Documentation")) {}
-				//App->RequestBrowser("https://needlesslord.github.io/StrawberryEngine/");
+			if (ImGui::MenuItem("Documentation")) 
+				App->RequestBrowser("https://needlesslord.github.io/StrawberryEngine/");
 
-			if (ImGui::MenuItem("Download latest release")) {}
-				//App->RequestBrowser("https://github.com/Needlesslord/StrawberryEngine/releases/tag/v0.2");
+			if (ImGui::MenuItem("Download latest release")) 
+				App->RequestBrowser("https://github.com/Needlesslord/StrawberryEngine/releases/tag/v0.2");
 
-			if (ImGui::MenuItem("Current release")) {}
-				//App->RequestBrowser("https://github.com/Needlesslord/StrawberryEngine/releases/tag/v0.2");
+			if (ImGui::MenuItem("Current release")) 
+				App->RequestBrowser("https://github.com/Needlesslord/StrawberryEngine/releases/tag/v0.2");
 
-			if (ImGui::MenuItem("All the releases")) {}
-				//App->RequestBrowser("https://github.com/Needlesslord/StrawberryEngine/releases");
+			if (ImGui::MenuItem("All the releases")) 
+				App->RequestBrowser("https://github.com/Needlesslord/StrawberryEngine/releases");
 
-			if (ImGui::MenuItem("Report a bug")) {}
-				//App->RequestBrowser("https://github.com/Needlesslord/StrawberryEngine/issues");
+			if (ImGui::MenuItem("Report a bug")) 
+				App->RequestBrowser("https://github.com/Needlesslord/StrawberryEngine/issues");
 
 			if (ImGui::MenuItem("About"))
 				isAboutShown = !isAboutShown;
