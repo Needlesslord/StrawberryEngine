@@ -43,24 +43,88 @@ update_status ModuleCamera3D::Update(float dt)
 	vec3 newPos(0,0,0);
 	float speed = 3.0f * dt;
 	if(App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT)
-		speed = 8.0f * dt;
-
-	if(App->input->GetKey(SDL_SCANCODE_R) == KEY_REPEAT) newPos.y += speed;
-	if(App->input->GetKey(SDL_SCANCODE_F) == KEY_REPEAT) newPos.y -= speed;
-
-	if(App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) newPos -= Z * speed;
-	if(App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) newPos += Z * speed;
+		speed *= 2;
 
 
-	if(App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) newPos -= X * speed;
-	if(App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) newPos += X * speed;
+	if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_REPEAT)
+	{
+
+		if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) newPos.y += speed; // Go up
+		if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) newPos.y -= speed; // Go down
+
+		if (App->input->GetKey(SDL_SCANCODE_R) == KEY_REPEAT) newPos -= Z * speed; // Zoom in
+		if (App->input->GetKey(SDL_SCANCODE_F) == KEY_REPEAT) newPos += Z * speed; // Zoom out
+
+		if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) newPos -= X * speed;
+		if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) newPos += X * speed;
+	}
 
 	Position += newPos;
 	Reference += newPos;
 
 	// Mouse motion ----------------
 
-	if(App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_REPEAT)
+	if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_REPEAT)
+	{
+		int dx = -App->input->GetMouseXMotion();
+		int dy = -App->input->GetMouseYMotion();
+
+		float Sensitivity = 0.10f;
+
+		vec3 ref = Reference;
+
+		//Position -= Reference;
+
+		if (dx != 0)
+		{
+			float DeltaX = (float)dx * Sensitivity;
+
+			//X = rotate(X, DeltaX, vec3(0.0f, 1.0f, 0.0f));
+			//Y = rotate(Y, DeltaX, vec3(0.0f, 1.0f, 0.0f));
+			//Z = rotate(Z, DeltaX, vec3(0.0f, 1.0f, 0.0f));
+
+			ref.x = Reference.x - DeltaX;
+		}
+
+		if (dy != 0)
+		{
+			float DeltaY = (float)dy * Sensitivity;
+
+			//Y = rotate(Y, DeltaY, X);
+			//Z = rotate(Z, DeltaY, X);
+
+			if (Y.y < 0.0f)
+			{
+				//Z = vec3(0.0f, Z.y > 0.0f ? 1.0f : -1.0f, 0.0f);
+				//Y = cross(Z, X);
+			}
+
+			if (isYInverted) {
+				ref.y = Reference.y - DeltaY;
+			}
+			else
+			{
+				ref.y = Reference.y + DeltaY;
+			}
+		}
+
+		ref.z = Reference.z;
+
+		//Position = Reference + Z * length(Position);
+		LookAt(ref);
+	}
+
+	
+
+	// Recalculate matrix -------------
+	CalculateViewMatrix();
+
+	return UPDATE_CONTINUE;
+}
+
+update_status ModuleCamera3D::PostUpdate(float dt)
+{
+	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_REPEAT && App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT && !App->scene_intro->meshesSelected.empty())
 	{
 		int dx = -App->input->GetMouseXMotion();
 		int dy = -App->input->GetMouseYMotion();
@@ -69,7 +133,7 @@ update_status ModuleCamera3D::Update(float dt)
 
 		Position -= Reference;
 
-		if(dx != 0)
+		if (dx != 0)
 		{
 			float DeltaX = (float)dx * Sensitivity;
 
@@ -78,25 +142,23 @@ update_status ModuleCamera3D::Update(float dt)
 			Z = rotate(Z, DeltaX, vec3(0.0f, 1.0f, 0.0f));
 		}
 
-		if(dy != 0)
+		if (dy != 0)
 		{
 			float DeltaY = (float)dy * Sensitivity;
 
 			Y = rotate(Y, DeltaY, X);
 			Z = rotate(Z, DeltaY, X);
 
-			if(Y.y < 0.0f)
+			if (Y.y < 0.0f)
 			{
 				Z = vec3(0.0f, Z.y > 0.0f ? 1.0f : -1.0f, 0.0f);
 				Y = cross(Z, X);
 			}
 		}
 
-		Position = Reference + Z * length(Position);
+		Mesh* ref = (*App->scene_intro->meshesSelected.begin());
+		Position = ref->position + Z * length(Position) + 5;
 	}
-
-	// Recalculate matrix -------------
-	CalculateViewMatrix();
 
 	return UPDATE_CONTINUE;
 }
