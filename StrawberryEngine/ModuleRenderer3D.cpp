@@ -398,12 +398,24 @@ void ModuleRenderer3D::Draw(Mesh* mesh)
 		glColor3f(0 / 7.0f, 0.6f, 0.6f);
 	}
 
+	if (isToggleWireframe)
+	{
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		glColor3f(1, 0, 1);
+	}
+
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->id_index);
 	glDrawElements(GL_TRIANGLES, mesh->num_index, GL_UNSIGNED_INT, NULL);
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+	if (isToggleWireframe)
+	{
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		glColor3f(1, 0, 1);
+	}
 
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
@@ -441,4 +453,65 @@ Texture* ModuleRenderer3D::CreateCheckersTexture()
 	App->importer->textureList.push_back(ret);
 
 	return ret;
+}
+
+void ModuleRenderer3D::ToggleDepthTest(const bool switchTo)
+{
+	if (switchTo == true)
+	{
+		glEnable(GL_DEPTH_TEST);
+	}
+	else
+	{
+		glDisable(GL_DEPTH_TEST);
+	}
+}
+
+void ModuleRenderer3D::ToggleLighting(const bool switchTo)
+{
+	if (switchTo)
+	{
+		glEnable(GL_LIGHTING);
+	}
+	else
+	{
+		glDisable(GL_LIGHTING);
+	}
+}
+
+void ModuleRenderer3D::ToggleBackFaceCull(const bool switchTo)
+{
+	if (switchTo)
+	{
+		glEnable(GL_CULL_FACE);
+	}
+	else
+	{
+		glDisable(GL_CULL_FACE);
+	}
+}
+
+void ModuleRenderer3D::ToggleTextures(const bool switchTo)
+{
+	if (switchTo)
+	{
+		glEnable(GL_TEXTURE_2D);
+	}
+	else
+	{
+		glDisable(GL_TEXTURE_2D);
+	}
+}
+
+void ModuleRenderer3D::ToggleWireframe(const bool switchTo)
+{
+	isToggleWireframe = switchTo;
+	if (!switchTo)
+	{
+		glEnable(GL_TEXTURE_2D);
+	}
+	else
+	{
+		glDisable(GL_TEXTURE_2D);
+	}
 }

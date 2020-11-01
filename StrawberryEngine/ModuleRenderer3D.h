@@ -32,8 +32,15 @@ public:
 
 	Texture* CreateCheckersTexture();
 
+	void ToggleDepthTest(const bool switchTo);
+	void ToggleLighting(const bool switchTo);
+	void ToggleBackFaceCull(const bool switchTo);
+	void ToggleTextures(const bool switchTo);
+	void ToggleWireframe(const bool switchTo);
 
 public:
+
+	bool isToggleWireframe = false;
 
 	Light lights[MAX_LIGHTS];
 	SDL_GLContext context;

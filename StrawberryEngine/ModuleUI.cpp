@@ -214,11 +214,33 @@ update_status ModuleUI::Update(float dt)
 
 			if (ImGui::CollapsingHeader("Render"))
 			{
+				
+				char* a = "on";
+				char* b = "off";
 				if (ImGui::Checkbox("Draw Meshes", &isDrawEnabled))
 				{
-					char* a = "on";
-					char* b = "off";
 					LOG("Turning rendering: %s", isDrawEnabled ? a : b);
+				}
+				if (ImGui::Checkbox("Show depth test", &isDepthTestEnabled))
+				{
+					App->renderer3D->ToggleDepthTest(isDepthTestEnabled);
+					LOG("Turning depth test: %s", isDepthTestEnabled ? a : b);
+				}
+				if (ImGui::Checkbox("Show lighting", &isLightingEnabled))
+				{
+					App->renderer3D->ToggleLighting(isLightingEnabled);
+					LOG("Turning lighting: %s", isLightingEnabled ? a : b);
+				}
+				if (ImGui::Checkbox("Show back face cull", &isBackFaceCullEnabled))
+				{
+					App->renderer3D->ToggleBackFaceCull(isBackFaceCullEnabled);
+					LOG("Turning back face cull: %s", isBackFaceCullEnabled ? a : b);
+				}
+				
+				if (ImGui::Checkbox("Show wireframes", &isWireframeEnabled))
+				{
+					App->renderer3D->ToggleWireframe(isWireframeEnabled);
+					LOG("Turning wireframes: %s", isWireframeEnabled ? a : b);
 				}
 			}
 
@@ -226,16 +248,14 @@ update_status ModuleUI::Update(float dt)
 
 			if (ImGui::CollapsingHeader("Textures"))
 			{
+				char* a = "on";
+				char* b = "off";
 				if (ImGui::Checkbox("Show textures", &isTexturesEnabled))
 				{
-					char* a = "on";
-					char* b = "off";
+					App->renderer3D->ToggleTextures(&isTexturesEnabled);
 					LOG("Turning textures: %s", isTexturesEnabled ? a : b);
 				}
 			}
-
-
-
 		}
 		ImGui::End();
 	}
@@ -327,6 +347,7 @@ update_status ModuleUI::Update(float dt)
 					{
 						ImGui::Text("Mesh path for %s:", (*meshIterator)->name); 
 						ImGui::TextColored({ 1,0,1,1 }, (*meshIterator)->path);
+						ImGui::Separator();
 					}
 				}
 
@@ -371,13 +392,13 @@ update_status ModuleUI::Update(float dt)
 						{
 							ImGui::Text("Texture path for %s:", (*textureIterator)->name);
 							ImGui::TextColored({ 1,0,1,1 }, (*textureIterator)->path);
+							ImGui::Separator();
 						}
 					}
 				}
-
-
 			}
 		}
+
 		ImGui::End();
 	}
 

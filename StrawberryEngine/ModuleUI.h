@@ -62,7 +62,11 @@ public:
 	bool isWinFullscreenDesktop;
 
 	bool isDrawEnabled = true;
+	bool isDepthTestEnabled = true;
+	bool isLightingEnabled = true;
+	bool isBackFaceCullEnabled = true;
 	bool isTexturesEnabled = true;
+	bool isWireframeEnabled = false;
 
 	bool isMeshSelected = false;
 
