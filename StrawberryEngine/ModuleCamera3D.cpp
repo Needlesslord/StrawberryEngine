@@ -11,7 +11,7 @@ ModuleCamera3D::ModuleCamera3D(Application* app, bool start_enabled) : Module(ap
 	Y = vec3(0.0f, 1.0f, 0.0f);
 	Z = vec3(0.0f, 0.0f, 1.0f);
 
-	Position = vec3(0.0f, 0.0f, 5.0f);
+	Position = vec3(0.0f, 0.0f, 8.5f);
 	Reference = vec3(0.0f, 0.0f, 0.0f);
 }
 
@@ -157,7 +157,7 @@ update_status ModuleCamera3D::PostUpdate(float dt)
 		}
 
 		Mesh* ref = (*App->scene_intro->meshesSelected.begin());
-		Position = ref->position + Z * length(Position) + 5;
+		Position = ref->position + Z * length(Position);
 	}
 
 	return UPDATE_CONTINUE;
