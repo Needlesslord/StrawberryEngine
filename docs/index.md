@@ -9,19 +9,19 @@ _Short description of the engine and links._
 
 This is Strawberry Engine's base. It includes basic features such as:
 
-- Model Import + Drag & Drop
-- Texture Import
+- Model Import w/ Drag & Drop
+- Texture Import w/ Drag & Drop
 - GameObject hierarchy + Component Pattern
 - Unity-like camera controls
 - Editor tools (main menu and windows)
 
 It is developed under the MIT License.
 
-To go to the Engine's **RELEASES** click [here](https://github.com/Needlesslord/StrawberryEngine/releases).
+- _To go to the Engine's **RELEASES** click [here](https://github.com/Needlesslord/StrawberryEngine/releases)._
 
-To go to the **GITHUB REPOSITORY** click [here](https://github.com/Needlesslord/StrawberryEngine).
+- _To go to the **GITHUB REPOSITORY** click [here](https://github.com/Needlesslord/StrawberryEngine)._
 
-To go to the **WEB PAGE** click [here *(under construction)*]().
+- _To go to the **WEB PAGE** click [here](https://needlesslord.github.io/StrawberryEngine/)._
 
 
 
@@ -44,7 +44,16 @@ This project is developed by:
 ## How **STRAWBERRY ENGINE** works
 _How to use the engine, detailing the controls and any specific action._
 
-
+- Camera: Right-click + WASD to move the camera in the X and Y axis, right-click also allows for free camera look, mouse wheel to zoom in and out, Atl + left-click orbits the selected mesh, the "F" key centers the camera's focus to the selecte mesh and SHIFT doubles the camera speed.
+- Hierarchy window: The hierarchy window displays all game objects in the scene with their respective meshes, which can be selected to display its information on the inspector window.
+- Inspector window: The inspector window, although open at the start of the engine, doesn't display any information unless there's at least one mesh selected, in which case it displays some basic information about the mesh and the textures.
+- Console window : The console window displays very basic information for now and it does not accept input.
+- Menu bar: The menu bar has 4 menus:
+	- File: only has an item to exit.
+	- View: offers the option to hide/show all the main windows.
+	- Help: list of links to our web page, to report bugs and to open the about window with information about the software and the hardware.
+	- Basic Shapes: offers the option to import 4 basic shapes (cube, cylinder, sphere and cone).
+- Configuration window: The configuration window gives information about the application and hardware and has several options for render, textures and window preferences.
 
 
 ### Included files
@@ -66,7 +75,7 @@ _Files you will find in the .zip._
 _Base funcionalities in the engine for it to work properly._
 
 - It allows to drag and drop FBX files from anywhere in the Hard Drive.
-- It allows to drag and drop DDS/PNG files from anywhere in the Hard Drive (apply the texture to the selected GameObject).
+- It allows to drag and drop DDS/PNG files from anywhere in the Hard Drive (And it applies the texture to the selected GameObject).
 - Game Object structure for each loaded mesh: available 3 display-only components: Transform, Mesh and Texture. 
 - Unity-like camera controls:
 	+ While Right clicking, “WASD” fps-like movement and free look around is enabled.
@@ -94,13 +103,21 @@ _Base funcionalities in the engine for it to work properly._
 ### Extra functionalities (innovation)
 _Additional funcionalities in the engine._
 
-*(under construction)*
+You can dynamically change the texture of any meshes you select, including the default "checkers" texture (will work with ImGui::Combo() in the future)
+
 
 
 
 
 ## Take into account...
 _Additional comments to understand some parts of the engine._
+
+
+## Credits 
+
+- 3D Models: [free3d.com](https://free3d.com/3d-models/fbx-textures)
+
+
 
 
 
