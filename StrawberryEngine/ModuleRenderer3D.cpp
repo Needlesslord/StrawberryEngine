@@ -378,21 +378,14 @@ void ModuleRenderer3D::Draw(Mesh* mesh)
 		}
 	}
 
-	if (mesh->isVertexNormalsEnabled && mesh->isSelected && mesh->hasNormals) // Not working
+	if (mesh->isVertexNormalsEnabled && mesh->isSelected && mesh->hasNormals) 
 	{
-
-		
-		//glNormal3f()
-		vec3 from;
-		float to;
 
 		for (int i = 0; i < mesh->num_vertex; i++)
 		{
 			float vX = mesh->vertex[i].x;
 			float vY = mesh->vertex[i].y;
 			float vZ = mesh->vertex[i].z;
-
-
 
 			glBegin(GL_LINES);
 			glColor3f(1, 0, 1);
