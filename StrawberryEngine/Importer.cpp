@@ -14,7 +14,11 @@ Importer::~Importer()
 
 bool Importer::Import()
 {
-	return true;
+	bool ret;
+
+
+
+	return ret;
 }
 
 bool Importer::Save()
