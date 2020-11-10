@@ -450,6 +450,27 @@ update_status ModuleUI::Update(float dt)
 						ImGui::TextColored({ 1,0,1,1 }, (*meshIterator)->path);
 						ImGui::Separator();
 					}
+
+					if (ImGui::Checkbox("Draw Vertex Normals", &isVertexNormalsEnabled))
+					{
+						meshIterator = App->scene_intro->meshesSelected.begin();
+						char* a = "on";
+						char* b = "off";
+						
+						for (meshIterator = App->scene_intro->meshesSelected.begin(); meshIterator != App->scene_intro->meshesSelected.end(); meshIterator++)
+						{
+							if (isVertexNormalsEnabled)
+							{
+								(*meshIterator)->isVertexNormalsEnabled = true;
+							}
+							else
+							{
+								(*meshIterator)->isVertexNormalsEnabled = false;
+							}
+
+							LOG("Turning normals: %s for %s", (*meshIterator)->isVertexNormalsEnabled ? a : b, (*meshIterator)->name);
+						}
+					}
 				}
 
 

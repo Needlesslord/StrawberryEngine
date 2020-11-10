@@ -21,10 +21,12 @@ public:
 	uint* index = nullptr;
 	uint id_vertex = 0; // unique vertex in VRAM
 	uint num_vertex = 0;
-	float* vertex = nullptr;
+	vec3* vertex = nullptr;
 	uint id_tex_coord = 0;
 	float* tex_coord = nullptr;
-	aiVector3D* normals = nullptr;
+
+	bool hasNormals = false;
+	vec3* normals = nullptr;
 
 	bool isSelected = false;
 

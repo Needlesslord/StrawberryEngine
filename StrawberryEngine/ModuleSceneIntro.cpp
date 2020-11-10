@@ -47,16 +47,16 @@ bool ModuleSceneIntro::CleanUp()
 
 update_status ModuleSceneIntro::PreUpdate(float dt)
 {
-	/*if (!meshesSelected.empty())
-	{
-		for (std::list<Mesh*>::iterator meshesToUnselect = meshesSelected.begin(); meshesToUnselect != meshesSelected.end(); meshesToUnselect++)
-		{
-			(*meshesToUnselect)->selected = false;
-		}
-		meshesSelected.clear();
-		App->ui->isMeshSelected = false;
-	}*/
+	// Refresh selected mesh list
 	meshesSelected.clear();
+	for (std::list<Mesh*>::iterator meshesToSelect = meshesList.begin(); meshesToSelect != meshesList.end(); meshesToSelect++)
+	{
+		if ((*meshesToSelect)->isSelected)
+		{
+			meshesSelected.push_back(*meshesToSelect);
+		}
+	}
+
 	return UPDATE_CONTINUE;
 }
 
@@ -67,20 +67,14 @@ update_status ModuleSceneIntro::Update(float dt)
 	p = { 0.0, 1.0, 0.0, 0.0 };
 	p.axis = true;
 
-	for (std::list<Mesh*>::iterator meshesToSelect = meshesList.begin(); meshesToSelect != meshesList.end(); meshesToSelect++)
-	{
-		if ((*meshesToSelect)->isSelected)
-		{
-			meshesSelected.push_back(*meshesToSelect);
-		}
-	}
-
 
 	if (App->input->GetKey(SDL_SCANCODE_N) == KEY_DOWN) // TESTING
 	{
-		for (std::list<Mesh*>::iterator meshesToMove = meshesList.begin(); meshesToMove != meshesList.end(); meshesToMove++)
+		return UPDATE_CONTINUE;
+
+		for (std::list<Mesh*>::iterator meshesToMove = meshesSelected.begin(); meshesToMove != meshesSelected.end(); meshesToMove++)
 		{
-			for (int i = 2; i < (*meshesToMove)->num_vertex; i += 3)
+			for (int i = 0; i < (*meshesToMove)->num_vertex; i += 3)
 			{
 				LOG("Original position: %d", (*meshesToMove)->vertex[i]);
 				(*meshesToMove)->vertex[i] += 1.f;

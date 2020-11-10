@@ -378,35 +378,30 @@ void ModuleRenderer3D::Draw(Mesh* mesh)
 		}
 	}
 
-	if (mesh->isFaceNormalsEnabled && mesh->isSelected) // Not working
+	if (mesh->isVertexNormalsEnabled && mesh->isSelected && mesh->hasNormals) // Not working
 	{
-		glBegin(GL_LINES);
 
 		
 		//glNormal3f()
 		vec3 from;
 		float to;
 
-		for (int i = 0; i < mesh->num_index; i += 3)
+		for (int i = 0; i < mesh->num_vertex; i++)
 		{
-			float vX = mesh->vertex[mesh->index[i]];
-			float vY = mesh->vertex[mesh->index[i + 1]];
-			float vZ = mesh->vertex[mesh->index[i + 2]];
+			float vX = mesh->vertex[i].x;
+			float vY = mesh->vertex[i].y;
+			float vZ = mesh->vertex[i].z;
 
-			from = (vX + vY + vZ) / 3;
 
-			float edge_a = vY - vX;
-			float edge_b = vZ - vX;
 
-			//to = Cross(edge_a, edge_b);
-			//normal.Normalize();
-
+			glBegin(GL_LINES);
 			glColor3f(1, 0, 1);
-			glVertex3f(mesh->normals->x, mesh->normals->y, mesh->normals->z);
+			glVertex3f(vX, vY, vZ);
+			glVertex3f(vX + mesh->normals[i].x, vY + mesh->normals[i].y, vZ + mesh->normals[i].z);
 		}
 
 		glEnd();
-		glColor3f(0 / 7.0f, 0.6f, 0.6f);
+		glColor3f(1, 1, 1);	
 	}
 
 	if (isToggleWireframe)
@@ -425,7 +420,7 @@ void ModuleRenderer3D::Draw(Mesh* mesh)
 	if (isToggleWireframe)
 	{
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-		glColor3f(1, 0, 1);
+		glColor3f(1, 1, 1);
 	}
 
 	glDisableClientState(GL_VERTEX_ARRAY);

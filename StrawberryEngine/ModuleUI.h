@@ -80,7 +80,8 @@ public:
 	bool isTexturesEnabled = true;
 	bool isWireframeEnabled = false;
 
-	bool isMeshSelected = false;
+	bool isVertexNormalsEnabled = false;
+	bool isFaceNormalsEnabled = false;
 
 	ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
