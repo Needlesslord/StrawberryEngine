@@ -4,7 +4,7 @@
 #include "ModuleUI.h"
 #include "ModuleWindow.h"
 #include "ModuleSceneIntro.h"
-#include "ModuleImporter.h"
+#include "ModuleAssetImporter.h"
 #include "GameObject.h"
 
 #include "Geometry.h"
@@ -367,7 +367,7 @@ void ModuleRenderer3D::Draw(Mesh* mesh)
 	{
 		glBindBuffer(GL_ARRAY_BUFFER, mesh->id_tex_coord);
 
-		for (std::list<Texture*>::iterator textureIterator = App->importer->textureList.begin(); textureIterator != App->importer->textureList.end(); textureIterator++)
+		for (std::list<Texture*>::iterator textureIterator = App->assetImporter->textureList.begin(); textureIterator != App->assetImporter->textureList.end(); textureIterator++)
 		{
 			if (mesh->textureNumber == (*textureIterator)->textureIterator )
 			{
@@ -449,7 +449,7 @@ Texture* ModuleRenderer3D::CreateCheckersTexture()
 	glBindTexture(GL_TEXTURE_2D, 0);
 
 	ret->textureIterator = 0;
-	App->importer->textureList.push_back(ret);
+	App->assetImporter->textureList.push_back(ret);
 
 	return ret;
 }

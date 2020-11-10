@@ -126,7 +126,7 @@ update_status ModuleInput::PreUpdate(float dt)
 					if (fileType == ".fbx" || fileType == ".FBX")
 					{
 						LOG("Loading .fbx");
-						App->importer->Load(dropped_filedir);
+						App->assetImporter->Load(dropped_filedir);
 						App->renderer3D->GenerateBuffers();
 					}
 					else if (fileType == ".png" || fileType == ".PNG")
@@ -136,10 +136,10 @@ update_status ModuleInput::PreUpdate(float dt)
 						{
 							if ((*meshIterator)->isSelected)
 							{
-								(*meshIterator)->textureNumber = App->importer->textureIterator;
+								(*meshIterator)->textureNumber = App->assetImporter->textureIterator;
 							}
 						}
-						App->importer->LoadTexture(dropped_filedir);
+						App->assetImporter->LoadTexture(dropped_filedir);
 					}
 					else if (fileType == ".dds" || fileType == ".DDS")
 					{
@@ -148,10 +148,10 @@ update_status ModuleInput::PreUpdate(float dt)
 						{
 							if ((*meshIterator)->isSelected)
 							{
-								(*meshIterator)->textureNumber = App->importer->textureIterator;
+								(*meshIterator)->textureNumber = App->assetImporter->textureIterator;
 							}
 						}
-						App->importer->LoadTexture(dropped_filedir);
+						App->assetImporter->LoadTexture(dropped_filedir);
 					}
 					else
 					{

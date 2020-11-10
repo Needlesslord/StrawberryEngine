@@ -1,6 +1,7 @@
 #include "Application.h"
-#include "ModuleImporter.h"
+#include "ModuleAssetImporter.h"
 #include "GameObject.h"
+#include "Importer.h"
 
 #include "Libs/Assimp/include/cimport.h"
 #include "Libs/Assimp/include/scene.h"
@@ -15,17 +16,17 @@
 #pragma comment ( lib, "Libs/DevIL/libx86/ILU.lib" )
 #pragma comment ( lib, "Libs/DevIL/libx86/ILUT.lib" )
 
-ModuleImporter::ModuleImporter(Application* app, bool start_enabled) : Module(app, start_enabled)
+ModuleAssetImporter::ModuleAssetImporter(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
 
 }
 
-ModuleImporter::~ModuleImporter()
+ModuleAssetImporter::~ModuleAssetImporter()
 {
 
 }
 
-bool ModuleImporter::Init()
+bool ModuleAssetImporter::Init()
 {
 	bool ret = true;
 
@@ -54,17 +55,20 @@ bool ModuleImporter::Init()
 	return ret;
 }
 
-bool ModuleImporter::Start()
+bool ModuleAssetImporter::Start()
 {
 	bool ret = true;
 
 	defaultTexture = App->renderer3D->CreateCheckersTexture();
 	houseTexture = LoadTexture("Assets/Baker_House.png");
 
+	Importer importer;
+	importer.Import();
+
 	return ret;
 }
 
-bool ModuleImporter::CleanUp()
+bool ModuleAssetImporter::CleanUp()
 {
 	aiDetachAllLogStreams();
 
@@ -73,7 +77,7 @@ bool ModuleImporter::CleanUp()
 	return true;
 }
 
-GameObject* ModuleImporter::Load(const char* path)
+GameObject* ModuleAssetImporter::Load(const char* path)
 {
 	GameObject* ret = new GameObject();
 	App->scene_intro->gameObjectList.push_back(ret);
@@ -134,14 +138,15 @@ GameObject* ModuleImporter::Load(const char* path)
 				memcpy(ourMesh->normals, scene->mMeshes[i]->mNormals, sizeof(vec3) * scene->mMeshes[i]->mNumVertices);
 				ourMesh->hasNormals = true;
 			}
-			/*if (scene->HasMaterials())
+
+			if (scene->HasMaterials())
 			{
 				aiTextureType type = aiTextureType_DIFFUSE;
 				aiString* path = new aiString;
 				scene->mMaterials[scene->mMeshes[i]->mMaterialIndex]->GetTexture(type, ourMesh->id_tex_coord, path);
 				const char* p = path->C_Str();
 				LoadTexture(p);
-			}*/
+			}
 
 			if (scene->mMeshes[i]->HasPositions())
 			{
@@ -175,7 +180,7 @@ GameObject* ModuleImporter::Load(const char* path)
 	return ret;
 }
 
-Texture* ModuleImporter::LoadTexture(const char* path)
+Texture* ModuleAssetImporter::LoadTexture(const char* path)
 {
 	Texture* ret = new Texture;
 

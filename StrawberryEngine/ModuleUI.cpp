@@ -5,7 +5,7 @@
 #include "ModuleWindow.h"
 #include "ModuleInput.h"
 #include "ModuleSceneIntro.h"
-#include "ModuleImporter.h"
+#include "ModuleAssetImporter.h"
 #include "GameObject.h"
 
 #include "Libs/DevIL/include/IL/il.h"
@@ -137,25 +137,25 @@ update_status ModuleUI::Update(float dt)
 		{
 			if (ImGui::MenuItem("Cube"))
 			{
-				App->importer->Load("Assets/Primitives/Cube.FBX");
+				App->assetImporter->Load("Assets/Primitives/Cube.FBX");
 				App->renderer3D->GenerateBuffers();
 			}
 
 			if (ImGui::MenuItem("Cylinder"))
 			{
-				App->importer->Load("Assets/Primitives/Cylinder.FBX");
+				App->assetImporter->Load("Assets/Primitives/Cylinder.FBX");
 				App->renderer3D->GenerateBuffers();
 			}
 
 			if (ImGui::MenuItem("Piramid"))
 			{
-				App->importer->Load("Assets/Primitives/Piramid.FBX");
+				App->assetImporter->Load("Assets/Primitives/Piramid.FBX");
 				App->renderer3D->GenerateBuffers();
 			}
 
 			if (ImGui::MenuItem("Sphere"))
 			{
-				App->importer->Load("Assets/Primitives/Sphere.FBX");
+				App->assetImporter->Load("Assets/Primitives/Sphere.FBX");
 				App->renderer3D->GenerateBuffers();
 			}
 
@@ -477,12 +477,12 @@ update_status ModuleUI::Update(float dt)
 				if (ImGui::CollapsingHeader("Textures"))
 				{
 
-					std::list<Texture*>::iterator textureIterator = App->importer->textureList.begin();
+					std::list<Texture*>::iterator textureIterator = App->assetImporter->textureList.begin();
 
 					//ImGui::BeginCombo("Textures", (*textureIterator)->name); // LOOK UP
 
 					int i = 0;
-					while (textureIterator != App->importer->textureList.end())
+					while (textureIterator != App->assetImporter->textureList.end())
 					{
 						if (ImGui::Button((*textureIterator)->name))
 						{
@@ -508,7 +508,7 @@ update_status ModuleUI::Update(float dt)
 
 
 
-					for (textureIterator = App->importer->textureList.begin(); textureIterator != App->importer->textureList.end(); textureIterator++)
+					for (textureIterator = App->assetImporter->textureList.begin(); textureIterator != App->assetImporter->textureList.end(); textureIterator++)
 					{
 						if ((*textureIterator)->name != nullptr && (*textureIterator)->path != nullptr)
 						{

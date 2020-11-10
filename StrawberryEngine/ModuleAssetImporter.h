@@ -1,5 +1,5 @@
-#ifndef __ModuleImporter_H__
-#define __ModuleImporter_H__
+#ifndef __ModuleAssetImporter_H__
+#define __ModuleAssetImporter_H__
 
 #include "Module.h"
 #include "Globals.h"
@@ -47,6 +47,8 @@ public:
 class Texture
 {
 public:
+	uint GetId() { return id; }
+public:
 	const char* path = nullptr;
 	char* name = nullptr;
 	uint id;
@@ -56,11 +58,11 @@ public:
 	uint textureIterator;
 };
 
-class ModuleImporter : public Module
+class ModuleAssetImporter : public Module
 {
 public:
-	ModuleImporter(Application* app, bool start_enabled = true);
-	~ModuleImporter();
+	ModuleAssetImporter(Application* app, bool start_enabled = true);
+	~ModuleAssetImporter();
 
 	bool Init();
 	bool Start();
@@ -81,4 +83,4 @@ public:
 
 };
 
-#endif // __ModuleImporter_H__
+#endif // __ModuleAssetImporter_H__

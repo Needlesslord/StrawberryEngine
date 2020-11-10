@@ -1,6 +1,6 @@
 #include "Globals.h"
 #include "GameObject.h"
-#include "ModuleImporter.h"
+#include "ModuleAssetImporter.h"
 #include "ModuleSceneIntro.h"
 GameObject::GameObject(char* name)
 {
