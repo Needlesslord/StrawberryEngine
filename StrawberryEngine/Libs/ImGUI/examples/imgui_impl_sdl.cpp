@@ -48,8 +48,8 @@
 #include "imgui_impl_sdl.h"
 
 // SDL
-#include "..\SDL\include\SDL.h"
-#include "..\SDL\include\SDL_syswm.h"
+#include <SDL.h>
+#include <SDL_syswm.h>
 #if defined(__APPLE__)
 #include "TargetConditionals.h"
 #endif
@@ -184,7 +184,7 @@ static bool ImGui_ImplSDL2_Init(SDL_Window* window)
     SDL_SysWMinfo wmInfo;
     SDL_VERSION(&wmInfo.version);
     SDL_GetWindowWMInfo(window, &wmInfo);
-    //io.ImeWindowHandle = wmInfo.info.win.window;
+    io.ImeWindowHandle = wmInfo.info.win.window;
 #else
     (void)window;
 #endif

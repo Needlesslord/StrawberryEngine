@@ -34,6 +34,10 @@ public:
 
 	void AddConsoleOutput(const char* text, ...);
 
+	void UnselectAll();
+
+	void SelectMesh(Mesh* mesh);
+
 	// Destructor
 	virtual ~ModuleUI();
 
@@ -88,6 +92,10 @@ public:
 	std::list<const char*> pendingOutputs;
 	char* output[30];
 	uint outputIterator = 29;
+
+private:
+
+	bool isTransformActive = true;
 
 };
 

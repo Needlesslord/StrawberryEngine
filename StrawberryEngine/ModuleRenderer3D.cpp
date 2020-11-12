@@ -378,7 +378,7 @@ void ModuleRenderer3D::Draw(Mesh* mesh)
 		}
 	}
 
-	if (mesh->isVertexNormalsEnabled && mesh->isSelected && mesh->hasNormals) 
+	if (mesh->isVertexNormalsEnabled && mesh->hasNormals) 
 	{
 
 		for (int i = 0; i < mesh->num_vertex; i++)

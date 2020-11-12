@@ -45,6 +45,7 @@ bool ModuleUI::Start()
 
 	ImGui::CreateContext();
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
+	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 
 	ImGui::StyleColorsDark();
 
@@ -381,7 +382,14 @@ update_status ModuleUI::Update(float dt)
 
 						for (std::list<Mesh*>::iterator meshIterator = (*gameObjectIterator)->childrenMeshes.begin(); meshIterator != (*gameObjectIterator)->childrenMeshes.end(); meshIterator++)
 						{
-							ImGui::Checkbox((*meshIterator)->name, &(*meshIterator)->isSelected);
+							if (ImGui::Checkbox((*meshIterator)->name, &(*meshIterator)->isSelected))
+							{
+								if (App->input->GetKey(SDL_SCANCODE_LCTRL) != KEY_REPEAT && (*meshIterator)->isSelected)
+								{
+									UnselectAll();
+								}
+								
+							}
 						}
 					}
 					ImGui::TreePop();
@@ -409,19 +417,19 @@ update_status ModuleUI::Update(float dt)
 			if (!App->scene_intro->meshesSelected.empty())
 			{
 				std::list<Mesh*>::iterator meshIterator = App->scene_intro->meshesSelected.begin();
-				if (ImGui::CollapsingHeader("Transformation"))
+				if (ImGui::CollapsingHeader("Transformation", ImGuiTreeNodeFlags_DefaultOpen))
 				{
 					float v1[3] = { (*meshIterator)->position.x, (*meshIterator)->position.y, (*meshIterator)->position.z };
-					ImGui::InputFloat3("Position", v1, 2);
+					ImGui::InputFloat3("Position", v1);
 
 					float v2[3] = { (*meshIterator)->rotation.x, (*meshIterator)->rotation.y, (*meshIterator)->rotation.z };
-					ImGui::InputFloat3("Rotation", v2, 2);
+					ImGui::InputFloat3("Rotation", v2);
 
 					float v3 = (*meshIterator)->scale;
 					ImGui::InputFloat("Scale", &v3);
 				}
 
-				if (ImGui::CollapsingHeader("Render"))
+				if (ImGui::CollapsingHeader("Render", ImGuiTreeNodeFlags_DefaultOpen))
 				{
 					if (ImGui::Checkbox("Draw Meshes", &(*meshIterator)->isDrawEnabled))
 					{
@@ -474,7 +482,7 @@ update_status ModuleUI::Update(float dt)
 				}
 
 
-				if (ImGui::CollapsingHeader("Textures"))
+				if (ImGui::CollapsingHeader("Textures", ImGuiTreeNodeFlags_DefaultOpen))
 				{
 
 					std::list<Texture*>::iterator textureIterator = App->assetImporter->textureList.begin();
@@ -665,4 +673,19 @@ void ModuleUI::AddConsoleOutput(const char* text, ...)
 	output[outputIterator] = tmp_string2;
 	pendingOutputs.push_back(output[outputIterator]);
 	outputIterator--;
+}
+
+void ModuleUI::SelectMesh(Mesh* mesh)
+{
+	mesh->isSelected = true;
+	App->scene_intro->meshesSelected.push_back(mesh);
+}
+
+void ModuleUI::UnselectAll()
+{
+	for (std::list<Mesh*>::iterator meshIterator = App->scene_intro->meshesSelected.begin(); meshIterator != App->scene_intro->meshesSelected.end(); meshIterator++)
+	{
+		(*meshIterator)->isSelected = false;
+	}
+	App->scene_intro->meshesSelected.clear();
 }

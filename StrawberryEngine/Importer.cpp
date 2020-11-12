@@ -14,7 +14,7 @@ Importer::~Importer()
 
 bool Importer::Import()
 {
-	bool ret;
+	bool ret = true;
 
 
 
