@@ -139,6 +139,7 @@ bool Application::CleanUp()
 		item--;
 		ret = (*item)->CleanUp();
 	}
+
 	return ret;
 }
 
