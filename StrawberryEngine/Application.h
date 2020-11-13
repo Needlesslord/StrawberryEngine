@@ -10,6 +10,7 @@
 #include "ModuleCamera3D.h"
 #include "ModuleUI.h"
 #include "ModuleAssetImporter.h"
+#include "ModuleFileSystem.h"
 
 #include <iostream>
 #include <list>
@@ -25,12 +26,16 @@ public:
 	ModuleCamera3D* camera;
 	ModuleUI* ui;
 	ModuleAssetImporter* assetImporter;
+	ModuleFileSystem* fileSystem;
 
 private:
 
 	Timer	ms_timer;
 	float	dt;
 	std::list<Module*> list_modules;
+
+	std::string title;
+	std::string organization;
 
 public:
 
@@ -42,6 +47,9 @@ public:
 	bool CleanUp();
 
 	void RequestBrowser(const char* URL);
+
+	const char* GetTitleName() const;
+	const char* GetOrganizationName() const;
 
 private:
 

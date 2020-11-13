@@ -11,6 +11,11 @@
 #include <list>
 #include "glmath.h"
 
+#define LIBRARY_PATH "Library/"
+#define FOLDERS_PATH "Library/Folders/"
+#define MESHES_PATH "Library/Meshes/"
+#define TEXTURES_PATH "Library/Textures/"
+
 #define LOG(format, ...) log(__FILE__, __LINE__, format, __VA_ARGS__);
 
 void log(const char file[], int line, const char* format, ...);
@@ -21,8 +26,8 @@ void log(const char file[], int line, const char* format, ...);
 #define RADTODEG 57.295779513082320876f
 #define HAVE_M_PI
 
-
 typedef unsigned int uint;
+typedef unsigned __int64 uint64;
 
 enum update_status
 {
@@ -41,6 +46,27 @@ enum update_status
 #define WIN_FULLSCREEN_DESKTOP false
 #define VSYNC true
 #define TITLE "Strawberry Engine"
+#define ORGANIZATION "UPC"
 
 #define GAME_OBJECT_DEFAULT_NAME "Default Game Object"
 #define GAME_MESH_NAME "Default Mesh"
+
+// Deletes a buffer
+#define RELEASE( x )\
+    {\
+       if( x != nullptr )\
+       {\
+         delete x;\
+	     x = nullptr;\
+       }\
+    }
+
+// Deletes an array of buffers
+#define RELEASE_ARRAY( x )\
+	{\
+       if( x != nullptr )\
+       {\
+           delete[] x;\
+	       x = nullptr;\
+		 }\
+	 }

@@ -10,6 +10,7 @@ Application::Application()
 	camera = new ModuleCamera3D(this);
 	ui = new ModuleUI(this);
 	assetImporter = new ModuleAssetImporter(this);
+	fileSystem = new ModuleFileSystem(this);
 
 	// Modules will Init() Start() and Update in this order
 	// They will CleanUp() in reverse order
@@ -19,13 +20,17 @@ Application::Application()
 	AddModule(camera);
 	AddModule(input);
 	AddModule(assetImporter);
-	
+	AddModule(fileSystem);
+
 	// Scenes
 	AddModule(scene_intro);
 	AddModule(ui);
 
 	// Renderer last!
 	AddModule(renderer3D);
+
+	title = TITLE;
+	organization = ORGANIZATION;
 }
 
 Application::~Application()
@@ -145,4 +150,14 @@ void Application::AddModule(Module* mod)
 void Application::RequestBrowser(const char* URL)
 {
 	ShellExecuteA(NULL, "open", URL, NULL, NULL, SW_SHOWNORMAL);
+}
+
+const char* Application::GetTitleName() const
+{
+	return title.c_str();
+}
+
+const char* Application::GetOrganizationName() const
+{
+	return organization.c_str();
 }
