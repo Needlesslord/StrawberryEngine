@@ -1,7 +1,8 @@
 #include "Globals.h"
 #include "GameObject.h"
-#include "ModuleAssetImporter.h"
+#include "MeshImporter.h"
 #include "ModuleSceneIntro.h"
+
 GameObject::GameObject(char* name)
 {
 	this->name = name;

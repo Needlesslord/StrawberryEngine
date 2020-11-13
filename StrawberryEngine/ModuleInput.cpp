@@ -1,6 +1,8 @@
 #include "Globals.h"
 #include "Application.h"
 #include "ModuleInput.h"
+#include "TextureImporter.h"
+#include "MeshImporter.h"
 
 #define MAX_KEYS 300
 
@@ -126,7 +128,7 @@ update_status ModuleInput::PreUpdate(float dt)
 					if (fileType == ".fbx" || fileType == ".FBX")
 					{
 						LOG("Loading .fbx");
-						App->assetImporter->Load(dropped_filedir);
+						App->importer->meshImporter->Load(dropped_filedir);
 						App->renderer3D->GenerateBuffers();
 					}
 					else if (fileType == ".png" || fileType == ".PNG")
@@ -136,10 +138,10 @@ update_status ModuleInput::PreUpdate(float dt)
 						{
 							if ((*meshIterator)->isSelected)
 							{
-								(*meshIterator)->textureNumber = App->assetImporter->textureIterator;
+								(*meshIterator)->textureNumber = App->importer->textureImporter->textureIterator;
 							}
 						}
-						App->assetImporter->LoadTexture(dropped_filedir);
+						App->importer->textureImporter->LoadTexture(dropped_filedir);
 					}
 					else if (fileType == ".dds" || fileType == ".DDS")
 					{
@@ -148,10 +150,10 @@ update_status ModuleInput::PreUpdate(float dt)
 						{
 							if ((*meshIterator)->isSelected)
 							{
-								(*meshIterator)->textureNumber = App->assetImporter->textureIterator;
+								(*meshIterator)->textureNumber = App->importer->textureImporter->textureIterator;
 							}
 						}
-						App->assetImporter->LoadTexture(dropped_filedir);
+						App->importer->textureImporter->LoadTexture(dropped_filedir);
 					}
 					else
 					{

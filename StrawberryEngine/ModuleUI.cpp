@@ -5,7 +5,9 @@
 #include "ModuleWindow.h"
 #include "ModuleInput.h"
 #include "ModuleSceneIntro.h"
-#include "ModuleAssetImporter.h"
+#include "ModuleImporter.h"
+#include "TextureImporter.h"
+#include "MeshImporter.h"
 #include "GameObject.h"
 
 #include "Libs/DevIL/include/IL/il.h"
@@ -46,12 +48,13 @@ bool ModuleUI::Start()
 	ImGui::CreateContext();
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
 	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
 
 	ImGui::StyleColorsDark();
 
 	ImGui_ImplSDL2_InitForOpenGL(App->window->window, App->renderer3D->context);
 	ImGui_ImplOpenGL3_Init("#version 130");
-	pendingOutputs.push_back("Initializing ImGui");
+	LOG("Initializing ImGui");
 
 	name = TITLE;
 	organization = "UPC CITM";
@@ -138,25 +141,25 @@ update_status ModuleUI::Update(float dt)
 		{
 			if (ImGui::MenuItem("Cube"))
 			{
-				App->assetImporter->Load("Assets/Primitives/Cube.FBX");
+				App->importer->meshImporter->Load("Assets/Primitives/Cube.FBX");
 				App->renderer3D->GenerateBuffers();
 			}
 
 			if (ImGui::MenuItem("Cylinder"))
 			{
-				App->assetImporter->Load("Assets/Primitives/Cylinder.FBX");
+				App->importer->meshImporter->Load("Assets/Primitives/Cylinder.FBX");
 				App->renderer3D->GenerateBuffers();
 			}
 
 			if (ImGui::MenuItem("Piramid"))
 			{
-				App->assetImporter->Load("Assets/Primitives/Piramid.FBX");
+				App->importer->meshImporter->Load("Assets/Primitives/Piramid.FBX");
 				App->renderer3D->GenerateBuffers();
 			}
 
 			if (ImGui::MenuItem("Sphere"))
 			{
-				App->assetImporter->Load("Assets/Primitives/Sphere.FBX");
+				App->importer->meshImporter->Load("Assets/Primitives/Sphere.FBX");
 				App->renderer3D->GenerateBuffers();
 			}
 
@@ -241,88 +244,33 @@ update_status ModuleUI::Update(float dt)
 
 			if (ImGui::CollapsingHeader("Render"))
 			{
-				
+			
 				char* a = "on";
 				char* b = "off";
 				if (ImGui::Checkbox("Draw Meshes", &isDrawEnabled))
 				{
 					LOG("Turning rendering: %s", isDrawEnabled ? a : b);
-					char* text = nullptr;
-					if (isDrawEnabled)
-					{
-						 text = "Turning rendering: on";
-					}
-					else
-					{
-						text = "Turning rendering: off";
-					}
-
-					pendingOutputs.push_back(text);
 				}
 				if (ImGui::Checkbox("Show depth test", &isDepthTestEnabled))
 				{
 					App->renderer3D->ToggleDepthTest(isDepthTestEnabled);
 					LOG("Turning depth test: %s", isDepthTestEnabled ? a : b);
-
-					char* text = nullptr;
-					if (isDepthTestEnabled)
-					{
-						text = "Turning depth test: on";
-					}
-					else
-					{
-						text = "Turning depth test: off";
-					}
-					pendingOutputs.push_back(text);
 				}
 				if (ImGui::Checkbox("Show lighting", &isLightingEnabled))
 				{
 					App->renderer3D->ToggleLighting(isLightingEnabled);
 					LOG("Turning lighting: %s", isLightingEnabled ? a : b);
-
-					char* text = nullptr;
-					if (isLightingEnabled)
-					{
-						text = "Turning lighting: on";
-					}
-					else
-					{
-						text = "Turning lighting: off";
-					}
-					pendingOutputs.push_back(text);
 				}
 				if (ImGui::Checkbox("Show back face cull", &isBackFaceCullEnabled))
 				{
 					App->renderer3D->ToggleBackFaceCull(isBackFaceCullEnabled);
 					LOG("Turning back face cull: %s", isBackFaceCullEnabled ? a : b);
-
-					char* text = nullptr;
-					if (isBackFaceCullEnabled)
-					{
-						text = "Turning back face cull: on";
-					}
-					else
-					{
-						text = "Turning back face cull: off";
-					}
-					pendingOutputs.push_back(text);
 				}
 				
 				if (ImGui::Checkbox("Show wireframes", &isWireframeEnabled))
 				{
 					App->renderer3D->ToggleWireframe(isWireframeEnabled);
 					LOG("Turning wireframes: %s", isWireframeEnabled ? a : b);
-
-					char* text = nullptr;
-					if (isWireframeEnabled)
-					{
-						text = "Turning wireframes: on";
-					}
-					else
-					{
-						text = "Turning wireframes: off";
-					}
-					pendingOutputs.push_back(text);
 				}
 			}
 
@@ -336,17 +284,6 @@ update_status ModuleUI::Update(float dt)
 				{
 					App->renderer3D->ToggleTextures(&isTexturesEnabled);
 					LOG("Turning textures: %s", isTexturesEnabled ? a : b);
-
-					char* text = nullptr;
-					if (isTexturesEnabled)
-					{
-						text = "Turning textures: on";
-					}
-					else
-					{
-						text = "Turning textures: off";
-					}
-					pendingOutputs.push_back(text);
 				}
 			}
 		}
@@ -416,6 +353,12 @@ update_status ModuleUI::Update(float dt)
 			if (!App->scene_intro->meshesSelected.empty())
 			{
 				std::list<Mesh*>::iterator meshIterator = App->scene_intro->meshesSelected.begin();
+
+				char* buf = (*meshIterator)->name;
+
+				if (ImGui::InputText("", buf, 50, ImGuiInputTextFlags_EnterReturnsTrue))
+					(*meshIterator)->name = buf;
+
 				if (ImGui::CollapsingHeader("Transformation", ImGuiTreeNodeFlags_DefaultOpen))
 				{
 					float v1[3] = { (*meshIterator)->position.x, (*meshIterator)->position.y, (*meshIterator)->position.z };
@@ -484,12 +427,12 @@ update_status ModuleUI::Update(float dt)
 				if (ImGui::CollapsingHeader("Textures", ImGuiTreeNodeFlags_DefaultOpen))
 				{
 
-					std::list<Texture*>::iterator textureIterator = App->assetImporter->textureList.begin();
+					std::list<Texture*>::iterator textureIterator = App->scene_intro->textureList.begin();
 
 					//ImGui::BeginCombo("Textures", (*textureIterator)->name); // LOOK UP
 
 					int i = 0;
-					while (textureIterator != App->assetImporter->textureList.end())
+					while (textureIterator != App->scene_intro->textureList.end())
 					{
 						if (ImGui::Button((*textureIterator)->name))
 						{
@@ -515,7 +458,7 @@ update_status ModuleUI::Update(float dt)
 
 
 
-					for (textureIterator = App->assetImporter->textureList.begin(); textureIterator != App->assetImporter->textureList.end(); textureIterator++)
+					for (textureIterator = App->scene_intro->textureList.begin(); textureIterator != App->scene_intro->textureList.end(); textureIterator++)
 					{
 						if ((*textureIterator)->name != nullptr && (*textureIterator)->path != nullptr)
 						{
@@ -658,20 +601,7 @@ void ModuleUI::Draw()
 
 void ModuleUI::AddConsoleOutput(const char* text, ...)
 {
-	char tmp_string[4096];
-	char tmp_string2[4096];
-	va_list  ap;
-
-	// Construct the string from variable arguments
-	va_start(ap, text);
-	vsprintf_s(tmp_string, 4096, text, ap);
-	va_end(ap, text);
-	//sprintf_s(tmp_string2, 4096, "\n%s(%d) : %s", "/Debug/logtest.log", 1, tmp_string);
-	//OutputDebugString(tmp_string2);
-	output[outputIterator] = new char;
-	output[outputIterator] = tmp_string2;
-	pendingOutputs.push_back(output[outputIterator]);
-	outputIterator--;
+	pendingOutputs.push_back(strdup(text));
 }
 
 void ModuleUI::SelectMesh(Mesh* mesh)

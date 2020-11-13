@@ -43,7 +43,7 @@ bool ModuleFileSystem::Init()
 	bool ret = true;
 	
 	// Ask SDL for a write dir
-	char* write_path = SDL_GetPrefPath(App->GetOrganizationName(), App->GetTitleName());
+	char* write_path = SDL_GetPrefPath("Strawberry Engine", "UPC");
 
 	// Trun this on while in game mode
 	//if(PHYSFS_setWriteDir(write_path) == 0)

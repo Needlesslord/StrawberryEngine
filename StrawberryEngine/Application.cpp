@@ -9,7 +9,7 @@ Application::Application()
 	renderer3D = new ModuleRenderer3D(this);
 	camera = new ModuleCamera3D(this);
 	ui = new ModuleUI(this);
-	assetImporter = new ModuleAssetImporter(this);
+	importer = new ModuleImporter(this);
 	fileSystem = new ModuleFileSystem(this);
 
 	// Modules will Init() Start() and Update in this order
@@ -19,7 +19,7 @@ Application::Application()
 	AddModule(window);
 	AddModule(camera);
 	AddModule(input);
-	AddModule(assetImporter);
+	AddModule(importer);
 	AddModule(fileSystem);
 
 	// Scenes

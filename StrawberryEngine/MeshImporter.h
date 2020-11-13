@@ -1,10 +1,10 @@
-#ifndef __ModuleAssetImporter_H__
-#define __ModuleAssetImporter_H__
+#ifndef __MeshImporter_H__
+#define __MeshImporter_H__
 
 #include "Module.h"
 #include "Globals.h"
-#include "Libs/DevIL/include/IL/il.h"
 #include "vector3.h"
+#include "ModuleImporter.h"
 
 class GameObject;
 
@@ -44,43 +44,24 @@ public:
 
 };
 
-class Texture
+
+
+class MeshImporter : public Importer
 {
 public:
-	uint GetId() { return id; }
-public:
-	const char* path = nullptr;
-	char* name = nullptr;
-	uint id;
-	uint w;
-	uint h;
+	MeshImporter();
+	~MeshImporter();
 
-	uint textureIterator;
-};
-
-class ModuleAssetImporter : public Module
-{
-public:
-	ModuleAssetImporter(Application* app, bool start_enabled = true);
-	~ModuleAssetImporter();
-
-	bool Init();
-	bool Start();
-	bool CleanUp();
-
-	Texture* LoadTexture(const char* path);
+	bool Start()override;
+	bool CleanUp()override;
 
 	GameObject* Load(const char* path);
 
 public:
 
-	Texture* defaultTexture = nullptr;
-	Texture* houseTexture = nullptr;
-	std::list<Texture*> textureList;
-
-	int textureIterator = 1;
+	ModuleImporter* importer;
 	int meshIterator = 0;
 
 };
 
-#endif // __ModuleAssetImporter_H__
+#endif // __MeshImporter_H__

@@ -4,6 +4,7 @@
 
 class Mesh;
 class GameObject;
+class Texture;
 
 class ModuleSceneIntro : public Module
 {
@@ -29,6 +30,8 @@ public:
 	std::list<Mesh*> meshesList;
 	std::list<Mesh*> meshesSelected;
 	std::list<GameObject*> gameObjectList;
+
+	std::list<Texture*> textureList;
 
 	GameObject* house;
 

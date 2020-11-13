@@ -1,10 +1,13 @@
 #include "Application.h"
 #include "Globals.h"
 #include "ModuleRenderer3D.h"
+
 #include "ModuleUI.h"
 #include "ModuleWindow.h"
 #include "ModuleSceneIntro.h"
-#include "ModuleAssetImporter.h"
+#include "ModuleImporter.h"
+#include "TextureImporter.h"
+#include "MeshImporter.h"
 #include "GameObject.h"
 
 #include "Geometry.h"
@@ -28,7 +31,7 @@ ModuleRenderer3D::~ModuleRenderer3D()
 bool ModuleRenderer3D::Init()
 {
 	LOG("Creating 3D Renderer context");
-	App->ui->pendingOutputs.push_back("Creating 3D Renderer context");
+	//App->ui->pendingOutputs.push_back("Creating 3D Renderer context"); // CACA
 	bool ret = true;
 	
 	//Create context
@@ -36,7 +39,6 @@ bool ModuleRenderer3D::Init()
 	if(context == NULL)
 	{
 		LOG("OpenGL context could not be created! SDL_Error: %s\n", SDL_GetError());
-		App->ui->pendingOutputs.push_back("OpenGL context could not be created!");
 		ret = false;
 	}
 	
@@ -47,20 +49,17 @@ bool ModuleRenderer3D::Init()
 		LOG("Renderer: %s", glGetString(GL_RENDERER));
 		LOG("OpenGL version supported %s", glGetString(GL_VERSION));
 		LOG("GLSL: %s\n", glGetString(GL_SHADING_LANGUAGE_VERSION));
-		App->ui->pendingOutputs.push_back("Initializing OpenGL");
 
 
 		//Use Vsync
 		if (VSYNC && SDL_GL_SetSwapInterval(1) < 0)
 		{
 			LOG("Warning: Unable to set VSync! SDL Error: %s\n", SDL_GetError());
-			App->ui->pendingOutputs.push_back("Warning: Unable to set VSync!");
 		}
 
 		//Initialize Glew
 		GLenum err = glewInit();
 		LOG("Using Glew %s", glewGetString(GLEW_VERSION));
-		App->ui->pendingOutputs.push_back("Initializing Glew");
 
 
 		//Initialize Projection Matrix
@@ -72,7 +71,6 @@ bool ModuleRenderer3D::Init()
 		if(error != GL_NO_ERROR)
 		{
 			LOG("Error initializing OpenGL! %s\n", gluErrorString(error));
-			App->ui->pendingOutputs.push_back("Error initializing OpenGL!");
 
 			ret = false;
 		}
@@ -86,7 +84,6 @@ bool ModuleRenderer3D::Init()
 		if(error != GL_NO_ERROR)
 		{
 			LOG("Error initializing OpenGL! %s\n", gluErrorString(error));
-			App->ui->pendingOutputs.push_back("Error initializing OpenGL!");
 			ret = false;
 		}
 		
@@ -102,7 +99,6 @@ bool ModuleRenderer3D::Init()
 		if(error != GL_NO_ERROR)
 		{
 			LOG("Error initializing OpenGL! %s\n", gluErrorString(error));
-			App->ui->pendingOutputs.push_back("Error initializing OpenGL!");
 			ret = false;
 		}
 		
@@ -161,10 +157,8 @@ bool ModuleRenderer3D::Start()
 
 	GenerateBuffers();
 	
-	//(*App->scene_intro->meshesList.begin())->name = "Casa"; // Test
 
-
-	//glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textureID, 0);
+	App->importer->textureImporter->defaultTexture = CreateCheckersTexture();
 
 	return true;
 }
@@ -367,9 +361,9 @@ void ModuleRenderer3D::Draw(Mesh* mesh)
 	{
 		glBindBuffer(GL_ARRAY_BUFFER, mesh->id_tex_coord);
 
-		for (std::list<Texture*>::iterator textureIterator = App->assetImporter->textureList.begin(); textureIterator != App->assetImporter->textureList.end(); textureIterator++)
+		for (std::list<Texture*>::iterator textureIterator = App->scene_intro->textureList.begin(); textureIterator != App->scene_intro->textureList.end(); textureIterator++)
 		{
-			if (mesh->textureNumber == (*textureIterator)->textureIterator )
+			if (mesh->textureNumber == (*textureIterator)->textureIterator)
 			{
 				glBindTexture(GL_TEXTURE_2D, (*textureIterator)->id);
 				glTexCoordPointer(2, GL_FLOAT, 0, NULL);
@@ -449,7 +443,7 @@ Texture* ModuleRenderer3D::CreateCheckersTexture()
 	glBindTexture(GL_TEXTURE_2D, 0);
 
 	ret->textureIterator = 0;
-	App->assetImporter->textureList.push_back(ret);
+	App->scene_intro->textureList.push_back(ret);
 
 	return ret;
 }
