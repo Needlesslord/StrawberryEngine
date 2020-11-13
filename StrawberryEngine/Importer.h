@@ -3,13 +3,14 @@
 
 #include "Globals.h"
 
+struct aiMaterial;
 class Importer
 {
 public:
 	Importer();
 	~Importer();
 
-	bool Import();
+	void Import(const aiMaterial* material, Mesh* ourMesh);
 	bool Save();
 	bool Load();
 

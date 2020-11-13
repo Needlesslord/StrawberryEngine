@@ -62,8 +62,7 @@ bool ModuleAssetImporter::Start()
 	defaultTexture = App->renderer3D->CreateCheckersTexture();
 	houseTexture = LoadTexture("Assets/Baker_House.png");
 
-	Importer importer;
-	importer.Import();
+	
 
 	return ret;
 }

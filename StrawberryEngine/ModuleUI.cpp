@@ -387,8 +387,7 @@ update_status ModuleUI::Update(float dt)
 								if (App->input->GetKey(SDL_SCANCODE_LCTRL) != KEY_REPEAT && (*meshIterator)->isSelected)
 								{
 									UnselectAll();
-								}
-								
+								}	
 							}
 						}
 					}
