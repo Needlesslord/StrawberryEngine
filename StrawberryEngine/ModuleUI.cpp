@@ -361,14 +361,23 @@ update_status ModuleUI::Update(float dt)
 
 				if (ImGui::CollapsingHeader("Transformation", ImGuiTreeNodeFlags_DefaultOpen))
 				{
-					float v1[3] = { (*meshIterator)->position.x, (*meshIterator)->position.y, (*meshIterator)->position.z };
-					ImGui::InputFloat3("Position", v1);
+					//float v1[3] = { (*meshIterator)->position.x, (*meshIterator)->position.y, (*meshIterator)->position.z };
+					//ImGui::InputFloat3("Position", v1);
 
-					float v2[3] = { (*meshIterator)->rotation.x, (*meshIterator)->rotation.y, (*meshIterator)->rotation.z };
-					ImGui::InputFloat3("Rotation", v2);
+					if (ImGui::DragFloat3("Position", &(*meshIterator)->position))
+					{
+						//float v1[3] = { (*meshIterator)->position.x, (*meshIterator)->position.y, (*meshIterator)->position.z };
+					}
 
-					float v3 = (*meshIterator)->scale;
-					ImGui::InputFloat("Scale", &v3);
+					if (ImGui::DragFloat3("Rotation", &(*meshIterator)->rotation))
+					{
+						//float v2[3] = { (*meshIterator)->rotation.x, (*meshIterator)->rotation.y, (*meshIterator)->rotation.z };
+					}
+
+					if (ImGui::DragFloat3("Scale", &(*meshIterator)->scale))
+					{
+						//float v3[3] = { (*meshIterator)->scale.x, (*meshIterator)->scale.y, (*meshIterator)->scale.z };
+					}
 				}
 
 				if (ImGui::CollapsingHeader("Render", ImGuiTreeNodeFlags_DefaultOpen))

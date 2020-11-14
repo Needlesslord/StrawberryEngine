@@ -11,6 +11,7 @@
 #include "Libs/Assimp/include/postprocess.h"
 #pragma comment (lib, "Libs/Assimp/libx86/assimp.lib")
 
+#include <math.h>
 
 MeshImporter::MeshImporter()
 {
@@ -106,9 +107,14 @@ GameObject* MeshImporter::Load(const char* path)
 
 			if (scene->mMeshes[i]->HasPositions())
 			{
-				ourMesh->position.x = scene->mMeshes[i]->mVertices->x;
-				ourMesh->position.y = scene->mMeshes[i]->mVertices->y;
-				ourMesh->position.z = scene->mMeshes[i]->mVertices->z;
+				aiVector3D translation, scaling;
+				aiQuaternion rotation;
+				scene->mRootNode->mTransformation.Decompose(scaling, rotation, translation);
+				vec3 pos(translation.x, translation.y, translation.z);
+				ourMesh->position = pos;
+				vec3 scale(scaling.x, scaling.y, scaling.z);
+				ourMesh->scale = scale;
+				//Quat rot(rotation.x, rotation.y, rotation.z, rotation.w);
 			}
 
 			char* charName = new char[12];

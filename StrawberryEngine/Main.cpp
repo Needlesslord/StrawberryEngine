@@ -84,5 +84,7 @@ int main(int argc, char ** argv)
 	}
 
 	delete App;
+	App = nullptr;
+	LOG("Exiting %s...\n", TITLE);
 	return main_return;
 }

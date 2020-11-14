@@ -34,7 +34,7 @@ public:
 
 	vec3 position = { 0,0,0 }; 
 	vec3 rotation = { 0,0,0 };
-	float scale = 1.0f;
+	vec3 scale = { 0,0,0 };
 
 	bool isDrawEnabled = true;
 	bool isFaceNormalsEnabled = false;
