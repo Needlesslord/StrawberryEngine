@@ -36,6 +36,9 @@ public:
 	vec3 rotation = { 0,0,0 };
 	vec3 scale = { 0,0,0 };
 
+	bool isMoved = false;
+	vec3 previousPosition = { 0,0,0 };
+
 	bool isDrawEnabled = true;
 	bool isFaceNormalsEnabled = false;
 	bool isVertexNormalsEnabled = false;

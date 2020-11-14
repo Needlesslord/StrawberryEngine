@@ -53,6 +53,14 @@ GameObject* MeshImporter::Load(const char* path)
 
 	const aiScene* scene = aiImportFile(path, aiProcessPreset_TargetRealtime_MaxQuality);
 
+	aiVector3D translation, scaling;
+	aiQuaternion rotation;
+	scene->mRootNode->mTransformation.Decompose(scaling, rotation, translation);
+	vec3 pos(translation.x, translation.y, translation.z);
+	ret->position = pos;
+	vec3 scale(scaling.x, scaling.y, scaling.z);
+	ret->scale = scale;
+
 	if (scene != nullptr && scene->HasMeshes())
 	{
 		// Use scene->mNumMeshes to iterate on scene->mMeshes array
@@ -107,11 +115,13 @@ GameObject* MeshImporter::Load(const char* path)
 
 			if (scene->mMeshes[i]->HasPositions())
 			{
-				aiVector3D translation, scaling;
-				aiQuaternion rotation;
-				scene->mRootNode->mTransformation.Decompose(scaling, rotation, translation);
-				vec3 pos(translation.x, translation.y, translation.z);
-				ourMesh->position = pos;
+				aiVector3D mTranslation, mScaling;
+				aiQuaternion mRotation;
+				scene->mRootNode->mChildren[i]->mTransformation.Decompose(mScaling, mRotation, mTranslation);
+				//scene->mRootNode->mTransformation.Decompose(mScaling, mRotation, mTranslation);
+				vec3 mPos(mTranslation.x, mTranslation.y, mTranslation.z);
+				ourMesh->position = pos + mPos;
+				ourMesh->previousPosition = ourMesh->position; // TESTING
 				vec3 scale(scaling.x, scaling.y, scaling.z);
 				ourMesh->scale = scale;
 				//Quat rot(rotation.x, rotation.y, rotation.z, rotation.w);

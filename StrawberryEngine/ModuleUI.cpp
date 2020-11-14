@@ -367,6 +367,7 @@ update_status ModuleUI::Update(float dt)
 					if (ImGui::DragFloat3("Position", &(*meshIterator)->position))
 					{
 						//float v1[3] = { (*meshIterator)->position.x, (*meshIterator)->position.y, (*meshIterator)->position.z };
+						(*meshIterator)->isMoved = true;
 					}
 
 					if (ImGui::DragFloat3("Rotation", &(*meshIterator)->rotation))

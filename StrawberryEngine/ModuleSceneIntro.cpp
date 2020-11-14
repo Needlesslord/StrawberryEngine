@@ -64,28 +64,34 @@ update_status ModuleSceneIntro::PreUpdate(float dt)
 // Update
 update_status ModuleSceneIntro::Update(float dt)
 {
-	
+
 	p = { 0.0, 1.0, 0.0, 0.0 };
 	p.axis = true;
 
 
-	if (App->input->GetKey(SDL_SCANCODE_N) == KEY_DOWN) // TESTING
+
+	bool needToGenBuffers = false;
+	for (std::list<Mesh*>::iterator meshesToMove = meshesList.begin(); meshesToMove != meshesList.end(); meshesToMove++)
 	{
-		return UPDATE_CONTINUE;
-
-		for (std::list<Mesh*>::iterator meshesToMove = meshesSelected.begin(); meshesToMove != meshesSelected.end(); meshesToMove++)
+		if ((*meshesToMove)->isMoved)
 		{
-			for (int i = 0; i < (*meshesToMove)->num_vertex; i += 3)
+			vec3 diff = (*meshesToMove)->position - (*meshesToMove)->previousPosition;
+			for (int i = 0; i < (*meshesToMove)->num_vertex; i++)
 			{
-				LOG("Original position: %d", (*meshesToMove)->vertex[i]);
-				(*meshesToMove)->vertex[i] += 1.f;
-				LOG("Original position: %d", (*meshesToMove)->vertex[i]);
+				(*meshesToMove)->vertex[i].x += diff.x;
+				(*meshesToMove)->vertex[i].y += diff.y;
+				(*meshesToMove)->vertex[i].z += diff.z;
 			}
+			(*meshesToMove)->previousPosition = (*meshesToMove)->position;
+			(*meshesToMove)->isMoved = false;
+			needToGenBuffers = true;
 		}
-		App->renderer3D->GenerateBuffers();
 	}
+	if (needToGenBuffers)
+		App->renderer3D->GenerateBuffers();
 
-	
+
+
 
 	return UPDATE_CONTINUE;
 }

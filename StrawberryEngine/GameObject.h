@@ -15,6 +15,12 @@ public:
 
 public:
 
+	vec3 position = { 0,0,0 };
+	vec3 rotation = { 0,0,0 };
+	vec3 scale = { 0,0,0 };
+
+	bool isMoved = false;
+
 	char* name = nullptr;
 	Mesh* goMesh = nullptr; // Game Object Mesh
 	std::list<Mesh*> childrenMeshes;
