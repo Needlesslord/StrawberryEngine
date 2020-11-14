@@ -10,41 +10,6 @@ class GameObject;
 class Texture;
 class Mesh;
 
-class Importer
-{
-
-public:
-	Importer() {};
-	virtual ~Importer() {};
-
-	virtual bool Init()
-	{ 
-		return true; 
-	}
-	virtual bool Start()
-	{
-		return true;
-	}
-	virtual update_status PreUpdate(float dt)
-	{
-		return UPDATE_CONTINUE;
-	}
-	virtual update_status PostUpdate(float dt)
-	{
-		return UPDATE_CONTINUE;
-	}
-	virtual bool CleanUp()
-	{
-		return true;
-	}
-
-	void Import();
-	bool Save();
-	bool Load();
-
-public:
-
-};
 
 class ModuleImporter : public Module
 {

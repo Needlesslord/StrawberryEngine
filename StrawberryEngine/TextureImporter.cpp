@@ -1,8 +1,6 @@
 #include "TextureImporter.h"
 #include "Application.h"
-#include "Module.h"
-#include "ModuleUI.h"
-#include "ModuleImporter.h"
+#include "ModuleFileSystem.h"
 
 #include "Libs/DevIL/include/IL/il.h"
 #include "Libs/DevIL/include/IL/ilu.h"
@@ -20,11 +18,6 @@ TextureImporter::TextureImporter()
 TextureImporter::~TextureImporter()
 {
 
-}
-
-void TextureImporter::Import()
-{
-	//importer = new
 }
 
 bool TextureImporter::Init()
@@ -61,9 +54,29 @@ bool TextureImporter::Start()
 	return ret;
 }
 
-
-bool TextureImporter::Save()
+void TextureImporter::Import()
 {
+	//importer = new
+}
+
+uint64 TextureImporter::Save(const Texture* ourTexture, char** fileBuffer)
+{
+	ILuint size;
+	ILubyte* data;
+	ilSetInteger(IL_DXTC_FORMAT, IL_DXT5);
+	size = ilSaveL(IL_DDS, nullptr, 0);
+
+	if (size > 0) 
+	{
+		data = new ILubyte[size];
+		if (ilSaveL(IL_DDS, data, size) > 0) 
+			*fileBuffer = (char*)data;
+
+		App->fileSystem->Save(ourTexture->name, fileBuffer, size);
+		RELEASE_ARRAY(data);
+		//RELEASE_ARRAY(fileBuffer);
+	}
+
 	return true;
 }
 
@@ -77,20 +90,14 @@ Texture* TextureImporter::LoadTexture(const char* path)
 {
 	Texture* ret = new Texture;
 
-	//ILuint ImageName;
-	//ilGenImages(1, &ImageName);
-	//ilBindImage(ImageName);
-
 	if (ilLoadImage(path))
 	{
 		LOG("Image path loaded properly");
-
 		ret->path = path;
 	}
 	else
 	{
 		LOG("Couldn't load image");
-
 		return ret;
 	}
 
@@ -127,8 +134,10 @@ Texture* TextureImporter::LoadTexture(const char* path)
 	textureIterator++;
 	
 	LOG(ret->name);
-	importer->AddTexture(ret);
+	App->importer->AddTexture(ret);
 	
+	//char* buffer = nullptr;
+	//Save(ret, &buffer);
 
 	return ret;
 }

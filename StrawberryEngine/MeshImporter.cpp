@@ -1,10 +1,9 @@
 #include "Application.h"
-#include "Module.h"
 #include "MeshImporter.h"
+
 #include "GameObject.h"
-#include "ModuleImporter.h"
-#include "TextureImporter.h"
-#include "ModuleUI.h"
+#include "Importer.h"
+//#include "Mesh.h"
 
 #include "Libs/Assimp/include/cimport.h"
 #include "Libs/Assimp/include/scene.h"
@@ -49,7 +48,7 @@ GameObject* MeshImporter::Load(const char* path)
 {
 	GameObject* ret = new GameObject();
 
-	importer->AddGameObject(ret);
+	App->importer->AddGameObject(ret);
 
 	const aiScene* scene = aiImportFile(path, aiProcessPreset_TargetRealtime_MaxQuality);
 
@@ -138,7 +137,7 @@ GameObject* MeshImporter::Load(const char* path)
 			ret->AddChild(ourMesh);
 			LOG("%s is now a child of %s", ourMesh->name, ret->name);
 			//App->ui->AddConsoleOutput("%s is now a child of %s", ourMesh->name, ret->name);
-			importer->AddMesh(ourMesh);
+			App->importer->AddMesh(ourMesh);
 
 		}
 		aiReleaseImport(scene);

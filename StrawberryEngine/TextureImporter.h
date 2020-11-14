@@ -1,5 +1,5 @@
 #include "Globals.h"
-#include "ModuleImporter.h"
+#include "Importer.h"
 
 #include "Libs/DevIL/include/IL/il.h"
 
@@ -23,17 +23,15 @@ public:
 	TextureImporter();
 	virtual~TextureImporter();
 
-	bool Init()override;
-	bool Start()override;
+	bool Init();
+	bool Start();
 	void Import();
-	bool Save();
+	uint64 Save(const Texture* ourTexture, char** fileBuffer);
 	bool Load();
 
 	Texture* LoadTexture(const char* path);
 
 public:
-
-	ModuleImporter* importer;
 
 	Texture* defaultTexture = nullptr;
 	Texture* houseTexture = nullptr;

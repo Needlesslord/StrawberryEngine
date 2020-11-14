@@ -87,6 +87,8 @@
     <ClInclude Include="Geometry.h" />
     <ClInclude Include="glmath.h" />
     <ClInclude Include="Globals.h" />
+    <ClInclude Include="Mesh.h" />
+    <ClInclude Include="Importer.h" />
     <ClInclude Include="Libs\ImGUI\imconfig.h" />
     <ClInclude Include="Libs\ImGUI\imgui.h" />
     <ClInclude Include="Libs\ImGUI\imgui_impl_opengl3.h" />
@@ -117,6 +119,7 @@
     <ClCompile Include="Color.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="glmath.cpp" />
+    <ClCompile Include="Importer.cpp" />
     <ClCompile Include="Libs\ImGUI\imgui.cpp" />
     <ClCompile Include="Libs\ImGUI\imgui_demo.cpp" />
     <ClCompile Include="Libs\ImGUI\imgui_draw.cpp" />

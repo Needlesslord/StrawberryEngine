@@ -68,8 +68,6 @@ update_status ModuleSceneIntro::Update(float dt)
 	p = { 0.0, 1.0, 0.0, 0.0 };
 	p.axis = true;
 
-
-
 	bool needToGenBuffers = false;
 	for (std::list<Mesh*>::iterator meshesToMove = meshesList.begin(); meshesToMove != meshesList.end(); meshesToMove++)
 	{
@@ -89,9 +87,6 @@ update_status ModuleSceneIntro::Update(float dt)
 	}
 	if (needToGenBuffers)
 		App->renderer3D->GenerateBuffers();
-
-
-
 
 	return UPDATE_CONTINUE;
 }

@@ -28,6 +28,9 @@
     <Filter Include="Sources\Importers">
       <UniqueIdentifier>{cb02d89d-2ba0-4be1-9f71-aa33817cea8b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\Components">
+      <UniqueIdentifier>{9be4594c-36a9-4031-9b53-71acc8776a9a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Module.h">
@@ -120,6 +123,12 @@
     <ClInclude Include="MeshImporter.h">
       <Filter>Sources\Importers</Filter>
     </ClInclude>
+    <ClInclude Include="Importer.h">
+      <Filter>Sources\Importers</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>Sources\Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleCamera3D.cpp">
@@ -198,6 +207,9 @@
       <Filter>Sources\Importers</Filter>
     </ClCompile>
     <ClCompile Include="MeshImporter.cpp">
+      <Filter>Sources\Importers</Filter>
+    </ClCompile>
+    <ClCompile Include="Importer.cpp">
       <Filter>Sources\Importers</Filter>
     </ClCompile>
   </ItemGroup>
