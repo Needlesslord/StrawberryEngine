@@ -3,6 +3,7 @@
 #include "ModuleInput.h"
 #include "TextureImporter.h"
 #include "MeshImporter.h"
+#include "GameObject.h"
 
 #define MAX_KEYS 300
 
@@ -128,17 +129,17 @@ update_status ModuleInput::PreUpdate(float dt)
 					if (fileType == ".fbx" || fileType == ".FBX")
 					{
 						LOG("Loading .fbx");
-						App->importer->meshImporter->Load(dropped_filedir);
+						App->importer->meshImporter->LoadMesh(dropped_filedir);
 						App->renderer3D->GenerateBuffers();
 					}
 					else if (fileType == ".png" || fileType == ".PNG")
 					{
 						LOG("Loading .png");
-						for (std::list<Mesh*>::iterator meshIterator = App->scene_intro->meshesList.begin(); meshIterator != App->scene_intro->meshesList.end(); meshIterator++)
+						for (std::list<GameObject*>::iterator goIterator = App->scene_intro->gameObjectList.begin(); goIterator != App->scene_intro->gameObjectList.end(); goIterator++)
 						{
-							if ((*meshIterator)->isSelected)
+							if ((*goIterator)->isSelected)
 							{
-								(*meshIterator)->textureNumber = App->importer->textureImporter->textureIterator;
+								(*goIterator)->meshComponent->textureNumber = App->importer->textureImporter->textureIterator;
 							}
 						}
 						App->importer->textureImporter->LoadTexture(dropped_filedir);
@@ -146,11 +147,11 @@ update_status ModuleInput::PreUpdate(float dt)
 					else if (fileType == ".dds" || fileType == ".DDS")
 					{
 						LOG("Loading .dds");
-						for (std::list<Mesh*>::iterator meshIterator = App->scene_intro->meshesList.begin(); meshIterator != App->scene_intro->meshesList.end(); meshIterator++)
+						for (std::list<GameObject*>::iterator goIterator = App->scene_intro->gameObjectList.begin(); goIterator != App->scene_intro->gameObjectList.end(); goIterator++)
 						{
-							if ((*meshIterator)->isSelected)
+							if ((*goIterator)->isSelected)
 							{
-								(*meshIterator)->textureNumber = App->importer->textureImporter->textureIterator;
+								(*goIterator)->meshComponent->textureNumber = App->importer->textureImporter->textureIterator;
 							}
 						}
 						App->importer->textureImporter->LoadTexture(dropped_filedir);

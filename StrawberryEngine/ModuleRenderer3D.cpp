@@ -192,14 +192,12 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 
 	if (App->ui->isDrawEnabled)
 	{
-		for (std::list<GameObject*>::iterator goIterator = App->scene_intro->gameObjectList.begin(); goIterator != App->scene_intro->gameObjectList.end(); goIterator++)
+
+		for (std::list<Mesh*>::iterator meshIterator = App->scene_intro->meshesList.begin(); meshIterator != App->scene_intro->meshesList.end(); meshIterator++)
 		{
-			for (std::list<Mesh*>::iterator meshIterator = (*goIterator)->childrenMeshes.begin(); meshIterator != (*goIterator)->childrenMeshes.end(); meshIterator++)
+			if ((*meshIterator)->isDrawEnabled)
 			{
-				if ((*meshIterator)->isDrawEnabled)
-				{
-					Draw(*meshIterator);
-				}
+				Draw(*meshIterator);
 			}
 		}
 	}
@@ -372,7 +370,7 @@ void ModuleRenderer3D::Draw(Mesh* mesh)
 		}
 	}
 
-	if (mesh->isVertexNormalsEnabled && mesh->hasNormals) 
+	if (mesh->parent->isVertexNormalsEnabled && mesh->hasNormals) 
 	{
 
 		for (int i = 0; i < mesh->num_vertex; i++)

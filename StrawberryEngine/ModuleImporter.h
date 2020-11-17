@@ -22,7 +22,6 @@ public:
 	update_status PreUpdate(float dt);
 	update_status PostUpdate(float dt);
 	bool CleanUp();
-	void AddGameObject(GameObject* go)const;
 	void AddMesh(Mesh* mesh)const;
 	void AddTexture(Texture* tex)const;
 
@@ -30,6 +29,8 @@ public:
 
 	TextureImporter* textureImporter;
 	MeshImporter* meshImporter;
+
+	uint gameObjectNameIterator = 0;
 
 };
 

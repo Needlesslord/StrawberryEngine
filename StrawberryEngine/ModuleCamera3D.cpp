@@ -3,6 +3,7 @@
 #include "PhysBody3D.h"
 #include "ModuleCamera3D.h"
 #include "MeshImporter.h"
+#include "GameObject.h"
 
 ModuleCamera3D::ModuleCamera3D(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
@@ -148,14 +149,14 @@ update_status ModuleCamera3D::PostUpdate(float dt)
 
 
 		// Alt+Left click should orbit the object.
-	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_REPEAT && App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT && !App->scene_intro->meshesSelected.empty())
+	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_REPEAT && App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT && !App->scene_intro->gameObjectSelected.empty())
 	{
 		int dx = -App->input->GetMouseXMotion();
 		int dy = -App->input->GetMouseYMotion();
 
 		float Sensitivity = 0.25f;
 
-		Mesh* ref = (*App->scene_intro->meshesSelected.begin());
+		GameObject* ref = (*App->scene_intro->gameObjectSelected.begin());
 		Reference = ref->position;
 
 		Position -= Reference;
@@ -191,9 +192,9 @@ update_status ModuleCamera3D::PostUpdate(float dt)
 
 
 		// Pressing “f” should focus the camera around the geometry.
-	if (App->input->GetKey(SDL_SCANCODE_F) == KEY_DOWN && !App->scene_intro->meshesSelected.empty())
+	if (App->input->GetKey(SDL_SCANCODE_F) == KEY_DOWN && !App->scene_intro->gameObjectSelected.empty())
 	{
-		LookAt((*App->scene_intro->meshesSelected.begin())->position);
+		LookAt((*App->scene_intro->gameObjectSelected.begin())->position);
 	}
 
 

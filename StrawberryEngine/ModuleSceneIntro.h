@@ -21,15 +21,16 @@ public:
 
 	void Draw();
 
-	GameObject* AddGameObject(char* n);
+	GameObject* AddGameObject(char* name = nullptr);
 
 public:
 	
 	Plane p;
 
+	std::list<GameObject*> gameObjectList; // main game objects, not counting their children
+	std::list<GameObject*> everyGameObjectList; // all game objects
+	std::list<GameObject*> gameObjectSelected;
 	std::list<Mesh*> meshesList;
-	std::list<Mesh*> meshesSelected;
-	std::list<GameObject*> gameObjectList;
 
 	std::list<Texture*> textureList;
 

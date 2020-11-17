@@ -17,7 +17,11 @@ public:
 	bool Start();
 	bool CleanUp();
 
-	GameObject* Load(const char* path);
+	void Import();
+	uint64 Save(Mesh* ourMesh, char** fileBuffer);
+	bool Load(const char* fileBuffer, Mesh* ourMesh);
+
+	GameObject* LoadMesh(const char* path);
 
 public:
 

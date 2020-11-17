@@ -141,25 +141,25 @@ update_status ModuleUI::Update(float dt)
 		{
 			if (ImGui::MenuItem("Cube"))
 			{
-				App->importer->meshImporter->Load("Assets/Primitives/Cube.FBX");
+				App->importer->meshImporter->LoadMesh("Assets/Primitives/Cube.FBX");
 				App->renderer3D->GenerateBuffers();
 			}
 
 			if (ImGui::MenuItem("Cylinder"))
 			{
-				App->importer->meshImporter->Load("Assets/Primitives/Cylinder.FBX");
+				App->importer->meshImporter->LoadMesh("Assets/Primitives/Cylinder.FBX");
 				App->renderer3D->GenerateBuffers();
 			}
 
 			if (ImGui::MenuItem("Piramid"))
 			{
-				App->importer->meshImporter->Load("Assets/Primitives/Piramid.FBX");
+				App->importer->meshImporter->LoadMesh("Assets/Primitives/Piramid.FBX");
 				App->renderer3D->GenerateBuffers();
 			}
 
 			if (ImGui::MenuItem("Sphere"))
 			{
-				App->importer->meshImporter->Load("Assets/Primitives/Sphere.FBX");
+				App->importer->meshImporter->LoadMesh("Assets/Primitives/Sphere.FBX");
 				App->renderer3D->GenerateBuffers();
 			}
 
@@ -305,7 +305,8 @@ update_status ModuleUI::Update(float dt)
 		ImGui::SetNextWindowSize({ 300, (float)(App->window->screen_surface->h * 8 / 10) });*/
 		ImGui::Begin("Hierarchy", &isHierarchyShown);
 
-		if (App->scene_intro->gameObjectList.size() > 0) {
+		if (App->scene_intro->gameObjectList.size() > 0) 
+		{
 
 			for (std::list<GameObject*>::iterator gameObjectIterator = App->scene_intro->gameObjectList.begin(); gameObjectIterator != App->scene_intro->gameObjectList.end(); gameObjectIterator++)
 			{
@@ -314,22 +315,19 @@ update_status ModuleUI::Update(float dt)
 				if (ImGui::TreeNode((*gameObjectIterator)->name))
 				{
 
-					if (!(*gameObjectIterator)->childrenMeshes.empty())
+					for (std::list<GameObject*>::iterator childrenIterator = (*gameObjectIterator)->children.begin(); childrenIterator != (*gameObjectIterator)->children.end(); childrenIterator++)
 					{
-
-						for (std::list<Mesh*>::iterator meshIterator = (*gameObjectIterator)->childrenMeshes.begin(); meshIterator != (*gameObjectIterator)->childrenMeshes.end(); meshIterator++)
+						if (ImGui::Checkbox((*childrenIterator)->name, &(*childrenIterator)->isSelected))
 						{
-							if (ImGui::Checkbox((*meshIterator)->name, &(*meshIterator)->isSelected))
+							if (App->input->GetKey(SDL_SCANCODE_LCTRL) != KEY_REPEAT && (*childrenIterator)->isSelected)
 							{
-								if (App->input->GetKey(SDL_SCANCODE_LCTRL) != KEY_REPEAT && (*meshIterator)->isSelected)
-								{
-									UnselectAll();
-								}	
+								UnselectAll();
 							}
 						}
 					}
 					ImGui::TreePop();
 				}
+				
 			}
 		}
 
@@ -350,32 +348,32 @@ update_status ModuleUI::Update(float dt)
 		ImGui::Begin("Inspector", &isInspectorShown);
 		{
 
-			if (!App->scene_intro->meshesSelected.empty())
+			if (!App->scene_intro->gameObjectSelected.empty())
 			{
-				std::list<Mesh*>::iterator meshIterator = App->scene_intro->meshesSelected.begin();
+				std::list<GameObject*>::iterator goIterator = App->scene_intro->gameObjectSelected.begin();
 
-				char* buf = (*meshIterator)->name;
+				char* buf = (*goIterator)->name;
 
 				if (ImGui::InputText("", buf, 50, ImGuiInputTextFlags_EnterReturnsTrue))
-					(*meshIterator)->name = buf;
+					(*goIterator)->name = buf;
 
 				if (ImGui::CollapsingHeader("Transformation", ImGuiTreeNodeFlags_DefaultOpen))
 				{
 					//float v1[3] = { (*meshIterator)->position.x, (*meshIterator)->position.y, (*meshIterator)->position.z };
 					//ImGui::InputFloat3("Position", v1);
 
-					if (ImGui::DragFloat3("Position", &(*meshIterator)->position))
+					if (ImGui::DragFloat3("Position", &(*goIterator)->position))
 					{
 						//float v1[3] = { (*meshIterator)->position.x, (*meshIterator)->position.y, (*meshIterator)->position.z };
-						(*meshIterator)->isMoved = true;
+						(*goIterator)->isMoved = true;
 					}
 
-					if (ImGui::DragFloat3("Rotation", &(*meshIterator)->rotation))
+					if (ImGui::DragFloat3("Rotation", &(*goIterator)->rotation))
 					{
 						//float v2[3] = { (*meshIterator)->rotation.x, (*meshIterator)->rotation.y, (*meshIterator)->rotation.z };
 					}
 
-					if (ImGui::DragFloat3("Scale", &(*meshIterator)->scale))
+					if (ImGui::DragFloat3("Scale", &(*goIterator)->scale))
 					{
 						//float v3[3] = { (*meshIterator)->scale.x, (*meshIterator)->scale.y, (*meshIterator)->scale.z };
 					}
@@ -383,52 +381,52 @@ update_status ModuleUI::Update(float dt)
 
 				if (ImGui::CollapsingHeader("Render", ImGuiTreeNodeFlags_DefaultOpen))
 				{
-					if (ImGui::Checkbox("Draw Meshes", &(*meshIterator)->isDrawEnabled))
+					if (ImGui::Checkbox("Draw Meshes", &(*goIterator)->meshComponent->isDrawEnabled))
 					{
 						char* a = "on";
 						char* b = "off";
-						bool helper = (*meshIterator)->isDrawEnabled;
-						for (meshIterator = App->scene_intro->meshesSelected.begin(); meshIterator != App->scene_intro->meshesSelected.end(); meshIterator++)
+						bool helper = (*goIterator)->meshComponent->isDrawEnabled;
+						for (goIterator = App->scene_intro->gameObjectSelected.begin(); goIterator != App->scene_intro->gameObjectSelected.end(); goIterator++)
 						{
 							if (helper)
 							{
-								(*meshIterator)->isDrawEnabled = true;
+								(*goIterator)->meshComponent->isDrawEnabled = true;
 							}
 							else
 							{
-								(*meshIterator)->isDrawEnabled = false;
+								(*goIterator)->meshComponent->isDrawEnabled = false;
 							}
 
-							LOG("Turning rendering: %s for %s", (*meshIterator)->isDrawEnabled ? a : b, (*meshIterator)->name);
+							LOG("Turning rendering: %s for %s", (*goIterator)->meshComponent->isDrawEnabled ? a : b, (*goIterator)->name);
 						}
 					}
 
 
-					for (meshIterator = App->scene_intro->meshesSelected.begin(); meshIterator != App->scene_intro->meshesSelected.end(); meshIterator++)
+					for (goIterator = App->scene_intro->gameObjectSelected.begin(); goIterator != App->scene_intro->gameObjectSelected.end(); goIterator++)
 					{
-						ImGui::Text("Mesh path for %s:", (*meshIterator)->name); 
-						ImGui::TextColored({ 1,0,1,1 }, (*meshIterator)->path);
+						ImGui::Text("Mesh path for %s:", (*goIterator)->name);
+						ImGui::TextColored({ 1,0,1,1 }, (*goIterator)->meshComponent->path);
 						ImGui::Separator();
 					}
 
 					if (ImGui::Checkbox("Draw Vertex Normals", &isVertexNormalsEnabled))
 					{
-						meshIterator = App->scene_intro->meshesSelected.begin();
+						goIterator = App->scene_intro->gameObjectSelected.begin();
 						char* a = "on";
 						char* b = "off";
 						
-						for (meshIterator = App->scene_intro->meshesSelected.begin(); meshIterator != App->scene_intro->meshesSelected.end(); meshIterator++)
+						for (goIterator = App->scene_intro->gameObjectSelected.begin(); goIterator != App->scene_intro->gameObjectSelected.end(); goIterator++)
 						{
 							if (isVertexNormalsEnabled)
 							{
-								(*meshIterator)->isVertexNormalsEnabled = true;
+								(*goIterator)->isVertexNormalsEnabled = true;
 							}
 							else
 							{
-								(*meshIterator)->isVertexNormalsEnabled = false;
+								(*goIterator)->isVertexNormalsEnabled = false;
 							}
 
-							LOG("Turning normals: %s for %s", (*meshIterator)->isVertexNormalsEnabled ? a : b, (*meshIterator)->name);
+							LOG("Turning normals: %s for %s", (*goIterator)->isVertexNormalsEnabled ? a : b, (*goIterator)->name);
 						}
 					}
 				}
@@ -446,23 +444,22 @@ update_status ModuleUI::Update(float dt)
 					{
 						if (ImGui::Button((*textureIterator)->name))
 						{
-							for (std::list<Mesh*>::iterator meshesToChangeTexture = App->scene_intro->meshesSelected.begin(); meshesToChangeTexture != App->scene_intro->meshesSelected.end(); meshesToChangeTexture++)
+							for (std::list<GameObject*>::iterator goToChangeTexture = App->scene_intro->gameObjectSelected.begin(); goToChangeTexture != App->scene_intro->gameObjectSelected.end(); goToChangeTexture++)
 							{
-								(*meshesToChangeTexture)->textureNumber = i;
+								(*goToChangeTexture)->meshComponent->textureNumber = i;
 							}
 						}
 						i++;
 						textureIterator++;
-
 					}
 
 
 
 					if (ImGui::Button("No texture"))
 					{
-						for (std::list<Mesh*>::iterator meshesToChangeTexture = App->scene_intro->meshesSelected.begin(); meshesToChangeTexture != App->scene_intro->meshesSelected.end(); meshesToChangeTexture++)
+						for (std::list<GameObject*>::iterator goToChangeTexture = App->scene_intro->gameObjectSelected.begin(); goToChangeTexture != App->scene_intro->gameObjectSelected.end(); goToChangeTexture++)
 						{
-							(*meshesToChangeTexture)->textureNumber = 999;
+							(*goToChangeTexture)->meshComponent->textureNumber = 999;
 						}
 					}
 
@@ -614,17 +611,11 @@ void ModuleUI::AddConsoleOutput(const char* text, ...)
 	pendingOutputs.push_back(strdup(text));
 }
 
-void ModuleUI::SelectMesh(Mesh* mesh)
-{
-	mesh->isSelected = true;
-	App->scene_intro->meshesSelected.push_back(mesh);
-}
-
 void ModuleUI::UnselectAll()
 {
-	for (std::list<Mesh*>::iterator meshIterator = App->scene_intro->meshesSelected.begin(); meshIterator != App->scene_intro->meshesSelected.end(); meshIterator++)
+	for (std::list<GameObject*>::iterator goIterator = App->scene_intro->gameObjectSelected.begin(); goIterator != App->scene_intro->gameObjectSelected.end(); goIterator++)
 	{
-		(*meshIterator)->isSelected = false;
+		(*goIterator)->isSelected = false;
 	}
-	App->scene_intro->meshesSelected.clear();
+	App->scene_intro->gameObjectSelected.clear();
 }

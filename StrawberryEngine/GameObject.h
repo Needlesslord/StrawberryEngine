@@ -5,12 +5,13 @@ class GameObject
 
 public:
 
-	GameObject(char* name = GAME_OBJECT_DEFAULT_NAME);
+	GameObject(char* name = nullptr);
 	~GameObject();
 
+	void AddDefName();
 	void ChangeName(char* newName);
 	void AddMesh(Mesh* m);
-	void AddChild(Mesh* m);
+	void AddChild(GameObject* go);
 	vec3 GetCenter();
 
 public:
@@ -20,10 +21,15 @@ public:
 	vec3 scale = { 0,0,0 };
 
 	bool isMoved = false;
+	vec3 previousPosition = { 0,0,0 };
 
 	char* name = nullptr;
-	Mesh* goMesh = nullptr; // Game Object Mesh
-	std::list<Mesh*> childrenMeshes;
-	bool selected;
+	Mesh* meshComponent = nullptr; 
+
+	std::list<GameObject*> children;
+
+	bool isVertexNormalsEnabled = false;
+
+	bool isSelected = false;
 
 };

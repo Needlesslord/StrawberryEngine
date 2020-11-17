@@ -47,6 +47,8 @@ bool ModuleImporter::Start()
 	{
 		ret = false;
 	}
+
+	
 	
 	return ret;
 }
@@ -76,11 +78,6 @@ bool ModuleImporter::CleanUp()
 	}
 
 	return ret;
-}
-
-void ModuleImporter::AddGameObject(GameObject* go)const 
-{
-	App->scene_intro->gameObjectList.push_back(go);
 }
 
 void ModuleImporter::AddMesh(Mesh* mesh)const

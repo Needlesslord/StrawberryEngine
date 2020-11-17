@@ -77,10 +77,10 @@ uint64 TextureImporter::Save(const Texture* ourTexture, char** fileBuffer)
 		//RELEASE_ARRAY(fileBuffer);
 	}
 
-	return true;
+	return size;
 }
 
-bool TextureImporter::Load()
+bool TextureImporter::Load(const char* fileBuffer, Texture* ourTexture)
 {
 	return true;
 }

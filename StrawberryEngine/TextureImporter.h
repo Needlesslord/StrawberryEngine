@@ -27,7 +27,7 @@ public:
 	bool Start();
 	void Import();
 	uint64 Save(const Texture* ourTexture, char** fileBuffer);
-	bool Load();
+	bool Load(const char* fileBuffer, Texture* ourTexture);
 
 	Texture* LoadTexture(const char* path);
 

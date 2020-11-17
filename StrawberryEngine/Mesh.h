@@ -1,5 +1,6 @@
 #include "vector3.h"
 
+class GameObject;
 class Mesh
 {
 public:
@@ -7,7 +8,6 @@ public:
 	~Mesh() {};
 public:
 
-	char* name = nullptr;
 	uint id_index = 0; // index in VRAM
 	uint num_index = 0;
 	uint* index = nullptr;
@@ -17,23 +17,16 @@ public:
 	uint id_tex_coord = 0;
 	float* tex_coord = nullptr;
 
+	bool hasTex_coords = false;
+
 	bool hasNormals = false;
 	vec3* normals = nullptr;
 
-	bool isSelected = false;
-
 	uint textureNumber = 999;
 
-	vec3 position = { 0,0,0 };
-	vec3 rotation = { 0,0,0 };
-	vec3 scale = { 0,0,0 };
-
-	bool isMoved = false;
-	vec3 previousPosition = { 0,0,0 };
-
 	bool isDrawEnabled = true;
-	bool isFaceNormalsEnabled = false;
-	bool isVertexNormalsEnabled = false;
+	
+	GameObject* parent = nullptr;
 
 	const char* path = nullptr;
 

@@ -24,14 +24,23 @@ bool ModuleSceneIntro::Start()
 	App->camera->Move(vec3(1.0f, 1.0f, 0.0f));
 	App->camera->LookAt(vec3(0, 0, 0));
 
-	house = App->importer->meshImporter->Load("Assets/BakerHouse.fbx");
+	house = App->importer->meshImporter->LoadMesh("Assets/BakerHouse.fbx");
 	house->ChangeName("Baker house");
 	
-	for (std::list<Mesh*>::iterator meshIterator = house->childrenMeshes.begin(); meshIterator != house->childrenMeshes.end(); meshIterator++)
+	for (std::list<GameObject*>::iterator goIterator = house->children.begin(); goIterator != house->children.end(); goIterator++)
 	{
-		(*meshIterator)->textureNumber = 1;
+		(*goIterator)->meshComponent->textureNumber = 1;
 	}
 	//App->importer->Load("Assets/warrior.fbx");
+
+	char* buffer = nullptr;
+	std::list<Mesh*>::iterator mesh = meshesList.begin();
+	
+	//App->importer->meshImporter->Save((*mesh), &buffer); // crashes randomly
+
+	//App->fileSystem->Save()
+	//RELEASE_ARRAY(buffer); //crashes for some reason
+
 
 	return ret;
 }
@@ -48,13 +57,15 @@ bool ModuleSceneIntro::CleanUp()
 
 update_status ModuleSceneIntro::PreUpdate(float dt)
 {
+	
+
 	// Refresh selected mesh list
-	meshesSelected.clear();
-	for (std::list<Mesh*>::iterator meshesToSelect = meshesList.begin(); meshesToSelect != meshesList.end(); meshesToSelect++)
+	gameObjectSelected.clear();
+	for (std::list<GameObject*>::iterator goToSelect = everyGameObjectList.begin(); goToSelect != everyGameObjectList.end(); goToSelect++)
 	{
-		if ((*meshesToSelect)->isSelected)
+		if ((*goToSelect)->isSelected)
 		{
-			meshesSelected.push_back(*meshesToSelect);
+			gameObjectSelected.push_back(*goToSelect);
 		}
 	}
 
@@ -69,19 +80,19 @@ update_status ModuleSceneIntro::Update(float dt)
 	p.axis = true;
 
 	bool needToGenBuffers = false;
-	for (std::list<Mesh*>::iterator meshesToMove = meshesList.begin(); meshesToMove != meshesList.end(); meshesToMove++)
+	for (std::list<GameObject*>::iterator goToMove = everyGameObjectList.begin(); goToMove != everyGameObjectList.end(); goToMove++)
 	{
-		if ((*meshesToMove)->isMoved)
+		if ((*goToMove)->isMoved)
 		{
-			vec3 diff = (*meshesToMove)->position - (*meshesToMove)->previousPosition;
-			for (int i = 0; i < (*meshesToMove)->num_vertex; i++)
+			vec3 diff = (*goToMove)->position - (*goToMove)->previousPosition;
+			for (int i = 0; i < (*goToMove)->meshComponent->num_vertex; i++)
 			{
-				(*meshesToMove)->vertex[i].x += diff.x;
-				(*meshesToMove)->vertex[i].y += diff.y;
-				(*meshesToMove)->vertex[i].z += diff.z;
+				(*goToMove)->meshComponent->vertex[i].x += diff.x;
+				(*goToMove)->meshComponent->vertex[i].y += diff.y;
+				(*goToMove)->meshComponent->vertex[i].z += diff.z;
 			}
-			(*meshesToMove)->previousPosition = (*meshesToMove)->position;
-			(*meshesToMove)->isMoved = false;
+			(*goToMove)->previousPosition = (*goToMove)->position;
+			(*goToMove)->isMoved = false;
 			needToGenBuffers = true;
 		}
 	}
@@ -100,13 +111,15 @@ void ModuleSceneIntro::Draw()
 	p.Render();
 }
 
-GameObject* ModuleSceneIntro::AddGameObject(char* n)
+GameObject* ModuleSceneIntro::AddGameObject(char* name)
 {
 	GameObject* ret;
 
-	ret = new GameObject(n);
+	ret = new GameObject(name);
 
 	gameObjectList.push_back(ret);
+	everyGameObjectList.push_back(ret);
 
 	return ret;
 }
+
