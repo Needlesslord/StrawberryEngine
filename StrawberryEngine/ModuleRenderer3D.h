@@ -6,7 +6,7 @@
 
 #define MAX_LIGHTS 8
 
-class Mesh;
+class GameObject;
 class Texture;
 
 class ModuleRenderer3D : public Module
@@ -28,7 +28,7 @@ public:
 	void DrawCubeIndices();
 
 	void GenerateBuffers();
-	void Draw(Mesh* mesh);
+	void Draw(GameObject* go);
 
 	Texture* CreateCheckersTexture();
 

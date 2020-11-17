@@ -4,6 +4,7 @@
 #include "Globals.h"
 #include "Mesh.h"
 #include "Importer.h"
+#include "scene.h"
 
 class GameObject;
 class Mesh;
@@ -22,6 +23,7 @@ public:
 	bool Load(const char* fileBuffer, Mesh* ourMesh);
 
 	GameObject* LoadMesh(const char* path);
+	void RecursiveLoad(const aiScene* scene, GameObject* ret, const char* path, aiNode* node);
 
 public:
 

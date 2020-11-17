@@ -190,25 +190,21 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 {
 	App->scene_intro->Draw();
 
+
+
 	if (App->ui->isDrawEnabled)
 	{
 
-		for (std::list<Mesh*>::iterator meshIterator = App->scene_intro->meshesList.begin(); meshIterator != App->scene_intro->meshesList.end(); meshIterator++)
+		for (std::list<GameObject*>::iterator goIterator = App->scene_intro->gameObjectList.begin(); goIterator != App->scene_intro->gameObjectList.end(); goIterator++)
 		{
-			if ((*meshIterator)->isDrawEnabled)
+			if ((*goIterator)->meshComponent->isDrawEnabled)
 			{
-				Draw(*meshIterator);
+				Draw(*goIterator);
 			}
 		}
 	}
 	
 	
-	//DrawCubeDirect();
-	//DrawCubeArray();
-	//DrawCubeIndices();
-	
-
-
 	App->ui->Draw();
 
 	SDL_GL_SwapWindow(App->window->window);
@@ -346,8 +342,10 @@ void ModuleRenderer3D::GenerateBuffers()
 	}
 }
 
-void ModuleRenderer3D::Draw(Mesh* mesh)
+void ModuleRenderer3D::Draw(GameObject* go)
 {
+	Mesh* mesh = go->meshComponent;
+
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
@@ -370,7 +368,7 @@ void ModuleRenderer3D::Draw(Mesh* mesh)
 		}
 	}
 
-	if (mesh->parent->isVertexNormalsEnabled && mesh->hasNormals) 
+	if (go->isVertexNormalsEnabled && mesh->hasNormals) 
 	{
 
 		for (int i = 0; i < mesh->num_vertex; i++)
@@ -410,6 +408,13 @@ void ModuleRenderer3D::Draw(Mesh* mesh)
 
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+
+
+	for (std::list<GameObject*>::iterator goIterator = go->children.begin(); goIterator != go->children.end(); goIterator++)
+	{
+		Draw(*goIterator);
+	}
+
 }
 
 Texture* ModuleRenderer3D::CreateCheckersTexture()

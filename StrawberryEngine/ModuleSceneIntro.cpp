@@ -1,10 +1,9 @@
 #include "Globals.h"
 #include "Application.h"
 #include "ModuleSceneIntro.h"
+
 #include "ModuleImporter.h"
 #include "MeshImporter.h"
-#include "Primitive.h"
-#include "PhysBody3D.h"
 #include "GameObject.h"
 #include "ModuleInput.h"
 
@@ -25,7 +24,7 @@ bool ModuleSceneIntro::Start()
 	App->camera->LookAt(vec3(0, 0, 0));
 
 	house = App->importer->meshImporter->LoadMesh("Assets/BakerHouse.fbx");
-	house->ChangeName("Baker house");
+	//house->ChangeName("Baker house");
 	
 	for (std::list<GameObject*>::iterator goIterator = house->children.begin(); goIterator != house->children.end(); goIterator++)
 	{

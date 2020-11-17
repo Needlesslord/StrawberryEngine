@@ -5,6 +5,7 @@
 class Mesh;
 class GameObject;
 class Texture;
+class Primitive;
 
 class ModuleSceneIntro : public Module
 {
@@ -24,8 +25,9 @@ public:
 	GameObject* AddGameObject(char* name = nullptr);
 
 public:
-	
-	Plane p;
+
+	prim::Plane p;
+
 
 	std::list<GameObject*> gameObjectList; // main game objects, not counting their children
 	std::list<GameObject*> everyGameObjectList; // all game objects

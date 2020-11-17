@@ -5,6 +5,7 @@
 #include "Importer.h"
 //#include "Mesh.h"
 
+
 #include "Libs/Assimp/include/cimport.h"
 #include "Libs/Assimp/include/scene.h"
 #include "Libs/Assimp/include/postprocess.h"
@@ -52,6 +53,7 @@ GameObject* MeshImporter::LoadMesh(const char* path)
 
 	const aiScene* scene = aiImportFile(path, aiProcessPreset_TargetRealtime_MaxQuality);
 
+
 	if (scene == nullptr)
 	{
 		LOG("Scene was null");
@@ -65,85 +67,18 @@ GameObject* MeshImporter::LoadMesh(const char* path)
 	ret->position = pos;
 	vec3 scale(scaling.x, scaling.y, scaling.z);
 	ret->scale = scale;
+	//const Quat rotationMGL(rotation.x, rotation.y, rotation.z, rotation.w); //btw, MGL is for MathGeoLib
+	//ret->rotationQuat = rotationMGL;
 
 	if (scene != nullptr && scene->HasMeshes())
 	{
-		// Use scene->mNumMeshes to iterate on scene->mMeshes array
-		for (int i = 0; i < scene->mNumMeshes; i++)
+		aiNode* node = scene->mRootNode;
+		for (uint i = 0; i < scene->mRootNode->mNumChildren; i++)
 		{
-			GameObject* ourGO = new GameObject();
-			App->scene_intro->everyGameObjectList.push_back(ourGO);
-			ret->AddChild(ourGO);
-			ourGO->meshComponent->parent = ourGO;
-
-			LOG("%s is now a child of %s", ourGO->name, ret->name);
-
-			ourGO->meshComponent->num_vertex = scene->mMeshes[i]->mNumVertices;
-			ourGO->meshComponent->vertex = new vec3[ourGO->meshComponent->num_vertex * 3];
-			memcpy(ourGO->meshComponent->vertex, scene->mMeshes[i]->mVertices, sizeof(float) * ourGO->meshComponent->num_vertex * 3);
-			LOG("New mesh with %d vertices", ourGO->meshComponent->num_vertex);
-
-			// copy faces
-			if (scene->mMeshes[i]->HasFaces())
-			{
-				ourGO->meshComponent->num_index = scene->mMeshes[i]->mNumFaces * 3;
-				ourGO->meshComponent->index = new uint[ourGO->meshComponent->num_index]; // assume each face is a triangle
-				for (uint j = 0; j < scene->mMeshes[i]->mNumFaces; j++)
-				{
-					if (scene->mMeshes[i]->mFaces[j].mNumIndices != 3)
-					{
-						LOG("WARNING, geometry face with != 3 indices!");
-					}
-					else
-					{
-						memcpy(&ourGO->meshComponent->index[j * 3], scene->mMeshes[i]->mFaces[j].mIndices, 3 * sizeof(uint));
-					}
-				}
-			}
-
-			if (scene->mMeshes[i]->HasTextureCoords(0))
-			{
-				ourGO->meshComponent->tex_coord = new float[ourGO->meshComponent->num_vertex * 2];
-
-				for (int j = 0; j < ourGO->meshComponent->num_vertex; j++)
-				{
-					ourGO->meshComponent->tex_coord[j * 2] = scene->mMeshes[i]->mTextureCoords[0][j].x;
-					ourGO->meshComponent->tex_coord[(j * 2) + 1] = scene->mMeshes[i]->mTextureCoords[0][j].y;
-				}
-
-				glGenBuffers(1, (GLuint*) & (ourGO->meshComponent->id_tex_coord));
-				glBindBuffer(GL_ARRAY_BUFFER, ourGO->meshComponent->id_tex_coord);
-				glBufferData(GL_ARRAY_BUFFER, sizeof(float) * ourGO->meshComponent->num_vertex * 2, ourGO->meshComponent->tex_coord, GL_STATIC_DRAW);
-				glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-				ourGO->meshComponent->hasTex_coords = true;
-			}
-			
-			if (scene->mMeshes[i]->HasNormals())
-			{
-				ourGO->meshComponent->normals = new vec3[scene->mMeshes[i]->mNumVertices];
-				memcpy(ourGO->meshComponent->normals, scene->mMeshes[i]->mNormals, sizeof(vec3) * scene->mMeshes[i]->mNumVertices);
-				ourGO->meshComponent->hasNormals = true;
-			}
-
-			if (scene->mMeshes[i]->HasPositions())
-			{
-				aiVector3D mTranslation, mScaling;
-				aiQuaternion mRotation;
-				scene->mRootNode->mChildren[i]->mTransformation.Decompose(mScaling, mRotation, mTranslation);
-				//scene->mRootNode->mTransformation.Decompose(mScaling, mRotation, mTranslation);
-				vec3 mPos(mTranslation.x, mTranslation.y, mTranslation.z);
-				ourGO->position = pos + mPos;
-				ourGO->previousPosition = ourGO->position; // TESTING
-				vec3 scale(scaling.x, scaling.y, scaling.z);
-				ourGO->scale = scale;
-				//Quat rot(rotation.x, rotation.y, rotation.z, rotation.w);
-			}
-
-			ourGO->meshComponent->path = path;
-			
-			App->scene_intro->meshesList.push_back(ourGO->meshComponent);
+			if (node != nullptr)
+				RecursiveLoad(scene, ret, path, node->mChildren[i]);
 		}
+
 		aiReleaseImport(scene);
 	}
 	else
@@ -155,6 +90,94 @@ GameObject* MeshImporter::LoadMesh(const char* path)
 	return ret;
 }
 
+void MeshImporter::RecursiveLoad(const aiScene* scene, GameObject* ret, const char* path, aiNode* node)
+{
+	// Use scene->mNumMeshes to iterate on scene->mMeshes array
+	for (int i = 0; i < node->mNumMeshes; i++)
+	{
+		char* name = strdup(node->mName.C_Str());
+		GameObject* ourGO = new GameObject(name);
+		App->scene_intro->everyGameObjectList.push_back(ourGO);
+		ret->AddChild(ourGO);
+		ourGO->meshComponent->parent = ourGO;
+
+		LOG("%s is now a child of %s", ourGO->name, ret->name);
+
+
+		aiVector3D translation, scaling;
+		aiQuaternion rotation;
+		node->mTransformation.Decompose(scaling, rotation, translation);
+		vec3 pos(translation.x, translation.y, translation.z);
+		ourGO->position = pos;
+		vec3 scale(scaling.x, scaling.y, scaling.z);
+		scale /= 100;
+		ourGO->scale = scale;
+
+		ourGO->isMoved = true;
+
+		aiMesh* shortcut = scene->mMeshes[node->mMeshes[i]];//this is crazy long
+
+		ourGO->meshComponent->num_vertex = shortcut->mNumVertices;
+		ourGO->meshComponent->vertex = new vec3[ourGO->meshComponent->num_vertex * 3];
+		memcpy(ourGO->meshComponent->vertex, shortcut->mVertices, sizeof(float) * ourGO->meshComponent->num_vertex * 3);
+		LOG("New mesh with %d vertices", ourGO->meshComponent->num_vertex);
+
+		// copy faces
+		if (shortcut->HasFaces())
+		{
+			ourGO->meshComponent->num_index = shortcut->mNumFaces * 3;
+			ourGO->meshComponent->index = new uint[ourGO->meshComponent->num_index]; // assume each face is a triangle
+			for (uint j = 0; j < shortcut->mNumFaces; j++)
+			{
+				if (shortcut->mFaces[j].mNumIndices != 3)
+				{
+					LOG("WARNING, geometry face with != 3 indices!");
+				}
+				else
+				{
+					memcpy(&ourGO->meshComponent->index[j * 3], shortcut->mFaces[j].mIndices, 3 * sizeof(uint));
+				}
+			}
+		}
+
+		if (shortcut->HasTextureCoords(0))
+		{
+			ourGO->meshComponent->tex_coord = new float[ourGO->meshComponent->num_vertex * 2];
+
+			for (int j = 0; j < ourGO->meshComponent->num_vertex; j++)
+			{
+				ourGO->meshComponent->tex_coord[j * 2] = shortcut->mTextureCoords[0][j].x;
+				ourGO->meshComponent->tex_coord[(j * 2) + 1] = shortcut->mTextureCoords[0][j].y;
+			}
+
+			glGenBuffers(1, (GLuint*) & (ourGO->meshComponent->id_tex_coord));
+			glBindBuffer(GL_ARRAY_BUFFER, ourGO->meshComponent->id_tex_coord);
+			glBufferData(GL_ARRAY_BUFFER, sizeof(float) * ourGO->meshComponent->num_vertex * 2, ourGO->meshComponent->tex_coord, GL_STATIC_DRAW);
+			glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+			ourGO->meshComponent->hasTex_coords = true;
+		}
+
+		if (shortcut->HasNormals())
+		{
+			ourGO->meshComponent->normals = new vec3[shortcut->mNumVertices];
+			memcpy(ourGO->meshComponent->normals, shortcut->mNormals, sizeof(vec3) * shortcut->mNumVertices);
+			ourGO->meshComponent->hasNormals = true;
+		}
+
+		ourGO->meshComponent->path = path;
+
+		App->scene_intro->meshesList.push_back(ourGO->meshComponent);
+
+		
+	}
+
+	for (uint i = 0; i < node->mNumChildren; i++)
+	{
+		if (node != nullptr)
+			RecursiveLoad(scene, ret, path, node->mChildren[i]);
+	}
+}
 
 void MeshImporter::Import()
 {

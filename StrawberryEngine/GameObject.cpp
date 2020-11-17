@@ -5,9 +5,11 @@
 #include "Application.h"
 #include "ModuleImporter.h"
 
+
+
 GameObject::GameObject(char* name)
 {
-	if (this->name == nullptr)
+	if (name == nullptr)
 	{
 		AddDefName();
 	}
