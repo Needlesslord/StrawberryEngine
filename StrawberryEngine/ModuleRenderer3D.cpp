@@ -394,7 +394,10 @@ void ModuleRenderer3D::Draw(GameObject* go)
 
 	for (std::list<GameObject*>::iterator goIterator = go->children.begin(); goIterator != go->children.end(); goIterator++)
 	{
-		Draw(*goIterator);
+		if ((*goIterator)->meshComponent->isDrawEnabled)
+		{
+			Draw(*goIterator);
+		}
 	}
 
 }

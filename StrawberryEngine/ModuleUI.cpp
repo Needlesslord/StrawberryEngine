@@ -401,9 +401,12 @@ update_status ModuleUI::Update(float dt)
 
 					for (goIterator = App->scene_intro->gameObjectSelected.begin(); goIterator != App->scene_intro->gameObjectSelected.end(); goIterator++)
 					{
-						ImGui::Text("Mesh path for %s:", (*goIterator)->name);
-						ImGui::TextColored({ 1,0,1,1 }, (*goIterator)->meshComponent->path);
-						ImGui::Separator();
+						if ((*goIterator)->meshComponent->path != nullptr)
+						{
+							ImGui::Text("Mesh path for %s:", (*goIterator)->name);
+							ImGui::TextColored({ 1,0,1,1 }, (*goIterator)->meshComponent->path);
+							ImGui::Separator();
+						}
 					}
 
 					if (ImGui::Checkbox("Draw Vertex Normals", &isVertexNormalsEnabled))

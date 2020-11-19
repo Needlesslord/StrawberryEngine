@@ -32,10 +32,7 @@ bool ModuleSceneIntro::Start()
 	}
 	//App->importer->Load("Assets/warrior.fbx");
 
-	char* buffer;
-	std::list<Mesh*>::iterator mesh = meshesList.begin();
 	
-	App->importer->meshImporter->Save((*mesh), &buffer); // crashes randomly
 
 	
 
