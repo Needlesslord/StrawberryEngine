@@ -224,6 +224,11 @@ uint64 MeshImporter::Save(Mesh* ourMesh, char** fileBuffer)
 
 	//TODO: Save AABB
 
+
+	uint a = App->fileSystem->Save("/Library/Meshes/test01.sem", *fileBuffer, size);
+
+	//RELEASE(*fileBuffer);
+
 	return size;
 }
 

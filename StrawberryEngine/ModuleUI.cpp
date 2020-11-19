@@ -16,9 +16,6 @@
 
 #include "Libs/Assimp/include/version.h"
 
-
-#include <GL/glew.h>
-
 #include "Libs/ImGui/imgui.h"
 #include "Libs/ImGui/imgui_impl_sdl.h"
 #include "Libs/ImGui/imgui_impl_opengl3.h"
