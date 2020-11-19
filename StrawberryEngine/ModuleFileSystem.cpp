@@ -18,7 +18,7 @@ ModuleFileSystem::ModuleFileSystem(Application* app, bool start_enabled) : Modul
 {
 	// needs to be created before Init so other modules can use it
 	char* base_path = SDL_GetBasePath();
-	PHYSFS_init(nullptr);
+	PHYSFS_init(base_path);
 	SDL_free(base_path);
 
 	//Setting the working directory as the writing directory
@@ -46,8 +46,8 @@ bool ModuleFileSystem::Init()
 	char* write_path = SDL_GetPrefPath("Strawberry Engine", "UPC");
 
 	// Trun this on while in game mode
-	if(PHYSFS_setWriteDir(write_path) == 0)
-		LOG("File System error while creating write dir: %s\n", PHYSFS_getLastError());
+	//if(PHYSFS_setWriteDir(write_path) == 0)
+	//	LOG("File System error while creating write dir: %s\n", PHYSFS_getLastError());
 
 	SDL_free(write_path);
 
@@ -64,10 +64,14 @@ bool ModuleFileSystem::CleanUp()
 
 void ModuleFileSystem::CreateLibraryDirectories()
 {
-	CreateDir(LIBRARY_PATH);
-	CreateDir(FOLDERS_PATH);
-	CreateDir(MESHES_PATH);
-	CreateDir(TEXTURES_PATH);
+	if (!PHYSFS_exists(LIBRARY_PATH))
+		CreateDir(LIBRARY_PATH);
+	if (!PHYSFS_exists(FOLDERS_PATH))
+		CreateDir(FOLDERS_PATH);
+	if (!PHYSFS_exists(MESHES_PATH))
+		CreateDir(MESHES_PATH);
+	if (!PHYSFS_exists(TEXTURES_PATH))
+		CreateDir(TEXTURES_PATH);
 }
 
 // Add a new zip file or folder
@@ -379,9 +383,12 @@ uint ModuleFileSystem::Save(const char* file, const void* buffer, unsigned int s
 {
 	unsigned int ret = 0;
 
-	bool overwrite = PHYSFS_exists(file) != 0;
-	PHYSFS_file* fs_file = (append) ? PHYSFS_openAppend(file) : PHYSFS_openWrite(file);
+	PHYSFS_permitSymbolicLinks(1); // If it doesn't crash anymomre it's cause of this... no crashes so far
 
+	bool overwrite = PHYSFS_exists(file) != 0;
+	
+	PHYSFS_file* fs_file = (append) ? PHYSFS_openAppend(file) : PHYSFS_openWrite(file);
+	const char* a = PHYSFS_getLastError();
 	if (fs_file != nullptr)
 	{
 		uint written = (uint)PHYSFS_write(fs_file, (const void*)buffer, 1, size);
@@ -406,6 +413,7 @@ uint ModuleFileSystem::Save(const char* file, const void* buffer, unsigned int s
 
 			ret = written;
 		}
+
 
 		if (PHYSFS_close(fs_file) == 0)
 			LOG("[error] File System error while closing file %s: %s", file, PHYSFS_getLastError());

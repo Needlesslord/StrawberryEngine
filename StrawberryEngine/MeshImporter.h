@@ -28,7 +28,8 @@ public:
 public:
 
 	int meshIterator = 0;
-
+	GameObject* test = nullptr;
+	int testIterator = 0;
 };
 
 #endif // __MeshImporter_H__

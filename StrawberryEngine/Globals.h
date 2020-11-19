@@ -14,7 +14,7 @@
 
 #define LIBRARY_PATH "Library/"
 #define FOLDERS_PATH "Library/Folders/"
-#define MESHES_PATH "Library/Meshes/"
+#define MESHES_PATH "/Library/Meshes/"
 #define TEXTURES_PATH "Library/Textures/"
 
 #define LOG(format, ...) log(__FILE__, __LINE__, format, __VA_ARGS__);

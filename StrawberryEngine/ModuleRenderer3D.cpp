@@ -10,9 +10,9 @@
 #include "MeshImporter.h"
 #include "GameObject.h"
 
-#include "Geometry.h"
 #include "Libs/Glew/include/GL/glew.h"
 #include "Libs/SDL/include/SDL_opengl.h"
+
 #include <gl/GL.h>
 #include <gl/GLU.h>
 
@@ -136,24 +136,6 @@ bool ModuleRenderer3D::Init()
 
 bool ModuleRenderer3D::Start()
 {
-	my_id = 0;
-	glGenBuffers(1, (GLuint*) & (my_id));
-	glBindBuffer(GL_ARRAY_BUFFER, my_id);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 36, cubeArray, GL_STATIC_DRAW);
-
-	myId = 0;
-	glGenBuffers(1, (GLuint*) & (myId));
-	glBindBuffer(GL_ARRAY_BUFFER, myId);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 24, cubeVertices, GL_STATIC_DRAW);
-
-	myIndeces = 0;
-	glGenBuffers(1, (GLuint*) & (myIndeces));
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, myIndeces);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * 36, cubeIndices, GL_STATIC_DRAW);
-
-	
-	//glBufferData(GL_TEXTURE_2D, sizeof(float) * 72, cubeUV, GL_STATIC_DRAW);
-	//GL_TEXCOORD2_BIT_PGI   GL_TEXTURE_BINDING_2D_ARRAY   GL_TEXTURE_2D_ARRAY	 GL_TEXTURE_COORD_ARRAY
 
 	GenerateBuffers();
 	
@@ -412,7 +394,10 @@ void ModuleRenderer3D::Draw(GameObject* go)
 
 	for (std::list<GameObject*>::iterator goIterator = go->children.begin(); goIterator != go->children.end(); goIterator++)
 	{
-		Draw(*goIterator);
+		if ((*goIterator)->meshComponent->isDrawEnabled)
+		{
+			Draw(*goIterator);
+		}
 	}
 
 }

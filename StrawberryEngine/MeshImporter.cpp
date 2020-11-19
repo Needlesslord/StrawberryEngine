@@ -33,6 +33,8 @@ bool MeshImporter::Start()
 	aiAttachLogStream(&stream);
 	LOG("Initializing Assimp");
 
+	test = App->scene_intro->AddGameObject("test");
+
 	return ret;
 }
 
@@ -169,7 +171,26 @@ void MeshImporter::RecursiveLoad(const aiScene* scene, GameObject* ret, const ch
 
 		App->scene_intro->meshesList.push_back(ourGO->meshComponent);
 
-		
+		char* buffer;
+		Save(ourGO->meshComponent, &buffer); // crashes randomly
+
+
+		char* goname;
+		if (testIterator == 0)
+		{
+			goname = "TestingLoad 0";
+		}
+		else
+			goname = "TestingLoad 1";
+		testIterator++;
+		GameObject* testingLoadGO = new GameObject(goname);
+		App->scene_intro->everyGameObjectList.push_back(testingLoadGO);
+		test->AddChild(testingLoadGO);
+		testingLoadGO->meshComponent->parent = testingLoadGO;
+
+		Load(buffer, testingLoadGO->meshComponent);
+
+		RELEASE(buffer);
 	}
 
 	for (uint i = 0; i < node->mNumChildren; i++)
@@ -187,12 +208,13 @@ void MeshImporter::Import()
 uint64 MeshImporter::Save(Mesh* ourMesh, char** fileBuffer)
 {
 	// amount of indices / vertices / colors / normals / texture_coords / AABB
-	uint ranges[2] = { ourMesh->num_index, ourMesh->num_vertex };
-	uint size = sizeof(ranges) + sizeof(uint) * ourMesh->num_index + sizeof(float) * ourMesh->num_vertex * 3;
+	uint ranges[4] = { ourMesh->num_index, ourMesh->num_vertex, ourMesh->num_vertex/* -(Normals)- */, ourMesh->num_vertex * 2 /* -(UVs)- */ };
+	uint size = sizeof(ranges) + sizeof(uint) * ourMesh->num_index + sizeof(uint) * ourMesh->num_vertex * 3 + sizeof(uint) * ourMesh->num_vertex/* -(Normals)- */ + sizeof(uint) * ourMesh->num_vertex * 2 /* -(UVs)- */;
 	*fileBuffer = new char[size]; // Allocate
 	char* cursor = *fileBuffer;
 
-	uint bytes = sizeof(ranges); // First store ranges
+	// First store ranges
+	uint bytes = sizeof(ranges); 
 	memcpy(cursor, ranges, bytes);
 	cursor += bytes;
 
@@ -224,6 +246,13 @@ uint64 MeshImporter::Save(Mesh* ourMesh, char** fileBuffer)
 
 	//TODO: Save AABB
 
+	char file[250]; 
+	sprintf_s(file, 250, "%s%s.sem", MESHES_PATH, ourMesh->parent->name/*Should be the mesh's name*/);
+
+	uint a = App->fileSystem->Save(file, *fileBuffer, size);
+
+	//RELEASE(*fileBuffer);
+
 	return size;
 }
 
@@ -231,7 +260,7 @@ bool MeshImporter::Load(const char* fileBuffer, Mesh* ourMesh)
 {
 	const char* cursor = fileBuffer;
 	// amount of indices / vertices / colors / normals / texture_coords
-	uint ranges[5];
+	uint ranges[4];
 	uint bytes = sizeof(ranges);
 	memcpy(ranges, cursor, bytes);
 	cursor += bytes;
@@ -245,14 +274,14 @@ bool MeshImporter::Load(const char* fileBuffer, Mesh* ourMesh)
 	cursor += bytes;
 
 	// Load vertices
-	bytes = sizeof(uint) * ourMesh->num_vertex * 3;
-	ourMesh->vertex = new vec3[ourMesh->num_vertex * 3]; // Not sure about this
+	bytes = sizeof(uint) * ourMesh->num_vertex;
+	ourMesh->vertex = new vec3[ourMesh->num_vertex]; // Not sure about this
 	memcpy(ourMesh->vertex, cursor, bytes);
 	cursor += bytes;
 
 	// Load normals
-	bytes = sizeof(uint) * ourMesh->num_vertex * 3;
-	ourMesh->normals = new vec3[ourMesh->num_vertex * 3]; // Not sure about this
+	bytes = sizeof(uint) * ourMesh->num_vertex;
+	ourMesh->normals = new vec3[ourMesh->num_vertex]; // Not sure about this !!!!!!!!!!!!
 	memcpy(ourMesh->normals, cursor, bytes);
 	cursor += bytes;
 
