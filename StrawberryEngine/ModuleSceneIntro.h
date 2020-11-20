@@ -28,8 +28,8 @@ public:
 
 	prim::Plane p;
 
-
-	std::list<GameObject*> gameObjectList; // main game objects, not counting their children
+	GameObject* rootNode = nullptr;
+	//std::list<GameObject*> gameObjectList; // main game objects, not counting their children  --->> moveing this  to the RootNode's children' list
 	std::list<GameObject*> everyGameObjectList; // all game objects
 	std::list<GameObject*> gameObjectSelected;
 	std::list<Mesh*> meshesList;

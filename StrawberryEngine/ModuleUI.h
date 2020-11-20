@@ -18,6 +18,9 @@ public:
 
 	ModuleUI(Application* app, bool start_enabled = true);
 
+	// Destructor
+	virtual ~ModuleUI();
+
 	bool Init();
 
 	bool Start();
@@ -36,10 +39,7 @@ public:
 
 	void UnselectAll();
 
-	void SelectMesh(Mesh* mesh);
-
-	// Destructor
-	virtual ~ModuleUI();
+	void CreateHierarchy(GameObject* go);
 
 public:
 

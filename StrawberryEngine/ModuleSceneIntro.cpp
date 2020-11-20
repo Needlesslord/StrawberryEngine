@@ -9,6 +9,7 @@
 
 ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
+	rootNode = new GameObject("RootNode");
 }
 
 ModuleSceneIntro::~ModuleSceneIntro()
@@ -111,7 +112,7 @@ GameObject* ModuleSceneIntro::AddGameObject(char* name)
 
 	ret = new GameObject(name);
 
-	gameObjectList.push_back(ret);
+	rootNode->children.push_back(ret);
 	everyGameObjectList.push_back(ret);
 
 	return ret;

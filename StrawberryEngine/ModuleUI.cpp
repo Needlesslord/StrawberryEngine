@@ -302,31 +302,9 @@ update_status ModuleUI::Update(float dt)
 		ImGui::SetNextWindowSize({ 300, (float)(App->window->screen_surface->h * 8 / 10) });*/
 		ImGui::Begin("Hierarchy", &isHierarchyShown);
 
-		if (App->scene_intro->gameObjectList.size() > 0) 
-		{
-
-			for (std::list<GameObject*>::iterator gameObjectIterator = App->scene_intro->gameObjectList.begin(); gameObjectIterator != App->scene_intro->gameObjectList.end(); gameObjectIterator++)
-			{
-				//ImGui::Checkbox((*gameObjectIterator)->name, &(*gameObjectIterator)->selected);
-
-				if (ImGui::TreeNode((*gameObjectIterator)->name))
-				{
-
-					for (std::list<GameObject*>::iterator childrenIterator = (*gameObjectIterator)->children.begin(); childrenIterator != (*gameObjectIterator)->children.end(); childrenIterator++)
-					{
-						if (ImGui::Checkbox((*childrenIterator)->name, &(*childrenIterator)->isSelected))
-						{
-							if (App->input->GetKey(SDL_SCANCODE_LCTRL) != KEY_REPEAT && (*childrenIterator)->isSelected)
-							{
-								UnselectAll();
-							}
-						}
-					}
-					ImGui::TreePop();
-				}
-				
-			}
-		}
+		
+		CreateHierarchy(App->scene_intro->rootNode);
+		
 
 		ImGui::End();
 	}
@@ -618,4 +596,34 @@ void ModuleUI::UnselectAll()
 		(*goIterator)->isSelected = false;
 	}
 	App->scene_intro->gameObjectSelected.clear();
+}
+
+void ModuleUI::CreateHierarchy(GameObject* go)
+{
+	if (go->children.size() > 0)
+	{
+		if (ImGui::TreeNode(go->name))
+		{
+			for (std::list<GameObject*>::iterator childrenIterator = go->children.begin(); childrenIterator != go->children.end(); childrenIterator++)
+			{
+				/*if (ImGui::Checkbox(go->name, &go->isSelected))
+				{
+					if (App->input->GetKey(SDL_SCANCODE_LCTRL) != KEY_REPEAT)
+					{
+						UnselectAll();
+					}
+				}*/
+				CreateHierarchy(*childrenIterator);
+			}
+			
+			ImGui::TreePop();
+		}
+	}
+	else
+	{
+		if (ImGui::Checkbox(go->name, &go->isSelected))
+		{
+			UnselectAll();
+		}
+	}
 }

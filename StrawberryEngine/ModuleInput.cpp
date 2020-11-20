@@ -135,7 +135,7 @@ update_status ModuleInput::PreUpdate(float dt)
 					else if (fileType == ".png" || fileType == ".PNG")
 					{
 						LOG("Loading .png");
-						for (std::list<GameObject*>::iterator goIterator = App->scene_intro->gameObjectList.begin(); goIterator != App->scene_intro->gameObjectList.end(); goIterator++)
+						for (std::list<GameObject*>::iterator goIterator = App->scene_intro->rootNode->children.begin(); goIterator != App->scene_intro->rootNode->children.end(); goIterator++)
 						{
 							if ((*goIterator)->isSelected)
 							{
@@ -147,7 +147,7 @@ update_status ModuleInput::PreUpdate(float dt)
 					else if (fileType == ".dds" || fileType == ".DDS")
 					{
 						LOG("Loading .dds");
-						for (std::list<GameObject*>::iterator goIterator = App->scene_intro->gameObjectList.begin(); goIterator != App->scene_intro->gameObjectList.end(); goIterator++)
+						for (std::list<GameObject*>::iterator goIterator = App->scene_intro->rootNode->children.begin(); goIterator != App->scene_intro->rootNode->children.end(); goIterator++)
 						{
 							if ((*goIterator)->isSelected)
 							{

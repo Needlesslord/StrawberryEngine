@@ -177,7 +177,7 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	if (App->ui->isDrawEnabled)
 	{
 
-		for (std::list<GameObject*>::iterator goIterator = App->scene_intro->gameObjectList.begin(); goIterator != App->scene_intro->gameObjectList.end(); goIterator++)
+		for (std::list<GameObject*>::iterator goIterator = App->scene_intro->rootNode->children.begin(); goIterator != App->scene_intro->rootNode->children.end(); goIterator++)
 		{
 			if ((*goIterator)->meshComponent->isDrawEnabled)
 			{
