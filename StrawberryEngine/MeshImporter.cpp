@@ -119,6 +119,8 @@ void MeshImporter::RecursiveLoad(const aiScene* scene, GameObject* ret, const ch
 
 		aiMesh* shortcut = scene->mMeshes[node->mMeshes[i]];//this is crazy long
 
+		char* meshname = strdup(shortcut->mName.C_Str());
+		ourGO->meshComponent->name = meshname;
 		ourGO->meshComponent->num_vertex = shortcut->mNumVertices;
 		ourGO->meshComponent->vertex = new vec3[ourGO->meshComponent->num_vertex * 3];
 		memcpy(ourGO->meshComponent->vertex, shortcut->mVertices, sizeof(float) * ourGO->meshComponent->num_vertex * 3);
@@ -189,6 +191,10 @@ void MeshImporter::RecursiveLoad(const aiScene* scene, GameObject* ret, const ch
 		testingLoadGO->meshComponent->parent = testingLoadGO;
 
 		Load(buffer, testingLoadGO->meshComponent);
+		testingLoadGO->position.x += 4;
+		testingLoadGO->isMoved = true;
+		App->scene_intro->meshesList.push_back(testingLoadGO->meshComponent);
+		App->renderer3D->GenerateBuffers();
 
 		RELEASE(buffer);
 	}
@@ -208,8 +214,13 @@ void MeshImporter::Import()
 uint64 MeshImporter::Save(Mesh* ourMesh, char** fileBuffer)
 {
 	// amount of indices / vertices / colors / normals / texture_coords / AABB
-	uint ranges[4] = { ourMesh->num_index, ourMesh->num_vertex, ourMesh->num_vertex/* -(Normals)- */, ourMesh->num_vertex * 2 /* -(UVs)- */ };
-	uint size = sizeof(ranges) + sizeof(uint) * ourMesh->num_index + sizeof(uint) * ourMesh->num_vertex * 3 + sizeof(uint) * ourMesh->num_vertex/* -(Normals)- */ + sizeof(uint) * ourMesh->num_vertex * 2 /* -(UVs)- */;
+	uint ranges[4] = { ourMesh->num_index, ourMesh->num_vertex, ourMesh->num_vertex/* -(Normals)- */, ourMesh->num_vertex /* -(UVs)- */ };
+	uint size = sizeof(ranges) + sizeof(uint)
+		+ sizeof(uint) * ourMesh->num_index 
+		+ sizeof(float) * ourMesh->num_vertex * 3 
+		+ sizeof(float) * ourMesh->num_vertex * 3 /* -(Normals)- */
+		+ sizeof(float) * ourMesh->num_vertex * 2 /* -(UVs)- */;
+
 	*fileBuffer = new char[size]; // Allocate
 	char* cursor = *fileBuffer;
 
@@ -224,32 +235,33 @@ uint64 MeshImporter::Save(Mesh* ourMesh, char** fileBuffer)
 	cursor += bytes;
 
 	// Store vertices
-	bytes = sizeof(uint) * ourMesh->num_vertex;
+	bytes = sizeof(float) * ourMesh->num_vertex * 3;
 	memcpy(cursor, ourMesh->vertex, bytes);
 	cursor += bytes;
 
-	if (ourMesh->hasNormals)
-	{
+
+	//if (ourMesh->hasNormals)
+	//{
 		// Store normals
-		bytes = sizeof(uint) * ourMesh->num_vertex;
+		bytes = sizeof(float) * ourMesh->num_vertex * 3;
 		memcpy(cursor, ourMesh->normals, bytes);
 		cursor += bytes;
-	}
+	//}
 
-	if (ourMesh->hasTex_coords)
-	{
+	//if (ourMesh->hasTex_coords)
+	//{
 		// Store tex coords
-		bytes = sizeof(uint) * ourMesh->num_vertex * 2;
+		bytes = sizeof(float) * ourMesh->num_vertex * 2;
 		memcpy(cursor, ourMesh->tex_coord, bytes);
 		cursor += bytes;
-	}
+	//}
 
 	//TODO: Save AABB
 
 	char file[250]; 
 	sprintf_s(file, 250, "%s%s.sem", MESHES_PATH, ourMesh->parent->name/*Should be the mesh's name*/);
 
-	uint a = App->fileSystem->Save(file, *fileBuffer, size);
+	App->fileSystem->Save(file, *fileBuffer, size);
 
 	//RELEASE(*fileBuffer);
 
@@ -274,21 +286,28 @@ bool MeshImporter::Load(const char* fileBuffer, Mesh* ourMesh)
 	cursor += bytes;
 
 	// Load vertices
-	bytes = sizeof(uint) * ourMesh->num_vertex;
+	bytes = sizeof(float) * ourMesh->num_vertex * 3;
 	ourMesh->vertex = new vec3[ourMesh->num_vertex]; // Not sure about this
 	memcpy(ourMesh->vertex, cursor, bytes);
 	cursor += bytes;
 
 	// Load normals
-	bytes = sizeof(uint) * ourMesh->num_vertex;
+	bytes = sizeof(float) * ourMesh->num_vertex * 3;
 	ourMesh->normals = new vec3[ourMesh->num_vertex]; // Not sure about this !!!!!!!!!!!!
 	memcpy(ourMesh->normals, cursor, bytes);
 	cursor += bytes;
+	ourMesh->hasNormals = true; // IDK
 
 	// Load tex coords
-	bytes = sizeof(uint) * ourMesh->num_vertex * 2;
+	bytes = sizeof(float) * ourMesh->num_vertex * 2;
 	ourMesh->tex_coord = new float[ourMesh->num_vertex * 2]; // Not sure about this
 	memcpy(ourMesh->tex_coord, cursor, bytes);
+	ourMesh->hasTex_coords = true; // IDK
+
+	glGenBuffers(1, (GLuint*) & (ourMesh->id_tex_coord));
+	glBindBuffer(GL_ARRAY_BUFFER, ourMesh->id_tex_coord);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * ourMesh->num_vertex * 2, ourMesh->tex_coord, GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	//TODO: Load AABB
 

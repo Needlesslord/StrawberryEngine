@@ -30,4 +30,6 @@ public:
 
 	const char* path = nullptr;
 
+	char* name = nullptr;
+
 };
