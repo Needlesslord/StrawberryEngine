@@ -24,18 +24,12 @@ bool ModuleSceneIntro::Start()
 	App->camera->Move(vec3(1.0f, 1.0f, 0.0f));
 	App->camera->LookAt(vec3(0, 0, 0));
 
-	house = App->importer->meshImporter->LoadMesh("Assets/BakerHouse.fbx");
-	//house->ChangeName("Baker house");
+	house = App->importer->meshImporter->LoadMesh("Assets/Meshes/BakerHouse.fbx");
 	
 	for (std::list<GameObject*>::iterator goIterator = house->children.begin(); goIterator != house->children.end(); goIterator++)
 	{
 		(*goIterator)->meshComponent->textureNumber = 1;
 	}
-	//App->importer->Load("Assets/warrior.fbx");
-
-	
-
-	
 
 	return ret;
 }
@@ -79,17 +73,29 @@ update_status ModuleSceneIntro::Update(float dt)
 	{
 		if ((*goToMove)->isMoved)
 		{
-			vec3 diff = (*goToMove)->position - (*goToMove)->previousPosition;
+
+			/*vec3 diff = (*goToMove)->position - (*goToMove)->previousPosition;
 			for (int i = 0; i < (*goToMove)->meshComponent->num_vertex; i++)
 			{
 				(*goToMove)->meshComponent->vertex[i].x += diff.x;
 				(*goToMove)->meshComponent->vertex[i].y += diff.y;
 				(*goToMove)->meshComponent->vertex[i].z += diff.z;
 			}
-			(*goToMove)->previousPosition = (*goToMove)->position;
+			(*goToMove)->previousPosition = (*goToMove)->position;*/
+
+
+
+			float3 rot = ((*goToMove)->rotation - (*goToMove)->previousRotation) * DEGTORAD;
+			(*goToMove)->previousRotation = (*goToMove)->rotation;
+			Quat quaternion_rot = Quat::FromEulerXYZ(rot.x, rot.y, rot.z);
+			(*goToMove)->rotationQuat = (*goToMove)->rotationQuat * quaternion_rot;
+
+			(*goToMove)->UpdateTransform();
 			(*goToMove)->isMoved = false;
 			needToGenBuffers = true;
 		}
+
+		
 	}
 	if (needToGenBuffers)
 		App->renderer3D->GenerateBuffers();

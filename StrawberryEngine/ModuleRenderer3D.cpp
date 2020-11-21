@@ -181,7 +181,10 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 		{
 			if ((*goIterator)->meshComponent->isDrawEnabled)
 			{
+				
 				Draw(*goIterator);
+
+				
 			}
 		}
 	}
@@ -326,6 +329,11 @@ void ModuleRenderer3D::GenerateBuffers()
 
 void ModuleRenderer3D::Draw(GameObject* go)
 {
+	glPushMatrix();
+	glMultMatrixf((GLfloat*) & go->transform.Transposed());
+
+
+
 	Mesh* mesh = go->meshComponent;
 
 	glEnableClientState(GL_VERTEX_ARRAY);
@@ -390,6 +398,11 @@ void ModuleRenderer3D::Draw(GameObject* go)
 
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+
+
+
+	glPopMatrix();
+
 
 
 	for (std::list<GameObject*>::iterator goIterator = go->children.begin(); goIterator != go->children.end(); goIterator++)

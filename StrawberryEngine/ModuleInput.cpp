@@ -126,9 +126,9 @@ update_status ModuleInput::PreUpdate(float dt)
 					fileType = dropped_filedir;
 					fileType.erase(0, fileType.find_last_of('.'));
 
-					if (fileType == ".fbx" || fileType == ".FBX")
+					if (fileType == ".fbx" || fileType == ".FBX" || fileType == ".obj" || fileType == ".OBJ")
 					{
-						LOG("Loading .fbx");
+						LOG("Loading mesh");
 						App->importer->meshImporter->LoadMesh(dropped_filedir);
 						App->renderer3D->GenerateBuffers();
 					}

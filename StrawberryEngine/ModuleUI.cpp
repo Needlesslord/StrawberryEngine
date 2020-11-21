@@ -317,8 +317,8 @@ update_status ModuleUI::Update(float dt)
 		if (!isInspectorInit)
 		{
 			isInspectorInit = true;
-			ImGui::SetNextWindowPos({ (float)App->window->screen_surface->w - 260, 30 });
-			ImGui::SetNextWindowSize({ 250, (float)(App->window->screen_surface->h -  40)});
+			ImGui::SetNextWindowPos({ (float)App->window->screen_surface->w - 410, 30 });
+			ImGui::SetNextWindowSize({ 400, (float)(App->window->screen_surface->h -  40)});
 		}
 		ImGui::Begin("Inspector", &isInspectorShown);
 		{
@@ -327,31 +327,80 @@ update_status ModuleUI::Update(float dt)
 			{
 				std::list<GameObject*>::iterator goIterator = App->scene_intro->gameObjectSelected.begin();
 
-				char* buf = (*goIterator)->name;
 
+				char* buf = (*goIterator)->name;
 				if (ImGui::InputText("", buf, 50, ImGuiInputTextFlags_EnterReturnsTrue))
 					(*goIterator)->name = buf;
 
-				if (ImGui::CollapsingHeader("Transformation", ImGuiTreeNodeFlags_DefaultOpen))
-				{
-					//float v1[3] = { (*meshIterator)->position.x, (*meshIterator)->position.y, (*meshIterator)->position.z };
-					//ImGui::InputFloat3("Position", v1);
 
-					if (ImGui::DragFloat3("Position", &(*goIterator)->position))
+				if (ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen))
+				{
+					// I'm gonna 'copy' Unity's
+					ImGui::Text("Position"); ImGui::SameLine(); ImGui::Text("X"); ImGui::SameLine(); ImGui::PushItemWidth(75); ImGui::PushID("posX");
+					if (ImGui::DragFloat("", &(*goIterator)->position.x))
 					{
-						//float v1[3] = { (*meshIterator)->position.x, (*meshIterator)->position.y, (*meshIterator)->position.z };
+						(*goIterator)->isMoved = true;
+					} 
+					ImGui::PopID();
+					ImGui::SameLine(); ImGui::Text("Y"); ImGui::SameLine(); ImGui::PushItemWidth(75); ImGui::PushID("posY");
+					if (ImGui::DragFloat("", &(*goIterator)->position.y))
+					{
+						(*goIterator)->isMoved = true;
+					} 
+					ImGui::PopID();
+					ImGui::SameLine(); ImGui::Text("Z"); ImGui::SameLine(); ImGui::PushItemWidth(75); ImGui::PushID("posZ");
+					if (ImGui::DragFloat("", &(*goIterator)->position.z))
+					{
 						(*goIterator)->isMoved = true;
 					}
+					ImGui::PopID();
 
-					if (ImGui::DragFloat3("Rotation", &(*goIterator)->rotation))
-					{
-						//float v2[3] = { (*meshIterator)->rotation.x, (*meshIterator)->rotation.y, (*meshIterator)->rotation.z };
-					}
 
-					if (ImGui::DragFloat3("Scale", &(*goIterator)->scale))
+					////
+
+
+					ImGui::Text("Rotation"); ImGui::SameLine(); ImGui::Text("X"); ImGui::SameLine(); ImGui::PushItemWidth(75); ImGui::PushID("rotX");
+					if (ImGui::DragFloat("", &(*goIterator)->rotation.x))
 					{
-						//float v3[3] = { (*meshIterator)->scale.x, (*meshIterator)->scale.y, (*meshIterator)->scale.z };
+						(*goIterator)->isMoved = true;
+					} 
+					ImGui::PopID();
+					ImGui::SameLine(); ImGui::Text("Y"); ImGui::SameLine(); ImGui::PushItemWidth(75); ImGui::PushID("rotY");
+					if (ImGui::DragFloat("", &(*goIterator)->rotation.y))
+					{
+						(*goIterator)->isMoved = true;
+					} 
+					ImGui::PopID();
+					ImGui::SameLine(); ImGui::Text("Z"); ImGui::SameLine(); ImGui::PushItemWidth(75); ImGui::PushID("rotZ");
+					if (ImGui::DragFloat("", &(*goIterator)->rotation.z))
+					{
+						(*goIterator)->isMoved = true;
 					}
+					ImGui::PopID();
+
+
+					////
+
+
+					ImGui::Text("Scale   "); ImGui::SameLine(); ImGui::Text("X"); ImGui::SameLine(); ImGui::PushItemWidth(75); ImGui::PushID("sclX");
+					if (ImGui::DragFloat("", &(*goIterator)->scale.x))
+					{
+						(*goIterator)->isMoved = true;
+					}
+					ImGui::PopID();
+					ImGui::SameLine(); ImGui::Text("Y"); ImGui::SameLine(); ImGui::PushItemWidth(75); ImGui::PushID("sclY");
+					if (ImGui::DragFloat("", &(*goIterator)->scale.y))
+					{
+						(*goIterator)->isMoved = true;
+					}
+					ImGui::PopID();
+					ImGui::SameLine(); ImGui::Text("Z"); ImGui::SameLine(); ImGui::PushItemWidth(75); ImGui::PushID("sclZ");
+					if (ImGui::DragFloat("", &(*goIterator)->scale.z))
+					{
+						(*goIterator)->isMoved = true;
+					}
+					ImGui::PopID();
+
 				}
 
 				if (ImGui::CollapsingHeader("Render", ImGuiTreeNodeFlags_DefaultOpen))
@@ -539,7 +588,7 @@ update_status ModuleUI::Update(float dt)
 		{
 			isConsoleInit = true;
 			ImGui::SetNextWindowPos({ 270, (float)(App->window->screen_surface->h - 210) });
-			ImGui::SetNextWindowSize({ (float)(App->window->screen_surface->w - 540), 200 });
+			ImGui::SetNextWindowSize({ (float)(App->window->screen_surface->w - 690), 200 });
 		}
 
 		ImGui::Begin("Console", &isConsoleShown);

@@ -65,12 +65,15 @@ GameObject* MeshImporter::LoadMesh(const char* path)
 	aiVector3D translation, scaling;
 	aiQuaternion rotation;
 	scene->mRootNode->mTransformation.Decompose(scaling, rotation, translation);
-	vec3 pos(translation.x, translation.y, translation.z);
+	float3 pos(translation.x, translation.y, translation.z);
 	ret->position = pos;
-	vec3 scale(scaling.x, scaling.y, scaling.z);
+	float3 scale(scaling.x, scaling.y, scaling.z);
 	ret->scale = scale;
-	//const Quat rotationMGL(rotation.x, rotation.y, rotation.z, rotation.w); //btw, MGL is for MathGeoLib
-	//ret->rotationQuat = rotationMGL;
+	const Quat rotationMGL(rotation.x, rotation.y, rotation.z, rotation.w); //btw, MGL is for MathGeoLib
+	ret->rotationQuat = rotationMGL;
+	ret->rotation = ret->rotationQuat.ToEulerXYZ() * RADTODEG;
+	ret->previousRotation = ret->rotation;
+	//ret->UpdateTransform();
 
 	if (scene != nullptr && scene->HasMeshes())
 	{
@@ -109,13 +112,17 @@ void MeshImporter::RecursiveLoad(const aiScene* scene, GameObject* ret, const ch
 		aiVector3D translation, scaling;
 		aiQuaternion rotation;
 		node->mTransformation.Decompose(scaling, rotation, translation);
-		vec3 pos(translation.x, translation.y, translation.z);
+		float3 pos(translation.x, translation.y, translation.z);
 		ourGO->position = pos;
-		vec3 scale(scaling.x, scaling.y, scaling.z);
+		float3 scale(scaling.x, scaling.y, scaling.z);
 		scale /= 100;
 		ourGO->scale = scale;
-
+		const Quat rotationMGL(rotation.x, rotation.y, rotation.z, rotation.w); //btw, MGL is for MathGeoLib
+		ourGO->rotationQuat = rotationMGL;
+		ourGO->rotation = ourGO->rotationQuat.ToEulerXYZ() * RADTODEG;
+		ourGO->previousRotation = ourGO->rotation;
 		ourGO->isMoved = true;
+
 
 		aiMesh* shortcut = scene->mMeshes[node->mMeshes[i]];//this is crazy long
 
@@ -174,10 +181,10 @@ void MeshImporter::RecursiveLoad(const aiScene* scene, GameObject* ret, const ch
 		App->scene_intro->meshesList.push_back(ourGO->meshComponent);
 
 		char* buffer;
-		Save(ourGO->meshComponent, &buffer); // crashes randomly
+		Save(ourGO->meshComponent, &buffer); 
 
 
-		char* goname;
+		/*char* goname;
 		if (testIterator == 0)
 		{
 			goname = "TestingLoad 0";
@@ -194,7 +201,7 @@ void MeshImporter::RecursiveLoad(const aiScene* scene, GameObject* ret, const ch
 		testingLoadGO->position.x += 4;
 		testingLoadGO->isMoved = true;
 		App->scene_intro->meshesList.push_back(testingLoadGO->meshComponent);
-		App->renderer3D->GenerateBuffers();
+		App->renderer3D->GenerateBuffers();*/
 
 		RELEASE(buffer);
 	}

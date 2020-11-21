@@ -146,6 +146,7 @@ update_status ModuleCamera3D::Update(float dt)
 update_status ModuleCamera3D::PostUpdate(float dt)
 {
 
+	vec3 ftov;
 
 		// Alt+Left click should orbit the object.
 	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_REPEAT && App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT && !App->scene_intro->gameObjectSelected.empty())
@@ -156,7 +157,11 @@ update_status ModuleCamera3D::PostUpdate(float dt)
 		float Sensitivity = 0.25f;
 
 		GameObject* ref = (*App->scene_intro->gameObjectSelected.begin());
-		Reference = ref->position;
+		ftov.x = ref->position.x;
+		ftov.y = ref->position.y;
+		ftov.z = ref->position.z;
+
+		Reference = ftov;
 
 		Position -= Reference;
 
@@ -193,7 +198,11 @@ update_status ModuleCamera3D::PostUpdate(float dt)
 		// Pressing “f” should focus the camera around the geometry.
 	if (App->input->GetKey(SDL_SCANCODE_F) == KEY_DOWN && !App->scene_intro->gameObjectSelected.empty())
 	{
-		LookAt((*App->scene_intro->gameObjectSelected.begin())->position);
+		GameObject* ref = (*App->scene_intro->gameObjectSelected.begin());
+		ftov.x = ref->position.x;
+		ftov.y = ref->position.y;
+		ftov.z = ref->position.z;
+		LookAt(ftov);
 	}
 
 
