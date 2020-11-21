@@ -84,11 +84,11 @@ update_status ModuleSceneIntro::Update(float dt)
 			(*goToMove)->previousPosition = (*goToMove)->position;*/
 
 
-
-			float3 rot = ((*goToMove)->rotation - (*goToMove)->previousRotation) * DEGTORAD;
+			// We'll need to extract this to a method cause it's ugly
+			float3 diff = ((*goToMove)->rotation - (*goToMove)->previousRotation) * DEGTORAD;
 			(*goToMove)->previousRotation = (*goToMove)->rotation;
-			Quat quaternion_rot = Quat::FromEulerXYZ(rot.x, rot.y, rot.z);
-			(*goToMove)->rotationQuat = (*goToMove)->rotationQuat * quaternion_rot;
+			Quat rot = Quat::FromEulerXYZ(diff.x, diff.y, diff.z);
+			(*goToMove)->rotationQuat = (*goToMove)->rotationQuat * rot;
 
 			(*goToMove)->UpdateTransform();
 			(*goToMove)->isMoved = false;
