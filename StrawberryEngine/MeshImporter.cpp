@@ -180,8 +180,8 @@ void MeshImporter::RecursiveLoad(const aiScene* scene, GameObject* ret, const ch
 
 		App->scene_intro->meshesList.push_back(ourGO->meshComponent);
 
-		char* buffer;
-		Save(ourGO->meshComponent, &buffer); 
+		//char* buffer;
+		//Save(ourGO->meshComponent, &buffer); 
 
 
 		/*char* goname;
@@ -201,9 +201,9 @@ void MeshImporter::RecursiveLoad(const aiScene* scene, GameObject* ret, const ch
 		testingLoadGO->position.x += 4;
 		testingLoadGO->isMoved = true;
 		App->scene_intro->meshesList.push_back(testingLoadGO->meshComponent);
-		App->renderer3D->GenerateBuffers();*/
+		App->renderer3D->GenerateBuffers();
 
-		RELEASE(buffer);
+		RELEASE(buffer);*/
 	}
 
 	for (uint i = 0; i < node->mNumChildren; i++)

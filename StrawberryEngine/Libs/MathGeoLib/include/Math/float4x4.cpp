@@ -1193,7 +1193,7 @@ float4x4 &float4x4::operator =(const float4x4 &rhs)
 
 #if defined(MATH_AUTOMATIC_SSE)
 	
-#if !defined(ANDROID) // Android NEON doesn't currently use aligned loads.
+#if defined(ANDROID) // Android NEON doesn't currently use aligned loads.
 	assert(IS16ALIGNED(this));
 	assert(IS16ALIGNED(&rhs));
 #endif
