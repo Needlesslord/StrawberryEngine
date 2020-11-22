@@ -14,6 +14,7 @@ public:
 	void ChangeName(char* newName);
 	void AddMesh(Mesh* m);
 	void AddChild(GameObject* go);
+	void UpdateRotation();
 	void UpdateLocalTransform();
 	void UpdateGlobalTransform();
 
@@ -24,8 +25,9 @@ public:
 	float3 rotation = { 0,0,0 };		// 
 	Quat rotationQuat = Quat::identity;
 
-	float4x4 localTransform = float4x4::identity;
-	float4x4 globalTransform = float4x4::identity;
+	float4x4 localTransform = float4x4::identity; // The transform of a game object within the parent
+	float4x4 globalTransform = float4x4::identity; // The transform of a game object in the world
+
 
 	bool isMoved = false; // this should change to transformUpdated or smthg
 

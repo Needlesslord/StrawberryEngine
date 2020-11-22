@@ -73,31 +73,12 @@ update_status ModuleSceneIntro::Update(float dt)
 	{
 		if ((*goToMove)->isMoved)
 		{
-
-			/*vec3 diff = (*goToMove)->position - (*goToMove)->previousPosition;
-			for (int i = 0; i < (*goToMove)->meshComponent->num_vertex; i++)
-			{
-				(*goToMove)->meshComponent->vertex[i].x += diff.x;
-				(*goToMove)->meshComponent->vertex[i].y += diff.y;
-				(*goToMove)->meshComponent->vertex[i].z += diff.z;
-			}
-			(*goToMove)->previousPosition = (*goToMove)->position;*/
-
-
-			// We'll need to extract this to a method cause it's ugly
-			float3 diff = ((*goToMove)->rotation - (*goToMove)->previousRotation) * DEGTORAD;
-			(*goToMove)->previousRotation = (*goToMove)->rotation;
-			Quat rot = Quat::FromEulerXYZ(diff.x, diff.y, diff.z);
-			(*goToMove)->rotationQuat = (*goToMove)->rotationQuat * rot;
-
 			(*goToMove)->UpdateLocalTransform();
 			//(*goToMove)->UpdateGlobalTransform();
 
 			(*goToMove)->isMoved = false;
 			needToGenBuffers = true;
 		}
-		
-		
 	}
 	if (needToGenBuffers)
 		App->renderer3D->GenerateBuffers();

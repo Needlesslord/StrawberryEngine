@@ -51,8 +51,17 @@ void GameObject::AddDefaultName()
 	App->importer->gameObjectNameIterator++;
 }
 
+void GameObject::UpdateRotation()
+{
+	float3 diff = (rotation - previousRotation) * DEGTORAD;
+	previousRotation = rotation;
+	Quat rot = Quat::FromEulerXYZ(diff.x, diff.y, diff.z);
+	rotationQuat = rotationQuat * rot;
+}
+
 void GameObject::UpdateLocalTransform()
 {
+	UpdateRotation();
 	localTransform = math::float4x4::FromTRS(position, rotationQuat, scale);
 }
 
