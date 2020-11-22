@@ -651,20 +651,29 @@ void ModuleUI::CreateHierarchy(GameObject* go)
 {
 	if (go->children.size() > 0)
 	{
-		if (ImGui::TreeNode(go->name))
+		ImGuiTreeNodeFlags flags;
+		if (go == App->scene_intro->rootNode)
 		{
+			flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_DefaultOpen;
+		}
+		else
+		{
+			flags = ImGuiTreeNodeFlags_OpenOnArrow;
+		}
+
+		if (ImGui::TreeNodeEx(go->name, flags))
+		{
+
+			if (ImGui::IsItemClicked())
+			{
+				go->isSelected = true;
+			}
+
 			for (std::list<GameObject*>::iterator childrenIterator = go->children.begin(); childrenIterator != go->children.end(); childrenIterator++)
 			{
-				/*if (ImGui::Checkbox(go->name, &go->isSelected))
-				{
-					if (App->input->GetKey(SDL_SCANCODE_LCTRL) != KEY_REPEAT)
-					{
-						UnselectAll();
-					}
-				}*/
 				CreateHierarchy(*childrenIterator);
 			}
-			
+
 			ImGui::TreePop();
 		}
 	}

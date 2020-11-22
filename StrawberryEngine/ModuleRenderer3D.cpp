@@ -330,7 +330,7 @@ void ModuleRenderer3D::GenerateBuffers()
 void ModuleRenderer3D::Draw(GameObject* go)
 {
 	glPushMatrix();
-	glMultMatrixf((GLfloat*) & go->transform.Transposed());
+	glMultMatrixf((GLfloat*) & go->localTransform.Transposed()); // If it's not transposed the translation goes weird... also, it should be global 
 
 
 

@@ -90,11 +90,13 @@ update_status ModuleSceneIntro::Update(float dt)
 			Quat rot = Quat::FromEulerXYZ(diff.x, diff.y, diff.z);
 			(*goToMove)->rotationQuat = (*goToMove)->rotationQuat * rot;
 
-			(*goToMove)->UpdateTransform();
+			(*goToMove)->UpdateLocalTransform();
+			//(*goToMove)->UpdateGlobalTransform();
+
 			(*goToMove)->isMoved = false;
 			needToGenBuffers = true;
 		}
-
+		
 		
 	}
 	if (needToGenBuffers)
@@ -119,6 +121,7 @@ GameObject* ModuleSceneIntro::AddGameObject(char* name)
 	ret = new GameObject(name);
 
 	rootNode->children.push_back(ret);
+	ret->parent = rootNode;
 	everyGameObjectList.push_back(ret);
 
 	return ret;

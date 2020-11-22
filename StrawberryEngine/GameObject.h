@@ -5,7 +5,6 @@ class Mesh;
 
 class GameObject
 {
-
 public:
 
 	GameObject(char* name = nullptr);
@@ -15,7 +14,8 @@ public:
 	void ChangeName(char* newName);
 	void AddMesh(Mesh* m);
 	void AddChild(GameObject* go);
-	void UpdateTransform();
+	void UpdateLocalTransform();
+	void UpdateGlobalTransform();
 
 public:
 
@@ -24,16 +24,21 @@ public:
 	float3 rotation = { 0,0,0 };		// 
 	Quat rotationQuat = Quat::identity;
 
-	float4x4 transform = float4x4::identity;
+	float4x4 localTransform = float4x4::identity;
+	float4x4 globalTransform = float4x4::identity;
 
 	bool isMoved = false; // this should change to transformUpdated or smthg
+
 	float3 previousPosition = { 0,0,0 }; // same to a prev. transform
 	float3 previousRotation = { 0,0,0 };
+	
 	char* name;
 
 	Mesh* meshComponent = nullptr; 
 
 	std::list<GameObject*> children;
+
+	GameObject* parent = nullptr;
 
 	bool isVertexNormalsEnabled = false;
 

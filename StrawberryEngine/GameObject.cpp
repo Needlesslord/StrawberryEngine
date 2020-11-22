@@ -38,6 +38,7 @@ void GameObject::AddMesh(Mesh* m)
 void GameObject::AddChild(GameObject* go)
 {
 	this->children.push_back(go);
+	go->parent = this;
 }
 
 void GameObject::AddDefaultName()
@@ -50,7 +51,24 @@ void GameObject::AddDefaultName()
 	App->importer->gameObjectNameIterator++;
 }
 
-void GameObject::UpdateTransform()
+void GameObject::UpdateLocalTransform()
 {
-	transform = math::float4x4::FromTRS(position, rotationQuat, scale);
+	localTransform = math::float4x4::FromTRS(position, rotationQuat, scale);
+}
+
+void GameObject::UpdateGlobalTransform()
+{
+	if (parent != App->scene_intro->rootNode)
+	{
+		float4x4& global = this->parent->globalTransform;
+		this->globalTransform = global * this->localTransform;
+
+		if (children.size() > 0)
+		{
+			for (std::list<GameObject*>::iterator childrenIterator = children.begin(); childrenIterator != children.end(); childrenIterator++)
+			{
+				(*childrenIterator)->UpdateGlobalTransform();
+			}
+		}
+	}	
 }

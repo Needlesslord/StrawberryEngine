@@ -51,6 +51,7 @@ GameObject* MeshImporter::LoadMesh(const char* path)
 {
 	GameObject* ret = new GameObject();
 	App->scene_intro->rootNode->children.push_back(ret);
+	ret->parent = App->scene_intro->rootNode;
 	App->scene_intro->everyGameObjectList.push_back(ret);
 
 	const aiScene* scene = aiImportFile(path, aiProcessPreset_TargetRealtime_MaxQuality);
