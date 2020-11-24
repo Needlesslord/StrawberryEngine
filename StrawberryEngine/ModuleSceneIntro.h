@@ -37,5 +37,5 @@ public:
 	std::list<Texture*> textureList;
 
 	GameObject* street;
-
+	GameObject* house;
 };

@@ -33,7 +33,7 @@ bool MeshImporter::Start()
 	aiAttachLogStream(&stream);
 	LOG("Initializing Assimp");
 
-	test = App->scene_intro->AddGameObject("test");
+	//test = App->scene_intro->AddGameObject("test");
 
 	return ret;
 }

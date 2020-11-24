@@ -17,7 +17,6 @@ GameObject::GameObject(char* name)
 		this->name = name;
 
 	meshComponent = new Mesh();
-	
 }
 
 GameObject::~GameObject()
@@ -82,5 +81,10 @@ void GameObject::UpdateGlobalTransform()
 	else
 	{
 		globalTransform = localTransform;
+	}
+
+	for (std::list<GameObject*>::iterator goIterator = children.begin(); goIterator != children.end(); goIterator++)
+	{
+		(*goIterator)->UpdateGlobalTransform();
 	}
 }
