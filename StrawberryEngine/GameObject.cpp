@@ -69,8 +69,7 @@ void GameObject::UpdateGlobalTransform()
 {
 	if (parent != App->scene_intro->rootNode)
 	{
-		float4x4& global = this->parent->globalTransform;
-		this->globalTransform = global * this->localTransform;
+		globalTransform = parent->globalTransform * localTransform;
 
 		if (children.size() > 0)
 		{
@@ -80,4 +79,8 @@ void GameObject::UpdateGlobalTransform()
 			}
 		}
 	}	
+	else
+	{
+		globalTransform = localTransform;
+	}
 }

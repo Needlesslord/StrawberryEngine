@@ -74,7 +74,8 @@ GameObject* MeshImporter::LoadMesh(const char* path)
 	ret->rotationQuat = rotationMGL;
 	ret->rotation = ret->rotationQuat.ToEulerXYZ() * RADTODEG;
 	ret->previousRotation = ret->rotation;
-	//ret->UpdateTransform();
+	ret->UpdateLocalTransform();
+	ret->UpdateGlobalTransform();
 
 	if (scene != nullptr && scene->HasMeshes())
 	{
@@ -116,7 +117,10 @@ void MeshImporter::RecursiveLoad(const aiScene* scene, GameObject* ret, const ch
 		float3 pos(translation.x, translation.y, translation.z);
 		ourGO->position = pos;
 		float3 scale(scaling.x, scaling.y, scaling.z);
-		scale /= 100;
+
+		if (scale.x == 100 || scale.y == 100 || scale.z == 100)
+			scale /= 100;
+
 		ourGO->scale = scale;
 		const Quat rotationMGL(rotation.x, rotation.y, rotation.z, rotation.w); //btw, MGL is for MathGeoLib
 		ourGO->rotationQuat = rotationMGL;

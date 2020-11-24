@@ -123,7 +123,7 @@
 #endif
 
 // Uncomment to specify the SIMD instruction set level in use.
-#define MATH_AVX
+//#define MATH_AVX
 //#define MATH_SSE41
 //#define MATH_SSE3
 //#define MATH_SSE2
@@ -137,7 +137,13 @@
 #include <arm_neon.h>
 #endif
 
-// MATH_AVX implies MATH_SSE41, which implies MATH_SSE3, which implies MATH_SSE2, which implies MATH_SSE.
+// MATH_FMA implies MATH_AVX, which implies MATH_SSE41, which implies MATH_SSE3, which implies MATH_SSE2, which implies MATH_SSE.
+#ifdef MATH_FMA
+#ifndef MATH_AVX
+#define MATH_AVX
+#endif
+#endif
+
 #ifdef MATH_AVX
 #if defined(__GNUC__) || defined(__clang__)
 #include <immintrin.h>

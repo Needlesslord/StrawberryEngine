@@ -24,13 +24,8 @@ bool ModuleSceneIntro::Start()
 	App->camera->Move(vec3(1.0f, 1.0f, 0.0f));
 	App->camera->LookAt(vec3(0, 0, 0));
 
-	house = App->importer->meshImporter->LoadMesh("Assets/Meshes/BakerHouse.fbx");
+	street = App->importer->meshImporter->LoadMesh("Assets/Meshes/Street environment_V01.FBX");
 	
-	for (std::list<GameObject*>::iterator goIterator = house->children.begin(); goIterator != house->children.end(); goIterator++)
-	{
-		(*goIterator)->meshComponent->textureNumber = 1;
-	}
-
 	return ret;
 }
 
@@ -74,7 +69,7 @@ update_status ModuleSceneIntro::Update(float dt)
 		if ((*goToMove)->isMoved)
 		{
 			(*goToMove)->UpdateLocalTransform();
-			//(*goToMove)->UpdateGlobalTransform();
+			(*goToMove)->UpdateGlobalTransform();
 
 			(*goToMove)->isMoved = false;
 			needToGenBuffers = true;
