@@ -66,13 +66,17 @@ GameObject* MeshImporter::LoadMesh(const char* path)
 	aiVector3D translation, scaling;
 	aiQuaternion rotation;
 	scene->mRootNode->mTransformation.Decompose(scaling, rotation, translation);
+
 	float3 pos(translation.x, translation.y, translation.z);
 	ret->position = pos;
+
 	float3 scale(scaling.x, scaling.y, scaling.z);
 	ret->scale = scale;
+
 	const Quat rotationMGL(rotation.x, rotation.y, rotation.z, rotation.w); //btw, MGL is for MathGeoLib
 	ret->rotationQuat = rotationMGL;
 	ret->rotation = ret->rotationQuat.ToEulerXYZ() * RADTODEG;
+
 	ret->previousRotation = ret->rotation;
 	ret->UpdateLocalTransform();
 	ret->UpdateGlobalTransform();
