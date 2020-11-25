@@ -1,6 +1,6 @@
 #include "Application.h"
 #include "MeshImporter.h"
-
+#include "TextureImporter.h"
 #include "GameObject.h"
 #include "Importer.h"
 //#include "Mesh.h"
@@ -106,6 +106,8 @@ void MeshImporter::RecursiveLoad(const aiScene* scene, GameObject* ret, const ch
 	// Use scene->mNumMeshes to iterate on scene->mMeshes array
 	for (int i = 0; i < node->mNumMeshes; i++)
 	{
+		if (node->mNumMeshes > 1)
+			i++;
 		char* name = strdup(node->mName.C_Str());
 		GameObject* ourGO = new GameObject(name);
 		App->scene_intro->everyGameObjectList.push_back(ourGO);
@@ -113,7 +115,6 @@ void MeshImporter::RecursiveLoad(const aiScene* scene, GameObject* ret, const ch
 		ourGO->meshComponent->parent = ourGO;
 
 		LOG("%s is now a child of %s", ourGO->name, ret->name);
-
 
 		aiVector3D translation, scaling;
 		aiQuaternion rotation;
@@ -132,8 +133,17 @@ void MeshImporter::RecursiveLoad(const aiScene* scene, GameObject* ret, const ch
 		ourGO->previousRotation = ourGO->rotation;
 		ourGO->isMoved = true;
 
-
 		aiMesh* shortcut = scene->mMeshes[node->mMeshes[i]];//this is crazy long
+
+		aiMaterial* texture = scene->mMaterials[shortcut->mMaterialIndex];
+		uint numTextures = texture->GetTextureCount(aiTextureType_DIFFUSE);
+		aiString texPath;
+		texture->GetTexture(aiTextureType_DIFFUSE, 0, &texPath);
+		if (texPath.C_Str() != nullptr)
+		{
+			App->importer->textureImporter->LoadTexture(texPath.C_Str());
+		}
+
 
 		char* meshname = strdup(shortcut->mName.C_Str());
 		ourGO->meshComponent->name = meshname;

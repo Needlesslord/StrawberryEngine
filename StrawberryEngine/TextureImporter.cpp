@@ -88,18 +88,18 @@ bool TextureImporter::Load(const char* fileBuffer, Texture* ourTexture)
 
 Texture* TextureImporter::LoadTexture(const char* path)
 {
-	Texture* ret = new Texture;
-
 	if (ilLoadImage(path))
 	{
 		LOG("Image path loaded properly");
-		ret->path = path;
 	}
 	else
 	{
 		LOG("Couldn't load image");
-		return ret;
+		return nullptr;
 	}
+	
+	Texture* ret = new Texture;
+	ret->path = path;
 
 	ret->id = ilutGLBindTexImage();
 	ret->w = ilGetInteger(IL_IMAGE_WIDTH);
