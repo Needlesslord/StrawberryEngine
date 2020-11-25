@@ -216,21 +216,35 @@ std::string ModuleFileSystem::GetPathRelativeToAssets(const char* originalPath) 
 	return ret;
 }
 
-bool ModuleFileSystem::HasExtension(const char* path) const
+std::string ModuleFileSystem::ChangeExtension(const char* path, std::string extension) const // Change it's extension
+{
+	std::string ret(path);
+	int i = ret.size();
+	int j = extension.size();
+	for (int z = 0; z < extension.size(); z++)
+	{
+		ret[i - 1] = extension[j - 1];
+		i--;
+		j--;
+	}
+	return ret;
+}
+
+bool ModuleFileSystem::HasExtension(const char* path) const //Wheter or not it has an extension
 {
 	std::string ext = "";
 	SplitFilePath(path, nullptr, nullptr, &ext);
 	return ext != "";
 }
 
-bool ModuleFileSystem::HasExtension(const char* path, std::string extension) const
+bool ModuleFileSystem::HasExtension(const char* path, std::string extension) const //Wheter or not it has that extension
 {
 	std::string ext = "";
 	SplitFilePath(path, nullptr, nullptr, &ext);
 	return ext == extension;
 }
 
-bool ModuleFileSystem::HasExtension(const char* path, std::vector<std::string> extensions) const
+bool ModuleFileSystem::HasExtension(const char* path, std::vector<std::string> extensions) const//Wheter or not it has one of those extensions
 {
 	std::string ext = "";
 	SplitFilePath(path, nullptr, nullptr, &ext);

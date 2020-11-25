@@ -97,7 +97,7 @@ GameObject* MeshImporter::LoadMesh(const char* path)
 		LOG("Error loading scene % s", path);
 		return nullptr;
 	}
-		
+
 	return ret;
 }
 
@@ -139,9 +139,33 @@ void MeshImporter::RecursiveLoad(const aiScene* scene, GameObject* ret, const ch
 		uint numTextures = texture->GetTextureCount(aiTextureType_DIFFUSE);
 		aiString texPath;
 		texture->GetTexture(aiTextureType_DIFFUSE, 0, &texPath);
-		if (texPath.C_Str() != nullptr)
+		Texture* ourTexture;
+		if (texPath.C_Str() != nullptr && texPath.length > 0)
 		{
-			App->importer->textureImporter->LoadTexture(texPath.C_Str());
+			std::string texPathString = App->fileSystem->NormalizePath(texPath.C_Str());
+			texPathString = texPathString.substr(2);
+			texPathString = "Assets" + texPathString;
+			
+			ourTexture = App->importer->textureImporter->LoadTexture(texPathString.c_str());
+			if (ourTexture == nullptr)
+			{
+
+				if (App->fileSystem->HasExtension(texPathString.c_str(), "tga") || App->fileSystem->HasExtension(texPathString.c_str(), "TGA"))
+				{
+					std::string ext = "png";
+					std::string pathChanged = App->fileSystem->ChangeExtension(texPathString.c_str(), ext);
+
+					ourTexture = App->importer->textureImporter->LoadTexture(pathChanged.c_str());
+					if (ourTexture != nullptr)
+					{
+						ourGO->meshComponent->textureNumber = ourTexture->textureIterator;
+					}
+				}
+			}
+			else
+			{
+				ourGO->meshComponent->textureNumber = ourTexture->textureIterator;
+			}
 		}
 
 

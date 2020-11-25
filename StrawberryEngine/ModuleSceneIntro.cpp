@@ -4,6 +4,7 @@
 
 #include "ModuleImporter.h"
 #include "MeshImporter.h"
+#include "TextureImporter.h"
 #include "GameObject.h"
 #include "ModuleInput.h"
 

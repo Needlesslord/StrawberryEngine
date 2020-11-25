@@ -129,6 +129,7 @@ bool ModuleRenderer3D::Init()
 	OnResize(App->window->screen_surface->w, App->window->screen_surface->h);
 
 
+	App->importer->textureImporter->defaultTexture = CreateCheckersTexture();
 
 
 	return ret;
@@ -140,7 +141,6 @@ bool ModuleRenderer3D::Start()
 	GenerateBuffers();
 	
 
-	App->importer->textureImporter->defaultTexture = CreateCheckersTexture();
 
 	return true;
 }

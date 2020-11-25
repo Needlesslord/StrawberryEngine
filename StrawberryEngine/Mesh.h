@@ -22,7 +22,7 @@ public:
 	bool hasNormals = false;
 	vec3* normals = nullptr;
 
-	uint textureNumber = 0;
+	uint textureNumber = 999;
 
 	bool isDrawEnabled = true;
 	
