@@ -97,9 +97,16 @@ Texture* TextureImporter::LoadTexture(const char* path)
 		LOG("Couldn't load image");
 		return nullptr;
 	}
-	
+
 	Texture* ret = new Texture;
 	ret->path = path;
+
+	std::string name(path);
+	uint a = name.find_last_of("/");
+	name = name.substr(a + 1);
+	char* n = new char[30];
+	strcpy(n, name.c_str());
+	ret->name = n;
 
 	ret->id = ilutGLBindTexImage();
 	ret->w = ilGetInteger(IL_IMAGE_WIDTH);
@@ -126,13 +133,16 @@ Texture* TextureImporter::LoadTexture(const char* path)
 
 	ret->textureIterator = textureIterator;
 
-	char* charName = new char[15];
-	std::string stringName = ("New Texture " + std::to_string(textureIterator));
-	strcpy(charName, stringName.c_str());
-	ret->name = charName;
+	if (ret->name == nullptr)
+	{
+		char* charName = new char[15];
+		std::string stringName = ("New Texture " + std::to_string(textureIterator));
+		strcpy(charName, stringName.c_str());
+		ret->name = charName;
 
-	textureIterator++;
-	
+		textureIterator++;
+	}
+
 	LOG(ret->name);
 	App->importer->AddTexture(ret);
 	

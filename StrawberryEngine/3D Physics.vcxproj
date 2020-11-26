@@ -168,6 +168,7 @@
     <ClInclude Include="PathNode.h" />
     <ClInclude Include="PhysBody3D.h" />
     <ClInclude Include="Primitive.h" />
+    <ClInclude Include="Texture.h" />
     <ClInclude Include="TextureImporter.h" />
     <ClInclude Include="Timer.h" />
   </ItemGroup>

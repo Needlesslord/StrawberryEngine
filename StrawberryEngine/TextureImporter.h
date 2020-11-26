@@ -1,21 +1,8 @@
 #include "Globals.h"
 #include "Importer.h"
+#include "Texture.h"
 
 #include "Libs/DevIL/include/IL/il.h"
-
-class Texture
-{
-public:
-	uint GetId() { return id; }
-public:
-	const char* path = nullptr;
-	char* name = nullptr;
-	uint id;
-	uint w;
-	uint h;
-
-	uint textureIterator;
-};
 
 class TextureImporter : public Importer
 {

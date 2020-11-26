@@ -333,7 +333,6 @@ void ModuleRenderer3D::Draw(GameObject* go)
 	glMultMatrixf((GLfloat*) & go->globalTransform.Transposed()); // If it's not transposed the translation goes weird... also, it should be global 
 
 
-
 	Mesh* mesh = go->meshComponent;
 
 	glEnableClientState(GL_VERTEX_ARRAY);
@@ -343,20 +342,17 @@ void ModuleRenderer3D::Draw(GameObject* go)
 	glVertexPointer(3, GL_FLOAT, 0, NULL);
 
 
-	if (App->ui->isTexturesEnabled && mesh->textureNumber != 999)
+	if (App->ui->isTexturesEnabled && go->textureComponent != nullptr)
 	{
-		glBindBuffer(GL_ARRAY_BUFFER, mesh->id_tex_coord);
-
-		for (std::list<Texture*>::iterator textureIterator = App->scene_intro->textureList.begin(); textureIterator != App->scene_intro->textureList.end(); textureIterator++)
+		if (go->textureComponent->isActive)
 		{
-			if (mesh->textureNumber == (*textureIterator)->textureIterator)
-			{
-				glBindTexture(GL_TEXTURE_2D, (*textureIterator)->id);
-				glTexCoordPointer(2, GL_FLOAT, 0, NULL);
-				break;
-			}
+			glBindBuffer(GL_ARRAY_BUFFER, mesh->id_tex_coord);
+
+			glBindTexture(GL_TEXTURE_2D, go->textureComponent->GetId());
+			glTexCoordPointer(2, GL_FLOAT, 0, NULL);
 		}
 	}
+
 
 	if (go->isVertexNormalsEnabled && mesh->hasNormals) 
 	{

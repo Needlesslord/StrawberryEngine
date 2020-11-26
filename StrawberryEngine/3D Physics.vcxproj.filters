@@ -315,6 +315,9 @@
     <ClInclude Include="Libs\MathGeoLib\include\Math\Polynomial.h">
       <Filter>Sources\Tools\Libs\MathGeoLib\Math</Filter>
     </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>Sources\Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleCamera3D.cpp">

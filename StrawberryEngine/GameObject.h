@@ -2,7 +2,7 @@
 #include "Libs/MathGeoLib/include/MathGeoLib.h"
 
 class Mesh;
-
+class Texture;
 class GameObject
 {
 public:
@@ -37,6 +37,7 @@ public:
 	char* name;
 
 	Mesh* meshComponent = nullptr; 
+	Texture* textureComponent = nullptr;
 
 	std::list<GameObject*> children;
 

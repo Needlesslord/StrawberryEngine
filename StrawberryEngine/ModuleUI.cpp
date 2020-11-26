@@ -403,9 +403,9 @@ update_status ModuleUI::Update(float dt)
 
 				}
 
-				if (ImGui::CollapsingHeader("Render", ImGuiTreeNodeFlags_DefaultOpen))
+				if (ImGui::CollapsingHeader("Mesh Component", ImGuiTreeNodeFlags_DefaultOpen))
 				{
-					if (ImGui::Checkbox("Draw Meshes", &(*goIterator)->meshComponent->isDrawEnabled))
+					if (ImGui::Checkbox("Active", &(*goIterator)->meshComponent->isDrawEnabled))
 					{
 						char* a = "on";
 						char* b = "off";
@@ -459,7 +459,7 @@ update_status ModuleUI::Update(float dt)
 				}
 
 
-				if (ImGui::CollapsingHeader("Textures", ImGuiTreeNodeFlags_DefaultOpen))
+				if (ImGui::CollapsingHeader("Texture Component", ImGuiTreeNodeFlags_DefaultOpen))
 				{
 
 					std::list<Texture*>::iterator textureIterator = App->scene_intro->textureList.begin();

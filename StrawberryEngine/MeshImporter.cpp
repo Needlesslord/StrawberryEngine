@@ -159,12 +159,14 @@ void MeshImporter::RecursiveLoad(const aiScene* scene, GameObject* ret, const ch
 					if (ourTexture != nullptr)
 					{
 						ourGO->meshComponent->textureNumber = ourTexture->textureIterator;
+						ourGO->textureComponent = ourTexture;
 					}
 				}
 			}
 			else
 			{
 				ourGO->meshComponent->textureNumber = ourTexture->textureIterator;
+				ourGO->textureComponent = ourTexture;
 			}
 		}
 
