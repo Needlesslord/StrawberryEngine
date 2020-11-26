@@ -433,7 +433,14 @@ update_status ModuleUI::Update(float dt)
 						ImGui::PushID("TexActive");
 						ImGui::Checkbox("Active", &(*goIterator)->textureComponent->isActive);
 						ImGui::PopID();
+
+						ImTextureID retID = (ImTextureID)(*goIterator)->textureComponent->GetId();
+						ImGui::Image(retID, { 100,100 }); // Could be ImageButton
 					}
+				}
+				else
+				{
+					// Add option to add tex
 				}
 			}
 		}

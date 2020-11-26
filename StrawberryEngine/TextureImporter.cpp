@@ -46,10 +46,7 @@ bool TextureImporter::Start()
 {
 	bool ret = true;
 
-	
 	houseTexture = LoadTexture("Assets/Textures/Baker_House.png");
-
-
 
 	return ret;
 }
