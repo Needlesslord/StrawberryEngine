@@ -403,106 +403,36 @@ update_status ModuleUI::Update(float dt)
 
 				}
 
-				if (ImGui::CollapsingHeader("Mesh Component", ImGuiTreeNodeFlags_DefaultOpen))
+				if ((*goIterator)->meshComponent != nullptr)
 				{
-					if (ImGui::Checkbox("Active", &(*goIterator)->meshComponent->isDrawEnabled))
+					if (ImGui::CollapsingHeader("Mesh Component", ImGuiTreeNodeFlags_DefaultOpen))
 					{
-						char* a = "on";
-						char* b = "off";
-						bool helper = (*goIterator)->meshComponent->isDrawEnabled;
-						for (goIterator = App->scene_intro->gameObjectSelected.begin(); goIterator != App->scene_intro->gameObjectSelected.end(); goIterator++)
-						{
-							if (helper)
-							{
-								(*goIterator)->meshComponent->isDrawEnabled = true;
-							}
-							else
-							{
-								(*goIterator)->meshComponent->isDrawEnabled = false;
-							}
+						ImGui::PushID("MeshActive");
+						ImGui::Checkbox("Active", &(*goIterator)->meshComponent->isDrawEnabled);
+						ImGui::PopID();
 
-							LOG("Turning rendering: %s for %s", (*goIterator)->meshComponent->isDrawEnabled ? a : b, (*goIterator)->name);
-						}
-					}
-
-
-					for (goIterator = App->scene_intro->gameObjectSelected.begin(); goIterator != App->scene_intro->gameObjectSelected.end(); goIterator++)
-					{
 						if ((*goIterator)->meshComponent->path != nullptr)
 						{
-							ImGui::Text("Mesh path for %s:", (*goIterator)->name);
+							ImGui::Text("Path:");
 							ImGui::TextColored({ 1,0,1,1 }, (*goIterator)->meshComponent->path);
 							ImGui::Separator();
 						}
-					}
 
-					if (ImGui::Checkbox("Draw Vertex Normals", &isVertexNormalsEnabled))
-					{
-						goIterator = App->scene_intro->gameObjectSelected.begin();
-						char* a = "on";
-						char* b = "off";
-						
-						for (goIterator = App->scene_intro->gameObjectSelected.begin(); goIterator != App->scene_intro->gameObjectSelected.end(); goIterator++)
+						if ((*goIterator)->meshComponent->hasNormals)
 						{
-							if (isVertexNormalsEnabled)
-							{
-								(*goIterator)->isVertexNormalsEnabled = true;
-							}
-							else
-							{
-								(*goIterator)->isVertexNormalsEnabled = false;
-							}
-
-							LOG("Turning normals: %s for %s", (*goIterator)->isVertexNormalsEnabled ? a : b, (*goIterator)->name);
+							ImGui::Checkbox("Draw Vertex Normals", &(*goIterator)->isVertexNormalsEnabled);
 						}
 					}
 				}
 
-
-				if (ImGui::CollapsingHeader("Texture Component", ImGuiTreeNodeFlags_DefaultOpen))
+				goIterator = App->scene_intro->gameObjectSelected.begin();
+				if ((*goIterator)->textureComponent != nullptr)
 				{
-
-					std::list<Texture*>::iterator textureIterator = App->scene_intro->textureList.begin();
-
-					//ImGui::BeginCombo("Textures", (*textureIterator)->name); // LOOK UP
-
-					int i = 0;
-					while (textureIterator != App->scene_intro->textureList.end())
+					if (ImGui::CollapsingHeader("Texture Component", ImGuiTreeNodeFlags_DefaultOpen))
 					{
-						if (ImGui::Button((*textureIterator)->name))
-						{
-							for (std::list<GameObject*>::iterator goToChangeTexture = App->scene_intro->gameObjectSelected.begin(); goToChangeTexture != App->scene_intro->gameObjectSelected.end(); goToChangeTexture++)
-							{
-								(*goToChangeTexture)->meshComponent->textureNumber = i;
-							}
-						}
-						i++;
-						textureIterator++;
-					}
-
-
-
-					if (ImGui::Button("No texture"))
-					{
-						for (std::list<GameObject*>::iterator goToChangeTexture = App->scene_intro->gameObjectSelected.begin(); goToChangeTexture != App->scene_intro->gameObjectSelected.end(); goToChangeTexture++)
-						{
-							(*goToChangeTexture)->meshComponent->textureNumber = 999;
-						}
-					}
-
-
-
-					for (textureIterator = App->scene_intro->textureList.begin(); textureIterator != App->scene_intro->textureList.end(); textureIterator++)
-					{
-						if ((*textureIterator)->name != nullptr && (*textureIterator)->path != nullptr)
-						{
-							ImGui::Separator();
-							ImGui::Text("%s", (*textureIterator)->name);
-							ImGui::Text("Texture size: %d * %d", (*textureIterator)->w, (*textureIterator)->h);
-							ImGui::Text("Texture path:");
-							ImGui::TextColored({ 1,0,1,1 }, (*textureIterator)->path);
-							ImGui::Separator();
-						}
+						ImGui::PushID("TexActive");
+						ImGui::Checkbox("Active", &(*goIterator)->textureComponent->isActive);
+						ImGui::PopID();
 					}
 				}
 			}

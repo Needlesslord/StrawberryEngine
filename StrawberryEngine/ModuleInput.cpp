@@ -132,30 +132,47 @@ update_status ModuleInput::PreUpdate(float dt)
 						App->importer->meshImporter->LoadMesh(dropped_filedir);
 						App->renderer3D->GenerateBuffers();
 					}
+
 					else if (fileType == ".png" || fileType == ".PNG")
 					{
-						LOG("Loading .png");
-						for (std::list<GameObject*>::iterator goIterator = App->scene_intro->rootNode->children.begin(); goIterator != App->scene_intro->rootNode->children.end(); goIterator++)
+						Texture* tex = App->importer->textureImporter->LoadTexture(dropped_filedir);
+						if (tex != nullptr)
 						{
-							if ((*goIterator)->isSelected)
+							LOG("Loaded .png");
+							for (std::list<GameObject*>::iterator goIterator = App->scene_intro->rootNode->children.begin(); goIterator != App->scene_intro->rootNode->children.end(); goIterator++)
 							{
-								(*goIterator)->meshComponent->textureNumber = App->importer->textureImporter->textureIterator;
+								if ((*goIterator)->isSelected)
+								{
+									(*goIterator)->textureComponent = tex;
+								}
 							}
 						}
-						App->importer->textureImporter->LoadTexture(dropped_filedir);
+						else
+						{
+							LOG("Error loading .png");
+						}
 					}
+
 					else if (fileType == ".dds" || fileType == ".DDS")
 					{
-						LOG("Loading .dds");
-						for (std::list<GameObject*>::iterator goIterator = App->scene_intro->rootNode->children.begin(); goIterator != App->scene_intro->rootNode->children.end(); goIterator++)
+						Texture* tex = App->importer->textureImporter->LoadTexture(dropped_filedir);
+						if (tex != nullptr)
 						{
-							if ((*goIterator)->isSelected)
+							LOG("Loaded .dds");
+							for (std::list<GameObject*>::iterator goIterator = App->scene_intro->rootNode->children.begin(); goIterator != App->scene_intro->rootNode->children.end(); goIterator++)
 							{
-								(*goIterator)->meshComponent->textureNumber = App->importer->textureImporter->textureIterator;
+								if ((*goIterator)->isSelected)
+								{
+									(*goIterator)->textureComponent = tex;
+								}
 							}
 						}
-						App->importer->textureImporter->LoadTexture(dropped_filedir);
+						else
+						{
+							LOG("Error loading .dds");
+						}
 					}
+
 					else
 					{
 						LOG("No support for that extension!");

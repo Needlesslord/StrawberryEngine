@@ -102,7 +102,7 @@ Texture* TextureImporter::LoadTexture(const char* path)
 	ret->path = path;
 
 	std::string name(path);
-	uint a = name.find_last_of("/");
+	uint a = name.find_last_of("\\/");
 	name = name.substr(a + 1);
 	char* n = new char[30];
 	strcpy(n, name.c_str());
@@ -130,18 +130,6 @@ Texture* TextureImporter::LoadTexture(const char* path)
 	glBindTexture(GL_TEXTURE_2D, 0);
 
 	ret->id = id_texture;
-
-	ret->textureIterator = textureIterator;
-
-	if (ret->name == nullptr)
-	{
-		char* charName = new char[15];
-		std::string stringName = ("New Texture " + std::to_string(textureIterator));
-		strcpy(charName, stringName.c_str());
-		ret->name = charName;
-
-		textureIterator++;
-	}
 
 	LOG(ret->name);
 	App->importer->AddTexture(ret);

@@ -112,6 +112,8 @@ void MeshImporter::RecursiveLoad(const aiScene* scene, GameObject* ret, const ch
 		GameObject* ourGO = new GameObject(name);
 		App->scene_intro->everyGameObjectList.push_back(ourGO);
 		ret->AddChild(ourGO);
+
+		ourGO->meshComponent = new Mesh();
 		ourGO->meshComponent->parent = ourGO;
 
 		LOG("%s is now a child of %s", ourGO->name, ret->name);
@@ -158,14 +160,12 @@ void MeshImporter::RecursiveLoad(const aiScene* scene, GameObject* ret, const ch
 					ourTexture = App->importer->textureImporter->LoadTexture(pathChanged.c_str());
 					if (ourTexture != nullptr)
 					{
-						ourGO->meshComponent->textureNumber = ourTexture->textureIterator;
 						ourGO->textureComponent = ourTexture;
 					}
 				}
 			}
 			else
 			{
-				ourGO->meshComponent->textureNumber = ourTexture->textureIterator;
 				ourGO->textureComponent = ourTexture;
 			}
 		}

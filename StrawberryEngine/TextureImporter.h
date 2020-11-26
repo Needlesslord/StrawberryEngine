@@ -7,6 +7,7 @@
 class TextureImporter : public Importer
 {
 public:
+
 	TextureImporter();
 	virtual~TextureImporter();
 
@@ -23,5 +24,4 @@ public:
 	Texture* defaultTexture = nullptr;
 	Texture* houseTexture = nullptr;
 
-	int textureIterator = 1;
 };

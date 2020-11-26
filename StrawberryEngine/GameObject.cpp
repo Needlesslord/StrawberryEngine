@@ -15,8 +15,6 @@ GameObject::GameObject(char* name)
 	}
 	else
 		this->name = name;
-
-	meshComponent = new Mesh();
 }
 
 GameObject::~GameObject()

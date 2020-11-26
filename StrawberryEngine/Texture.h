@@ -9,7 +9,5 @@ public:
 	uint w;
 	uint h;
 
-	uint textureIterator;
-
 	bool isActive = true;
 };

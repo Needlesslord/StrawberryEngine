@@ -29,6 +29,7 @@ bool ModuleSceneIntro::Start()
 	street = App->importer->meshImporter->LoadMesh("Assets/Meshes/Street environment_V01.FBX");
 	street->rotation = { -90,0,0 };
 	street->isMoved = true;
+	street->ChangeName("Street");
 
 	return ret;
 }

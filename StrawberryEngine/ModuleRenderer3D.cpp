@@ -176,17 +176,7 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 
 	if (App->ui->isDrawEnabled)
 	{
-
-		for (std::list<GameObject*>::iterator goIterator = App->scene_intro->rootNode->children.begin(); goIterator != App->scene_intro->rootNode->children.end(); goIterator++)
-		{
-			if ((*goIterator)->meshComponent->isDrawEnabled)
-			{
-				
-				Draw(*goIterator);
-
-				
-			}
-		}
+		Draw(App->scene_intro->rootNode);
 	}
 	
 	
@@ -329,84 +319,87 @@ void ModuleRenderer3D::GenerateBuffers()
 
 void ModuleRenderer3D::Draw(GameObject* go)
 {
-	glPushMatrix();
-	glMultMatrixf((GLfloat*) & go->globalTransform.Transposed()); // If it's not transposed the translation goes weird... also, it should be global 
-
-
-	Mesh* mesh = go->meshComponent;
-
-	glEnableClientState(GL_VERTEX_ARRAY);
-	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-
-	glBindBuffer(GL_ARRAY_BUFFER, mesh->id_vertex);
-	glVertexPointer(3, GL_FLOAT, 0, NULL);
-
-
-	if (App->ui->isTexturesEnabled && go->textureComponent != nullptr)
+	if (go->meshComponent != nullptr)
 	{
-		if (go->textureComponent->isActive)
+		if (go->meshComponent->isDrawEnabled)
 		{
-			glBindBuffer(GL_ARRAY_BUFFER, mesh->id_tex_coord);
 
-			glBindTexture(GL_TEXTURE_2D, go->textureComponent->GetId());
-			glTexCoordPointer(2, GL_FLOAT, 0, NULL);
+			glPushMatrix();
+			glMultMatrixf((GLfloat*)&go->globalTransform.Transposed()); // If it's not transposed the translation goes weird... also, it should be global 
+
+
+			Mesh* mesh = go->meshComponent;
+
+			glEnableClientState(GL_VERTEX_ARRAY);
+			glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+
+			glBindBuffer(GL_ARRAY_BUFFER, mesh->id_vertex);
+			glVertexPointer(3, GL_FLOAT, 0, NULL);
+
+
+			if (App->ui->isTexturesEnabled && go->textureComponent != nullptr)
+			{
+				if (go->textureComponent->isActive)
+				{
+					glBindBuffer(GL_ARRAY_BUFFER, mesh->id_tex_coord);
+
+					glBindTexture(GL_TEXTURE_2D, go->textureComponent->GetId());
+					glTexCoordPointer(2, GL_FLOAT, 0, NULL);
+				}
+			}
+
+
+			if (go->isVertexNormalsEnabled && mesh->hasNormals)
+			{
+
+				for (int i = 0; i < mesh->num_vertex; i++)
+				{
+					float vX = mesh->vertex[i].x;
+					float vY = mesh->vertex[i].y;
+					float vZ = mesh->vertex[i].z;
+
+					glBegin(GL_LINES);
+					glColor3f(1, 0, 1);
+					glVertex3f(vX, vY, vZ);
+					glVertex3f(vX + mesh->normals[i].x, vY + mesh->normals[i].y, vZ + mesh->normals[i].z);
+				}
+
+				glEnd();
+				glColor3f(1, 1, 1);
+			}
+
+			if (isToggleWireframe)
+			{
+				glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+				glColor3f(1, 0, 1);
+			}
+
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->id_index);
+			glDrawElements(GL_TRIANGLES, mesh->num_index, GL_UNSIGNED_INT, NULL);
+
+			glBindBuffer(GL_ARRAY_BUFFER, 0);
+			glBindTexture(GL_TEXTURE_2D, 0);
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+			if (isToggleWireframe)
+			{
+				glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+				glColor3f(1, 1, 1);
+			}
+
+			glDisableClientState(GL_VERTEX_ARRAY);
+			glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+
+
+
+			glPopMatrix();
+
 		}
 	}
-
-
-	if (go->isVertexNormalsEnabled && mesh->hasNormals) 
-	{
-
-		for (int i = 0; i < mesh->num_vertex; i++)
-		{
-			float vX = mesh->vertex[i].x;
-			float vY = mesh->vertex[i].y;
-			float vZ = mesh->vertex[i].z;
-
-			glBegin(GL_LINES);
-			glColor3f(1, 0, 1);
-			glVertex3f(vX, vY, vZ);
-			glVertex3f(vX + mesh->normals[i].x, vY + mesh->normals[i].y, vZ + mesh->normals[i].z);
-		}
-
-		glEnd();
-		glColor3f(1, 1, 1);	
-	}
-
-	if (isToggleWireframe)
-	{
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-		glColor3f(1, 0, 1);
-	}
-
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->id_index);
-	glDrawElements(GL_TRIANGLES, mesh->num_index, GL_UNSIGNED_INT, NULL);
-
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindTexture(GL_TEXTURE_2D, 0);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
-	if (isToggleWireframe)
-	{
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-		glColor3f(1, 1, 1);
-	}
-
-	glDisableClientState(GL_VERTEX_ARRAY);
-	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-
-
-
-	glPopMatrix();
-
-
-
+	
 	for (std::list<GameObject*>::iterator goIterator = go->children.begin(); goIterator != go->children.end(); goIterator++)
 	{
-		if ((*goIterator)->meshComponent->isDrawEnabled)
-		{
-			Draw(*goIterator);
-		}
+		Draw(*goIterator);
 	}
 
 }
@@ -439,7 +432,6 @@ Texture* ModuleRenderer3D::CreateCheckersTexture()
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 32, 32, 0, GL_RGBA, GL_UNSIGNED_BYTE, checkerImage);
 	glBindTexture(GL_TEXTURE_2D, 0);
 
-	ret->textureIterator = 0;
 	App->scene_intro->textureList.push_back(ret);
 
 	return ret;
