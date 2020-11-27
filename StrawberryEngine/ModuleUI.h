@@ -35,7 +35,7 @@ public:
 
 	void Draw();
 
-	void AddConsoleOutput(const char* text, ...);
+	void AddConsoleOutput(const char* text);
 
 	void UnselectAll();
 
@@ -64,7 +64,6 @@ public:
 	bool isConsoleInit = false;
 
 	bool isReparentingShown = false;
-	bool isAreYouSureShown = false;
 
 	// Config data
 	char* name = nullptr;
@@ -88,15 +87,7 @@ public:
 	bool isVertexNormalsEnabled = false;
 	bool isFaceNormalsEnabled = false;
 
-	ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
-
 	std::list<const char*> pendingOutputs;
-	char* output[30];
-	uint outputIterator = 29;
-
-private:
-
-	bool isTransformActive = true;
 
 };
 

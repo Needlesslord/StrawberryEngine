@@ -74,7 +74,7 @@ update_status ModuleUI::PreUpdate(float dt)
 {
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
 
-	SDL_Event event;
+	/*SDL_Event event;
 	while (SDL_PollEvent(&event))
 	{
 		ImGui_ImplSDL2_ProcessEvent(&event);
@@ -82,7 +82,7 @@ update_status ModuleUI::PreUpdate(float dt)
 			done = UPDATE_CONTINUE;
 		if (event.type == SDL_WINDOWEVENT && event.window.event == SDL_WINDOWEVENT_CLOSE && event.window.windowID == SDL_GetWindowID(App->window->window))
 			done = UPDATE_CONTINUE;
-	}
+	}*/
 
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplSDL2_NewFrame(App->window->window);
@@ -326,12 +326,8 @@ update_status ModuleUI::Update(float dt)
 			if (!App->scene_intro->gameObjectSelected.empty())
 			{
 				std::list<GameObject*>::iterator goIterator = App->scene_intro->gameObjectSelected.begin();
-
-
-				char* buf = (*goIterator)->name;
-				if (ImGui::InputText("", buf, 50, ImGuiInputTextFlags_EnterReturnsTrue))
-					(*goIterator)->name = buf;
-
+				
+				ImGui::InputText("", (*goIterator)->name, 50);
 
 				if (ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen))
 				{
@@ -418,30 +414,10 @@ update_status ModuleUI::Update(float dt)
 						ImGui::PushStyleColor(ImGuiCol_Button, { 0.85, 0, 0, 1 });
 						if (ImGui::Button("Destroy"))
 						{
-							isAreYouSureShown = true;
+							App->scene_intro->meshComponentsToDelete.push_back(*goIterator);
 						}
 						ImGui::PopStyleColor();
 						ImGui::PopStyleColor();
-						if (isAreYouSureShown)
-						{
-							ImGui::SetNextWindowPos({ 200, 200 });
-							if (ImGui::BeginPopupContextWindow("rusure"))
-							{
-								ImGui::MenuItem("Are you sure?");
-								if (ImGui::MenuItem("Yes"))
-								{
-									App->scene_intro->meshComponentsToDelete.push_back(*goIterator);
-									isAreYouSureShown = false;
-								}
-
-								if (ImGui::MenuItem("No"))
-								{
-									isAreYouSureShown = false;
-								}
-
-								ImGui::EndPopup();
-							}
-						}
 						
 
 						if ((*goIterator)->meshComponent->path != nullptr)
@@ -618,7 +594,7 @@ void ModuleUI::Draw()
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
 
-void ModuleUI::AddConsoleOutput(const char* text, ...)
+void ModuleUI::AddConsoleOutput(const char* text)
 {
 	pendingOutputs.push_back(strdup(text));
 }
