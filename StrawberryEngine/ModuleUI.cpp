@@ -335,6 +335,7 @@ update_status ModuleUI::Update(float dt)
 
 				if (ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen))
 				{
+					ImGui::Spacing(); 
 					// I'm gonna 'copy' Unity's
 					ImGui::Text("Position"); ImGui::SameLine(); ImGui::Text("X"); ImGui::SameLine(); ImGui::PushItemWidth(75); ImGui::PushID("posX");
 					if (ImGui::DragFloat("", &(*goIterator)->position.x))
@@ -405,6 +406,7 @@ update_status ModuleUI::Update(float dt)
 
 				if ((*goIterator)->meshComponent != nullptr)
 				{
+					ImGui::Spacing(); ImGui::Spacing(); ImGui::Spacing();
 					if (ImGui::CollapsingHeader("Mesh Component", ImGuiTreeNodeFlags_DefaultOpen))
 					{
 						ImGui::PushID("MeshActive");
@@ -413,13 +415,17 @@ update_status ModuleUI::Update(float dt)
 
 						if ((*goIterator)->meshComponent->path != nullptr)
 						{
+							ImGui::Spacing(); 
 							ImGui::Text("Path:");
 							ImGui::TextColored({ 1,0,1,1 }, (*goIterator)->meshComponent->path);
-							ImGui::Separator();
 						}
+
+						ImGui::Spacing();
+						ImGui::Text("Num. of vertices:"); ImGui::SameLine(); ImGui::TextColored({ 1,0,1,1 }, std::to_string((*goIterator)->meshComponent->num_vertex).c_str());
 
 						if ((*goIterator)->meshComponent->hasNormals)
 						{
+							ImGui::Spacing();
 							ImGui::Checkbox("Draw Vertex Normals", &(*goIterator)->isVertexNormalsEnabled);
 						}
 					}
@@ -428,14 +434,25 @@ update_status ModuleUI::Update(float dt)
 				goIterator = App->scene_intro->gameObjectSelected.begin();
 				if ((*goIterator)->textureComponent != nullptr)
 				{
+					ImGui::Spacing(); ImGui::Spacing(); ImGui::Spacing();
 					if (ImGui::CollapsingHeader("Texture Component", ImGuiTreeNodeFlags_DefaultOpen))
 					{
 						ImGui::PushID("TexActive");
 						ImGui::Checkbox("Active", &(*goIterator)->textureComponent->isActive);
 						ImGui::PopID();
 
-						ImTextureID retID = (ImTextureID)(*goIterator)->textureComponent->GetId();
-						ImGui::Image(retID, { 100,100 }); // Could be ImageButton
+						if ((*goIterator)->textureComponent->texPath != nullptr && (*goIterator)->textureComponent->texPath != "")
+						{
+							ImGui::Spacing();
+							ImGui::Text("Path:");
+							ImGui::TextColored({ 1,0,1,1 }, (*goIterator)->textureComponent->texPath);
+						}
+
+						ImGui::Spacing();
+						ImGui::Text("Width:"); ImGui::SameLine(); ImGui::TextColored({ 1,0,1,1 }, std::to_string((*goIterator)->textureComponent->w).c_str());
+						ImGui::Text("Height:"); ImGui::SameLine(); ImGui::TextColored({ 1,0,1,1 }, std::to_string((*goIterator)->textureComponent->h).c_str());
+						ImGui::Image((ImTextureID)(*goIterator)->textureComponent->GetId(), { 150,150 });
+						
 					}
 				}
 				else
@@ -541,7 +558,7 @@ update_status ModuleUI::Update(float dt)
 	}
 
 
-
+	
 
 
 	return UPDATE_CONTINUE;
@@ -586,39 +603,77 @@ void ModuleUI::UnselectAll()
 
 void ModuleUI::CreateHierarchy(GameObject* go)
 {
-	if (go->children.size() > 0)
+
+	ImGuiTreeNodeFlags flags;
+	if (go == App->scene_intro->rootNode)
 	{
-		ImGuiTreeNodeFlags flags;
-		if (go == App->scene_intro->rootNode)
-		{
-			flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_DefaultOpen;
-		}
-		else
-		{
-			flags = ImGuiTreeNodeFlags_OpenOnArrow;
-		}
-
-		if (ImGui::TreeNodeEx(go->name, flags))
-		{
-
-			if (ImGui::IsItemClicked())
-			{
-				go->isSelected = true;
-			}
-
-			for (std::list<GameObject*>::iterator childrenIterator = go->children.begin(); childrenIterator != go->children.end(); childrenIterator++)
-			{
-				CreateHierarchy(*childrenIterator);
-			}
-
-			ImGui::TreePop();
-		}
+		flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_DefaultOpen;
+	}
+	else if (go->children.size() > 0)
+	{
+		flags = ImGuiTreeNodeFlags_OpenOnArrow;
 	}
 	else
 	{
-		if (ImGui::Checkbox(go->name, &go->isSelected))
+		flags = ImGuiTreeNodeFlags_Leaf;
+	}
+
+	if (ImGui::TreeNodeEx(go->name, flags))
+	{
+
+		if (ImGui::IsMouseClicked(0) && ImGui::IsWindowHovered())
 		{
 			UnselectAll();
 		}
+
+		if (ImGui::IsItemClicked(0) || ImGui::IsItemClicked(1))
+		{
+			if (!go->isSelected)
+			{
+				UnselectAll();
+				go->isSelected = true;
+			}
+		}
+
+		if (ImGui::IsItemClicked(1))
+		{
+			isReparentingShown = true;
+		}
+
+
+		if (isReparentingShown && go->isSelected && go != App->scene_intro->rootNode)
+		{
+
+			//ImGui::SetNextWindowPos({ 200, 200 });
+			if (ImGui::BeginPopupContextWindow())
+			{
+				if (ImGui::MenuItem("Add Child"))
+				{
+					App->scene_intro->AddEmptyGameObject(go);
+				}
+				if (ImGui::MenuItem("Remove GameObject (SUPR)"))
+				{
+					App->scene_intro->AddChildrenToDeathRow(go);
+				}
+				if (go->parent != App->scene_intro->rootNode)
+				{
+					if (ImGui::MenuItem("Reparent Up"))
+					{
+						App->scene_intro->gameObjectsToReparent.push_back(go);
+					}
+				}
+
+				ImGui::EndPopup();
+			}
+		}
+
+
+		for (std::list<GameObject*>::iterator childrenIterator = go->children.begin(); childrenIterator != go->children.end(); childrenIterator++)
+		{
+			CreateHierarchy(*childrenIterator);
+		}
+
+		ImGui::TreePop();
 	}
+
 }

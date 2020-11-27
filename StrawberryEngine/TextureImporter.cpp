@@ -96,9 +96,12 @@ Texture* TextureImporter::LoadTexture(const char* path)
 	}
 
 	Texture* ret = new Texture;
-	ret->path = path;
-
 	std::string name(path);
+
+	char* p = new char[30];
+	strcpy(p, name.c_str());
+	ret->texPath = p;
+
 	uint a = name.find_last_of("\\/");
 	name = name.substr(a + 1);
 	char* n = new char[30];
@@ -130,9 +133,6 @@ Texture* TextureImporter::LoadTexture(const char* path)
 
 	LOG(ret->name);
 	App->importer->AddTexture(ret);
-	
-	//char* buffer = nullptr;
-	//Save(ret, &buffer);
 
 	return ret;
 }

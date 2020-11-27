@@ -64,9 +64,23 @@ update_status ModuleSceneIntro::PreUpdate(float dt)
 // Update
 update_status ModuleSceneIntro::Update(float dt)
 {
-
 	p = { 0.0, 1.0, 0.0, 0.0 };
 	p.axis = true;
+
+	if (App->input->GetKey(SDL_SCANCODE_DELETE) == KEY_DOWN)
+	{
+		for (std::list<GameObject*>::iterator goIterator = gameObjectSelected.begin(); goIterator != gameObjectSelected.end(); goIterator++)
+		{
+			if (!(*goIterator)->children.empty())
+			{
+				AddChildrenToDeathRow(*goIterator);
+			}
+			else
+			{
+				gameObjectsToDelete.push_back(*goIterator);
+			}
+		}
+	}
 
 	bool needToGenBuffers = false;
 	for (std::list<GameObject*>::iterator goToMove = everyGameObjectList.begin(); goToMove != everyGameObjectList.end(); goToMove++)
@@ -86,6 +100,34 @@ update_status ModuleSceneIntro::Update(float dt)
 	return UPDATE_CONTINUE;
 }
 
+update_status ModuleSceneIntro::PostUpdate(float dt)
+{
+
+	if (!gameObjectsToDelete.empty())
+	{
+		for (std::list<GameObject*>::iterator goToDelete = gameObjectsToDelete.begin(); goToDelete != gameObjectsToDelete.end(); goToDelete++)
+		{
+			DeleteGameObject(*goToDelete);
+		}
+		gameObjectsToDelete.clear();
+	}
+
+	if (!gameObjectsToReparent.empty())
+	{
+		for (std::list<GameObject*>::iterator goToReparent = gameObjectsToReparent.begin(); goToReparent != gameObjectsToReparent.end(); goToReparent++)
+		{
+			ReparentUp(*goToReparent);
+		}
+		gameObjectsToReparent.clear();
+	}
+
+	
+
+
+	return UPDATE_CONTINUE;
+}
+
+
 void ModuleSceneIntro::Draw()
 {
 	p.Render();
@@ -104,3 +146,61 @@ GameObject* ModuleSceneIntro::AddGameObject(char* name)
 	return ret;
 }
 
+GameObject* ModuleSceneIntro::AddEmptyGameObject(GameObject* parent, char* name)
+{
+	GameObject* ret;
+
+	ret = new GameObject(name);
+
+	if (parent != nullptr)
+	{
+		parent->AddChild(ret);
+		ret->parent = parent;
+	}
+	
+	everyGameObjectList.push_back(ret);
+
+	return ret;
+}
+
+void ModuleSceneIntro::DeleteGameObject(GameObject* go)
+{
+	if (go->meshComponent != nullptr)
+	{
+		delete(go->meshComponent);
+		go->meshComponent = nullptr;
+	}
+	
+	if (go->isSelected)
+	{
+		gameObjectSelected.remove(go);
+	}
+
+	everyGameObjectList.remove(go);
+	if (go->parent != nullptr)
+	{
+		go->parent->children.remove(go);
+	}
+
+	delete(go);
+	go = nullptr;
+}
+
+void ModuleSceneIntro::AddChildrenToDeathRow(GameObject* go)
+{
+	for (std::list<GameObject*>::iterator goIterator = go->children.begin(); goIterator != go->children.end(); goIterator++)
+	{
+		AddChildrenToDeathRow(*goIterator);
+	}
+	gameObjectsToDelete.push_back(go);
+}
+
+void ModuleSceneIntro::ReparentUp(GameObject* go)
+{
+	if (go->parent != rootNode)
+	{
+		go->parent->children.remove(go);
+		go->parent->parent->children.push_back(go);
+		go->parent = go->parent->parent;
+	}
+}

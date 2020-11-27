@@ -63,7 +63,7 @@ public:
 	bool isConsoleShown = true;
 	bool isConsoleInit = false;
 
-	//ImGuiDir direction;
+	bool isReparentingShown = false;
 
 	// Config data
 	char* name = nullptr;
