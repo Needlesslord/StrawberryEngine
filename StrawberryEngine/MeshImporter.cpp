@@ -33,7 +33,7 @@ bool MeshImporter::Start()
 	aiAttachLogStream(&stream);
 	LOG("Initializing Assimp");
 
-	//test = App->scene_intro->AddGameObject("test");
+	test = App->scene_intro->AddGameObject("test");
 
 	return ret;
 }
@@ -225,8 +225,8 @@ void MeshImporter::RecursiveLoad(const aiScene* scene, GameObject* ret, const ch
 
 		App->scene_intro->meshesList.push_back(ourGO->meshComponent);
 
-		//char* buffer;
-		//Save(ourGO->meshComponent, &buffer); 
+		char* buffer;
+		Save(ourGO->meshComponent, &buffer); 
 
 
 		/*char* goname;
@@ -246,9 +246,9 @@ void MeshImporter::RecursiveLoad(const aiScene* scene, GameObject* ret, const ch
 		testingLoadGO->position.x += 4;
 		testingLoadGO->isMoved = true;
 		App->scene_intro->meshesList.push_back(testingLoadGO->meshComponent);
-		App->renderer3D->GenerateBuffers();
+		App->renderer3D->GenerateBuffers();*/
 
-		RELEASE(buffer);*/
+		RELEASE(buffer);
 	}
 
 	for (uint i = 0; i < node->mNumChildren; i++)
@@ -300,13 +300,13 @@ uint64 MeshImporter::Save(Mesh* ourMesh, char** fileBuffer)
 		cursor += bytes;
 	//}
 
-	//if (ourMesh->hasTex_coords)
-	//{
+	if (ourMesh->hasTex_coords)
+	{
 		// Store tex coords
 		bytes = sizeof(float) * ourMesh->num_vertex * 2;
 		memcpy(cursor, ourMesh->tex_coord, bytes);
 		cursor += bytes;
-	//}
+	}
 
 	//TODO: Save AABB
 

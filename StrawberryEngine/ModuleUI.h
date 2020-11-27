@@ -64,6 +64,7 @@ public:
 	bool isConsoleInit = false;
 
 	bool isReparentingShown = false;
+	bool isAreYouSureShown = false;
 
 	// Config data
 	char* name = nullptr;

@@ -64,8 +64,6 @@ update_status ModuleSceneIntro::PreUpdate(float dt)
 // Update
 update_status ModuleSceneIntro::Update(float dt)
 {
-	p = { 0.0, 1.0, 0.0, 0.0 };
-	p.axis = true;
 
 	if (App->input->GetKey(SDL_SCANCODE_DELETE) == KEY_DOWN)
 	{
@@ -121,7 +119,16 @@ update_status ModuleSceneIntro::PostUpdate(float dt)
 		gameObjectsToReparent.clear();
 	}
 
-	
+	if (!meshComponentsToDelete.empty())
+	{
+		for (std::list<GameObject*>::iterator meshToDelete = meshComponentsToDelete.begin(); meshToDelete != meshComponentsToDelete.end(); meshToDelete++)
+		{
+			delete((*meshToDelete)->meshComponent); //just mesh doesn't work lol
+			(*meshToDelete)->meshComponent = nullptr;
+		}
+		meshComponentsToDelete.clear();
+	}
+
 
 
 	return UPDATE_CONTINUE;
@@ -130,7 +137,21 @@ update_status ModuleSceneIntro::PostUpdate(float dt)
 
 void ModuleSceneIntro::Draw()
 {
-	p.Render();
+	glLineWidth(1.0f);
+
+	glBegin(GL_LINES);
+
+	float d = 200.0f;
+
+	for (float i = -d; i <= d; i += 1.0f)
+	{
+		glVertex3f(i, 0.0f, -d);
+		glVertex3f(i, 0.0f, d);
+		glVertex3f(-d, 0.0f, i);
+		glVertex3f(d, 0.0f, i);
+	}
+
+	glEnd();
 }
 
 GameObject* ModuleSceneIntro::AddGameObject(char* name)

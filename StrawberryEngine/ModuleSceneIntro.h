@@ -1,11 +1,9 @@
 #pragma once
 #include "Module.h"
-#include "Primitive.h"
 
 class Mesh;
 class GameObject;
 class Texture;
-class Primitive;
 
 class ModuleSceneIntro : public Module
 {
@@ -31,14 +29,13 @@ public:
 
 public:
 
-	prim::Plane p;
-
 	GameObject* rootNode = nullptr;
 	//std::list<GameObject*> gameObjectList; // main game objects, not counting their children  --->> moveing this  to the RootNode's children' list
 	std::list<GameObject*> everyGameObjectList; // all game objects
 	std::list<GameObject*> gameObjectSelected;
 	std::list<GameObject*> gameObjectsToDelete;
 	std::list<GameObject*> gameObjectsToReparent;
+	std::list<GameObject*> meshComponentsToDelete;
 
 	std::list<Mesh*> meshesList;
 

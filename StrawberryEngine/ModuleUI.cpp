@@ -413,6 +413,37 @@ update_status ModuleUI::Update(float dt)
 						ImGui::Checkbox("Active", &(*goIterator)->meshComponent->isDrawEnabled);
 						ImGui::PopID();
 
+						ImGui::SameLine();
+						ImGui::PushStyleColor(ImGuiCol_ButtonHovered, { 0.5, 0, 0, 0.75 });
+						ImGui::PushStyleColor(ImGuiCol_Button, { 0.85, 0, 0, 1 });
+						if (ImGui::Button("Destroy"))
+						{
+							isAreYouSureShown = true;
+						}
+						ImGui::PopStyleColor();
+						ImGui::PopStyleColor();
+						if (isAreYouSureShown)
+						{
+							ImGui::SetNextWindowPos({ 200, 200 });
+							if (ImGui::BeginPopupContextWindow("rusure"))
+							{
+								ImGui::MenuItem("Are you sure?");
+								if (ImGui::MenuItem("Yes"))
+								{
+									App->scene_intro->meshComponentsToDelete.push_back(*goIterator);
+									isAreYouSureShown = false;
+								}
+
+								if (ImGui::MenuItem("No"))
+								{
+									isAreYouSureShown = false;
+								}
+
+								ImGui::EndPopup();
+							}
+						}
+						
+
 						if ((*goIterator)->meshComponent->path != nullptr)
 						{
 							ImGui::Spacing(); 
