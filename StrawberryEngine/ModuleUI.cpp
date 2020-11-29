@@ -435,6 +435,9 @@ update_status ModuleUI::Update(float dt)
 							ImGui::Spacing();
 							ImGui::Checkbox("Draw Vertex Normals", &(*goIterator)->isVertexNormalsEnabled);
 						}
+
+						ImGui::Spacing();
+						ImGui::Checkbox("Draw Bounding Boxes", &(*goIterator)->isAABBEnabled);
 					}
 				}
 

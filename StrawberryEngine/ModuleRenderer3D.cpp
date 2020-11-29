@@ -368,6 +368,29 @@ void ModuleRenderer3D::Draw(GameObject* go)
 				glColor3f(1, 1, 1);
 			}
 
+			if (go->isAABBEnabled)
+			{
+				glBegin(GL_LINES);
+				
+				for (uint i = 0; i < 12; i++)
+				{
+					float vX = mesh->localBoundingBox.Edge(i).a.x;
+					float vY = mesh->localBoundingBox.Edge(i).a.y;
+					float vZ = mesh->localBoundingBox.Edge(i).a.z;
+
+					float v2X = mesh->localBoundingBox.Edge(i).b.x;
+					float v2Y = mesh->localBoundingBox.Edge(i).b.y;
+					float v2Z = mesh->localBoundingBox.Edge(i).b.z;
+
+					glColor3f(1, 0, 1);
+					glVertex3f(vX, vY, vZ);
+					glVertex3f(v2X, v2Y, v2Z);
+				}
+				
+				glColor3f(1, 1, 1);
+				glEnd();
+			}
+
 			if (isToggleWireframe)
 			{
 				glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);

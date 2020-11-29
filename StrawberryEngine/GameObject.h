@@ -44,6 +44,7 @@ public:
 	GameObject* parent = nullptr;
 
 	bool isVertexNormalsEnabled = false;
+	bool isAABBEnabled = false;
 
 	bool isSelected = false;
 

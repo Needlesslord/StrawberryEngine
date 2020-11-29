@@ -1,4 +1,5 @@
 #include "vector3.h"
+#include "Libs/MathGeoLib/include/MathGeoLib.h"
 
 class GameObject;
 class Mesh
@@ -31,5 +32,8 @@ public:
 	const char* path = nullptr;
 
 	char* name = nullptr;
+
+	AABB localBoundingBox;
+	//AABB globalBboundingBox;
 
 };

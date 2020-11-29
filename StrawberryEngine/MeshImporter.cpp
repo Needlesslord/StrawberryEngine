@@ -221,6 +221,10 @@ void MeshImporter::RecursiveLoad(const aiScene* scene, GameObject* ret, const ch
 			ourGO->meshComponent->hasNormals = true;
 		}
 
+		// AABB
+		ourGO->meshComponent->localBoundingBox.SetNegativeInfinity();
+		ourGO->meshComponent->localBoundingBox.Enclose((float3*)ourGO->meshComponent->vertex, ourGO->meshComponent->num_vertex);
+		
 		ourGO->meshComponent->path = path;
 
 		App->scene_intro->meshesList.push_back(ourGO->meshComponent);
