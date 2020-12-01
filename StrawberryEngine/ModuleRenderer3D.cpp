@@ -337,6 +337,7 @@ void ModuleRenderer3D::Draw(GameObject* go)
 			glVertexPointer(3, GL_FLOAT, 0, NULL);
 
 
+			// Draw texture
 			if (App->ui->isTexturesEnabled && go->textureComponent != nullptr)
 			{
 				if (go->textureComponent->isActive)
@@ -349,9 +350,10 @@ void ModuleRenderer3D::Draw(GameObject* go)
 			}
 
 
+			// Draw normals
 			if (go->isVertexNormalsEnabled && mesh->hasNormals)
 			{
-
+			
 				for (int i = 0; i < mesh->num_vertex; i++)
 				{
 					float vX = mesh->vertex[i].x;
@@ -368,28 +370,8 @@ void ModuleRenderer3D::Draw(GameObject* go)
 				glColor3f(1, 1, 1);
 			}
 
-			if (go->isAABBEnabled)
-			{
-				glBegin(GL_LINES);
-				
-				for (uint i = 0; i < 12; i++)
-				{
-					float vX = mesh->localBoundingBox.Edge(i).a.x;
-					float vY = mesh->localBoundingBox.Edge(i).a.y;
-					float vZ = mesh->localBoundingBox.Edge(i).a.z;
 
-					float v2X = mesh->localBoundingBox.Edge(i).b.x;
-					float v2Y = mesh->localBoundingBox.Edge(i).b.y;
-					float v2Z = mesh->localBoundingBox.Edge(i).b.z;
-
-					glColor3f(1, 0, 1);
-					glVertex3f(vX, vY, vZ);
-					glVertex3f(v2X, v2Y, v2Z);
-				}
-				
-				glColor3f(1, 1, 1);
-				glEnd();
-			}
+		
 
 			if (isToggleWireframe)
 			{
@@ -417,6 +399,30 @@ void ModuleRenderer3D::Draw(GameObject* go)
 
 			glPopMatrix();
 
+			// Draw AABB
+			if (go->isAABBEnabled)
+			{
+
+				glBegin(GL_LINES);
+				glColor3f(1, 0, 1);
+
+				for (uint i = 0; i < 12; i++)
+				{
+					float vX = go->aabb.Edge(i).a.x;
+					float vY = go->aabb.Edge(i).a.y;
+					float vZ = go->aabb.Edge(i).a.z;
+
+					float v2X = go->aabb.Edge(i).b.x;
+					float v2Y = go->aabb.Edge(i).b.y;
+					float v2Z = go->aabb.Edge(i).b.z;
+
+					glVertex3f(vX, vY, vZ);
+					glVertex3f(v2X, v2Y, v2Z);
+				}
+
+				glColor3f(1, 1, 1);
+				glEnd();
+			}
 		}
 	}
 	

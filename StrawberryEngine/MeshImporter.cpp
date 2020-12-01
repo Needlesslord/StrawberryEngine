@@ -171,6 +171,7 @@ void MeshImporter::RecursiveLoad(const aiScene* scene, GameObject* ret, const ch
 		}
 
 
+		// Vertex
 		char* meshname = strdup(shortcut->mName.C_Str());
 		ourGO->meshComponent->name = meshname;
 		ourGO->meshComponent->num_vertex = shortcut->mNumVertices;
@@ -178,7 +179,13 @@ void MeshImporter::RecursiveLoad(const aiScene* scene, GameObject* ret, const ch
 		memcpy(ourGO->meshComponent->vertex, shortcut->mVertices, sizeof(float) * ourGO->meshComponent->num_vertex * 3);
 		LOG("New mesh with %d vertices", ourGO->meshComponent->num_vertex);
 
-		// copy faces
+
+		// AABB
+		ourGO->meshComponent->localAABB.SetNegativeInfinity();
+		ourGO->meshComponent->localAABB.Enclose((float3*)ourGO->meshComponent->vertex, ourGO->meshComponent->num_vertex);
+
+
+		// Copy faces
 		if (shortcut->HasFaces())
 		{
 			ourGO->meshComponent->num_index = shortcut->mNumFaces * 3;
@@ -196,6 +203,8 @@ void MeshImporter::RecursiveLoad(const aiScene* scene, GameObject* ret, const ch
 			}
 		}
 
+
+		// UVs
 		if (shortcut->HasTextureCoords(0))
 		{
 			ourGO->meshComponent->tex_coord = new float[ourGO->meshComponent->num_vertex * 2];
@@ -214,6 +223,8 @@ void MeshImporter::RecursiveLoad(const aiScene* scene, GameObject* ret, const ch
 			ourGO->meshComponent->hasTex_coords = true;
 		}
 
+
+		// Normals
 		if (shortcut->HasNormals())
 		{
 			ourGO->meshComponent->normals = new vec3[shortcut->mNumVertices];
@@ -221,10 +232,8 @@ void MeshImporter::RecursiveLoad(const aiScene* scene, GameObject* ret, const ch
 			ourGO->meshComponent->hasNormals = true;
 		}
 
-		// AABB
-		ourGO->meshComponent->localBoundingBox.SetNegativeInfinity();
-		ourGO->meshComponent->localBoundingBox.Enclose((float3*)ourGO->meshComponent->vertex, ourGO->meshComponent->num_vertex);
 		
+
 		ourGO->meshComponent->path = path;
 
 		App->scene_intro->meshesList.push_back(ourGO->meshComponent);

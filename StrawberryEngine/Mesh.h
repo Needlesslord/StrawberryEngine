@@ -33,7 +33,6 @@ public:
 
 	char* name = nullptr;
 
-	AABB localBoundingBox;
-	//AABB globalBboundingBox;
+	AABB localAABB;
 
 };

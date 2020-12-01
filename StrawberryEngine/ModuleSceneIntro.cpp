@@ -87,6 +87,7 @@ update_status ModuleSceneIntro::Update(float dt)
 		{
 			(*goToMove)->UpdateLocalTransform();
 			(*goToMove)->UpdateGlobalTransform();
+			(*goToMove)->UpdateAABB();
 
 			(*goToMove)->isMoved = false;
 			needToGenBuffers = true;

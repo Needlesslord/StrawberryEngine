@@ -59,22 +59,23 @@ void GameObject::UpdateRotation()
 void GameObject::UpdateLocalTransform()
 {
 	UpdateRotation();
-	localTransform = math::float4x4::FromTRS(position, rotationQuat, scale);
+	localTransform = math::float4x4::FromTRS(position, rotationQuat, scale);	
+
+	if (children.size() > 0)
+	{
+		for (std::list<GameObject*>::iterator childrenIterator = children.begin(); childrenIterator != children.end(); childrenIterator++)
+		{
+			(*childrenIterator)->UpdateLocalTransform();
+		}
+	}
 }
 
 void GameObject::UpdateGlobalTransform()
 {
+	isMoved = false;
 	if (parent != App->scene_intro->rootNode)
 	{
 		globalTransform = parent->globalTransform * localTransform;
-
-		if (children.size() > 0)
-		{
-			for (std::list<GameObject*>::iterator childrenIterator = children.begin(); childrenIterator != children.end(); childrenIterator++)
-			{
-				(*childrenIterator)->UpdateGlobalTransform();
-			}
-		}
 	}	
 	else
 	{
@@ -84,5 +85,26 @@ void GameObject::UpdateGlobalTransform()
 	for (std::list<GameObject*>::iterator goIterator = children.begin(); goIterator != children.end(); goIterator++)
 	{
 		(*goIterator)->UpdateGlobalTransform();
+	}
+}
+
+void GameObject::UpdateAABB()
+{
+	if (meshComponent)
+	{
+		obb = meshComponent->localAABB;
+		obb.Transform(globalTransform);
+		// Generate global AABB
+		aabb.SetNegativeInfinity();
+		aabb.Enclose(obb);
+
+		float a = aabb.maxPoint.y;
+		std::string b = std::to_string(a);
+		LOG(b.c_str());
+	}
+
+	for (std::list<GameObject*>::iterator goIterator = children.begin(); goIterator != children.end(); goIterator++)
+	{
+		(*goIterator)->UpdateAABB();
 	}
 }

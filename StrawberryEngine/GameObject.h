@@ -17,6 +17,7 @@ public:
 	void UpdateRotation();
 	void UpdateLocalTransform();
 	void UpdateGlobalTransform();
+	void UpdateAABB();
 
 public:
 
@@ -28,10 +29,12 @@ public:
 	float4x4 localTransform = float4x4::identity; // The transform of a game object within the parent
 	float4x4 globalTransform = float4x4::identity; // The transform of a game object in the world
 
+	OBB obb;
+	AABB aabb;
 
 	bool isMoved = false; // this should change to transformUpdated or smthg
 
-	float3 previousPosition = { 0,0,0 }; // same to a prev. transform
+
 	float3 previousRotation = { 0,0,0 };
 	
 	char* name;
