@@ -25,6 +25,8 @@ public:
 	GameObject* LoadMesh(const char* path);
 	void RecursiveLoad(const aiScene* scene, GameObject* ret, const char* path, aiNode* node);
 
+	bool HasAssimp(const char* name) const;
+
 public:
 
 	int meshIterator = 0;

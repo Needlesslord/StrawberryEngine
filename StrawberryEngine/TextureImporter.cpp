@@ -69,9 +69,12 @@ uint64 TextureImporter::Save(const Texture* ourTexture, char** fileBuffer)
 		if (ilSaveL(IL_DDS, data, size) > 0) 
 			*fileBuffer = (char*)data;
 
-		App->fileSystem->Save(ourTexture->name, fileBuffer, size);
+		std::string ext = "set";
+		std::string pathChanged = App->fileSystem->ChangeExtension(ourTexture->name, ext);
+		char file[250];
+		sprintf_s(file, 250, "%s%s", TEXTURES_PATH, pathChanged.c_str());
+		App->fileSystem->Save(file, data, size);
 		RELEASE_ARRAY(data);
-		//RELEASE_ARRAY(fileBuffer);
 	}
 
 	return size;
@@ -133,6 +136,10 @@ Texture* TextureImporter::LoadTexture(const char* path)
 
 	LOG(ret->name);
 	App->importer->AddTexture(ret);
+
+	char* buffer;
+	Save(ret, &buffer);
+	//RELEASE(buffer);
 
 	return ret;
 }

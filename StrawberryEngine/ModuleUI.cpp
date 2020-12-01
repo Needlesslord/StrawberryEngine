@@ -66,6 +66,7 @@ bool ModuleUI::Start()
 
 	isHierarchyShown = true;
 	isInspectorShown = true;
+	isAssetsShown = true;
 
 	return ret;
 }
@@ -412,7 +413,7 @@ update_status ModuleUI::Update(float dt)
 						ImGui::SameLine();
 						ImGui::PushStyleColor(ImGuiCol_ButtonHovered, { 0.5, 0, 0, 0.75 });
 						ImGui::PushStyleColor(ImGuiCol_Button, { 0.85, 0, 0, 1 });
-						if (ImGui::Button("Destroy"))
+						if (ImGui::Button("Destroy Mesh"))
 						{
 							App->scene_intro->meshComponentsToDelete.push_back(*goIterator);
 						}
@@ -451,6 +452,16 @@ update_status ModuleUI::Update(float dt)
 						ImGui::Checkbox("Active", &(*goIterator)->textureComponent->isActive);
 						ImGui::PopID();
 
+						ImGui::SameLine();
+						ImGui::PushStyleColor(ImGuiCol_ButtonHovered, { 0.5, 0, 0, 0.75 });
+						ImGui::PushStyleColor(ImGuiCol_Button, { 0.85, 0, 0, 1 });
+						if (ImGui::Button("Destroy Texture"))
+						{
+							App->scene_intro->textureComponentsToDelete.push_back(*goIterator);
+						}
+						ImGui::PopStyleColor();
+						ImGui::PopStyleColor();
+
 						if ((*goIterator)->textureComponent->texPath != nullptr && (*goIterator)->textureComponent->texPath != "")
 						{
 							ImGui::Spacing();
@@ -462,12 +473,60 @@ update_status ModuleUI::Update(float dt)
 						ImGui::Text("Width:"); ImGui::SameLine(); ImGui::TextColored({ 1,0,1,1 }, std::to_string((*goIterator)->textureComponent->w).c_str());
 						ImGui::Text("Height:"); ImGui::SameLine(); ImGui::TextColored({ 1,0,1,1 }, std::to_string((*goIterator)->textureComponent->h).c_str());
 						ImGui::Image((ImTextureID)(*goIterator)->textureComponent->GetId(), { 150,150 });
-						
+
+						ImGui::Spacing();
+						if (ImGui::Button("Change Texture", { 200, 40 }))
+						{
+							isChangeTexShown = true;
+						}
+					
+						if (isChangeTexShown)
+						{
+							//ImGuiPopupFlags_
+							if (ImGui::BeginPopupContextWindow("Change tex", ImGuiPopupFlags_MouseButtonLeft))
+							{
+								for (std::list<Texture*>::iterator textureIterator = App->scene_intro->textureList.begin(); textureIterator != App->scene_intro->textureList.end(); textureIterator++)
+								{
+									if (ImGui::MenuItem((*textureIterator)->name))
+									{
+										GameObject* go = (*App->scene_intro->gameObjectSelected.begin());
+										go->textureComponent = (*textureIterator);
+
+										isChangeTexShown = false;
+									}
+								}
+
+								ImGui::EndPopup();
+							}
+						}
 					}
 				}
 				else
 				{
-					// Add option to add tex
+					if (ImGui::Button("Add Texture", { 200, 40 }))
+					{
+						isAddTexShown = true;
+					}
+
+					if (isAddTexShown)
+					{
+						//ImGuiPopupFlags_
+						if (ImGui::BeginPopupContextWindow("Add tex", ImGuiPopupFlags_MouseButtonLeft))
+						{
+							for (std::list<Texture*>::iterator textureIterator = App->scene_intro->textureList.begin(); textureIterator != App->scene_intro->textureList.end(); textureIterator++)
+							{
+								if (ImGui::MenuItem((*textureIterator)->name))
+								{
+									GameObject* go = (*App->scene_intro->gameObjectSelected.begin());
+									go->textureComponent = (*textureIterator);
+
+									isAddTexShown = false;
+								}
+							}
+
+							ImGui::EndPopup();
+						}
+					}
 				}
 			}
 		}
@@ -476,7 +535,7 @@ update_status ModuleUI::Update(float dt)
 	}
 
 
-
+	
 
 
 	if (isAboutShown) 
@@ -569,6 +628,34 @@ update_status ModuleUI::Update(float dt)
 
 
 	
+	if (isAssetsShown)
+	{
+		if (!isAssetsInit)
+		{
+			isAssetsInit = true;
+			ImGui::SetNextWindowPos({ (float)App->window->screen_surface->w - 410, 230 });
+			ImGui::SetNextWindowSize({ 400, (float)(App->window->screen_surface->h - 240) });
+		}
+		ImGui::Begin("Assets", &isAssetsShown);
+
+
+		if (ImGui::TreeNodeEx("Textures"))
+		{
+			for (std::list<Texture*>::iterator textureIterator = App->scene_intro->textureList.begin(); textureIterator != App->scene_intro->textureList.end(); textureIterator++)
+			{
+				if (ImGui::TreeNodeEx((*textureIterator)->name, ImGuiTreeNodeFlags_Leaf))
+				{
+					ImGui::TreePop();
+				}
+			}
+			ImGui::TreePop();
+		}
+
+
+
+		ImGui::End();
+	}
+
 
 
 	return UPDATE_CONTINUE;

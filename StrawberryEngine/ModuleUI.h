@@ -63,7 +63,13 @@ public:
 	bool isConsoleShown = true;
 	bool isConsoleInit = false;
 
+	bool isAssetsShown = true;
+	bool isAssetsInit = false;
+
 	bool isReparentingShown = false;
+
+	bool isChangeTexShown = false;
+	bool isAddTexShown = false;
 
 	// Config data
 	char* name = nullptr;

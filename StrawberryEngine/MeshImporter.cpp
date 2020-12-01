@@ -56,7 +56,6 @@ GameObject* MeshImporter::LoadMesh(const char* path)
 
 	const aiScene* scene = aiImportFile(path, aiProcessPreset_TargetRealtime_MaxQuality);
 
-
 	if (scene == nullptr)
 	{
 		LOG("Scene was null");
@@ -377,4 +376,13 @@ bool MeshImporter::Load(const char* fileBuffer, Mesh* ourMesh)
 	//TODO: Load AABB
 
 	return true;
+}
+
+bool MeshImporter::HasAssimp(const char* name) const
+{
+	std::string ext = "Assimp";
+	std::string a(name);
+	int ret = a.find(ext.c_str());
+
+	return !(ret == -1);
 }

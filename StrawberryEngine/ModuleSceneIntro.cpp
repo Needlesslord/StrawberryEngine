@@ -131,7 +131,15 @@ update_status ModuleSceneIntro::PostUpdate(float dt)
 		meshComponentsToDelete.clear();
 	}
 
-
+	if (!textureComponentsToDelete.empty())
+	{
+		for (std::list<GameObject*>::iterator textureToDelete = textureComponentsToDelete.begin(); textureToDelete != textureComponentsToDelete.end(); textureToDelete++)
+		{
+			delete((*textureToDelete)->textureComponent); //just mesh doesn't work lol
+			(*textureToDelete)->textureComponent = nullptr;
+		}
+		textureComponentsToDelete.clear();
+	}
 
 	return UPDATE_CONTINUE;
 }

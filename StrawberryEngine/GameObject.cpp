@@ -104,10 +104,6 @@ void GameObject::UpdateAABB()
 		// Generate global AABB
 		aabb.SetNegativeInfinity();
 		aabb.Enclose(obb);
-
-		float a = aabb.maxPoint.y;
-		std::string b = std::to_string(a);
-		LOG(b.c_str());
 	}
 
 	for (std::list<GameObject*>::iterator goIterator = children.begin(); goIterator != children.end(); goIterator++)
