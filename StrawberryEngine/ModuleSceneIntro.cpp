@@ -85,6 +85,7 @@ update_status ModuleSceneIntro::Update(float dt)
 	{
 		if ((*goToMove)->isMoved)
 		{
+			(*goToMove)->UpdateRotation();
 			(*goToMove)->UpdateLocalTransform();
 			(*goToMove)->UpdateGlobalTransform();
 			(*goToMove)->UpdateAABB();

@@ -54,11 +54,18 @@ void GameObject::UpdateRotation()
 	previousRotation = rotation;
 	Quat rot = Quat::FromEulerXYZ(diff.x, diff.y, diff.z);
 	rotationQuat = rotationQuat * rot;
+
+	if (children.size() > 0)
+	{
+		for (std::list<GameObject*>::iterator childrenIterator = children.begin(); childrenIterator != children.end(); childrenIterator++)
+		{
+			(*childrenIterator)->UpdateRotation();
+		}
+	}
 }
 
 void GameObject::UpdateLocalTransform()
 {
-	UpdateRotation();
 	localTransform = math::float4x4::FromTRS(position, rotationQuat, scale);	
 
 	if (children.size() > 0)
