@@ -39,6 +39,14 @@ public:
 
 	void UnselectAll();
 
+	void ShowMenuBar();
+	void ShowConfig();
+	void ShowHierarchy();
+	void ShowInspector();
+	void ShowConsole();
+	void ShowAbout();
+	void ShowAssets();
+
 	void CreateHierarchy(GameObject* go);
 
 public:
@@ -46,39 +54,39 @@ public:
 	bool done = false;
 
 	// Windows shown bools
-	bool isDemoShown = false;
+	bool isDemoActive = false;
 
-	bool isConfigShown = false;
+	bool isConfigActive = false;
 	bool isConfigInit = false;
 
-	bool isAboutShown = false;
+	bool isAboutActive = false;
 	bool isAboutInit = false;
 
-	bool isHierarchyShown = false;
+	bool isHierarchyActive = false;
 	bool isHierarchyInit = false;
 
-	bool isInspectorShown = false;
+	bool isInspectorActive = false;
 	bool isInspectorInit = false;
 
-	bool isConsoleShown = true;
+	bool isConsoleActive = true;
 	bool isConsoleInit = false;
 
-	bool isAssetsShown = true;
+	bool isAssetsActive = true;
 	bool isAssetsInit = false;
 
-	bool isReparentingShown = false;
-
-	bool isChangeTexShown = false;
-	bool isAddTexShown = false;
+	bool isReparentingActive = false;
+	bool isChangeTexActive = false;
+	bool isChangeMeshActive = false;
+	bool isAddTexActive = false;
+	bool isAddMeshActive = false;
 
 	// Config data
 	char* name = nullptr;
 	char* organization = nullptr;
 
-			// Temporary vars
-	bool isActive = false;
+	// Temporary vars
 	float brightness = 1.0f;
-	bool isWinFullscreen;
+	bool isWinFullscreen; // Started on Start()
 	bool isWinResizable;
 	bool isWinBorderless;
 	bool isWinFullscreenDesktop;
@@ -89,9 +97,6 @@ public:
 	bool isBackFaceCullEnabled = true;
 	bool isTexturesEnabled = true;
 	bool isWireframeEnabled = false;
-
-	bool isVertexNormalsEnabled = false;
-	bool isFaceNormalsEnabled = false;
 
 	std::list<const char*> pendingOutputs;
 

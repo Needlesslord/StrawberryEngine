@@ -125,7 +125,6 @@ update_status ModuleSceneIntro::PostUpdate(float dt)
 	{
 		for (std::list<GameObject*>::iterator meshToDelete = meshComponentsToDelete.begin(); meshToDelete != meshComponentsToDelete.end(); meshToDelete++)
 		{
-			delete((*meshToDelete)->meshComponent); //just mesh doesn't work lol
 			(*meshToDelete)->meshComponent = nullptr;
 		}
 		meshComponentsToDelete.clear();
@@ -135,7 +134,6 @@ update_status ModuleSceneIntro::PostUpdate(float dt)
 	{
 		for (std::list<GameObject*>::iterator textureToDelete = textureComponentsToDelete.begin(); textureToDelete != textureComponentsToDelete.end(); textureToDelete++)
 		{
-			delete((*textureToDelete)->textureComponent); //just mesh doesn't work lol
 			(*textureToDelete)->textureComponent = nullptr;
 		}
 		textureComponentsToDelete.clear();

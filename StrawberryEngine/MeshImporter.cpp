@@ -112,7 +112,7 @@ void MeshImporter::RecursiveLoad(const aiScene* scene, GameObject* ret, const ch
 		App->scene_intro->everyGameObjectList.push_back(ourGO);
 		ret->AddChild(ourGO);
 
-		ourGO->meshComponent = new Mesh();
+		ourGO->meshComponent = new Mesh(name);
 		ourGO->meshComponent->parent = ourGO;
 
 		LOG("%s is now a child of %s", ourGO->name, ret->name);
@@ -171,8 +171,6 @@ void MeshImporter::RecursiveLoad(const aiScene* scene, GameObject* ret, const ch
 
 
 		// Vertex
-		char* meshname = strdup(shortcut->mName.C_Str());
-		ourGO->meshComponent->name = meshname;
 		ourGO->meshComponent->num_vertex = shortcut->mNumVertices;
 		ourGO->meshComponent->vertex = new vec3[ourGO->meshComponent->num_vertex * 3];
 		memcpy(ourGO->meshComponent->vertex, shortcut->mVertices, sizeof(float) * ourGO->meshComponent->num_vertex * 3);

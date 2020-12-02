@@ -5,7 +5,7 @@ class GameObject;
 class Mesh
 {
 public:
-	Mesh() {};
+	Mesh(char* name = nullptr) { this->name = name; };
 	~Mesh() {};
 public:
 
