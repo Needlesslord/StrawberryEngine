@@ -162,3 +162,14 @@ const char* Application::GetOrganizationName() const
 {
 	return organization.c_str();
 }
+
+void Application::SetTitleName(std::string newName)
+{
+	title = newName;
+	App->window->SetTitle(newName.c_str());
+}
+
+void Application::SetOrganizationName(std::string newName)
+{
+	organization = newName;
+}

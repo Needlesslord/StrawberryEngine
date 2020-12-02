@@ -46,7 +46,6 @@ bool ModuleUI::Start()
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
 	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
-
 	ImGui::StyleColorsDark();
 
 	ImGui_ImplSDL2_InitForOpenGL(App->window->window, App->renderer3D->context);
@@ -129,7 +128,16 @@ update_status ModuleUI::Update(float dt)
 		ShowAssets();
 	}
 
-
+	ImGuiContext& g = *GImGui;
+	if (g.DragDropActive)
+	{
+		ShowDragTarget();
+	}
+	else
+	{
+		draggedMesh = nullptr;
+		draggedTexture = nullptr;
+	}
 
 	return UPDATE_CONTINUE;
 }
@@ -151,6 +159,11 @@ bool ModuleUI::CleanUp()
 	return true;
 }
 
+void ModuleUI::HandleSDLInput(SDL_Event* e)
+{
+	ImGui_ImplSDL2_ProcessEvent(e);
+}
+
 void ModuleUI::Draw() 
 {
 	ImGui::Render();
@@ -160,6 +173,7 @@ void ModuleUI::Draw()
 void ModuleUI::AddConsoleOutput(const char* text)
 {
 	pendingOutputs.push_back(strdup(text));
+	isNewOutput = true;
 }
 
 void ModuleUI::UnselectAll()
@@ -265,8 +279,11 @@ void ModuleUI::ShowConfig()
 
 		if (ImGui::CollapsingHeader("Application"))
 		{
-			ImGui::InputText("Engine Name", name, 32);
-			ImGui::InputText("Organization", organization, 32);
+			if (ImGui::InputText("Engine Name", (char*)name.c_str(), 32))
+			{
+				App->SetTitleName(name);
+			}
+			ImGui::InputText("Organization", (char*)organization.c_str(), 32);
 			ImGui::SliderInt("Max FPS", &App->maxFps, 0, 200);
 			ImGui::Text("Limit Framerate: %d", App->maxFps);
 			//
@@ -406,7 +423,7 @@ void ModuleUI::CreateHierarchy(GameObject* go)
 		flags = ImGuiTreeNodeFlags_Leaf;
 	}
 
-	if (ImGui::TreeNodeEx(go->name, flags))
+	if (ImGui::TreeNodeEx(go->name.c_str(), flags))
 	{
 
 		if (ImGui::IsMouseClicked(0) && ImGui::IsWindowHovered())
@@ -480,9 +497,9 @@ void ModuleUI::ShowInspector()
 		if (!App->scene_intro->gameObjectSelected.empty())
 		{
 			std::list<GameObject*>::iterator goIterator = App->scene_intro->gameObjectSelected.begin();
-
-			ImGui::InputText("", (*goIterator)->name, 50);
-
+		
+			ImGui::InputText("", (char*)(*goIterator)->name.c_str(), 50);
+			
 			if (ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen))
 			{
 				ImGui::Spacing();
@@ -601,7 +618,6 @@ void ModuleUI::ShowInspector()
 
 					if (isChangeMeshActive)
 					{
-						//ImGuiPopupFlags_
 						if (ImGui::BeginPopupContextWindow("Change mesh", ImGuiPopupFlags_MouseButtonLeft))
 						{
 							GameObject* go = (*App->scene_intro->gameObjectSelected.begin());
@@ -610,9 +626,11 @@ void ModuleUI::ShowInspector()
 							{
 								if ((*meshIterator) != go->meshComponent)
 								{
-									if (ImGui::MenuItem((*meshIterator)->name))
+									if (ImGui::MenuItem((*meshIterator)->name.c_str()))
 									{
 										go->meshComponent = (*meshIterator);
+										go->isMoved = true;
+										go->meshComponent->isDrawEnabled = true;
 										isChangeMeshActive = false;
 									}
 								}
@@ -623,7 +641,7 @@ void ModuleUI::ShowInspector()
 					}
 				}
 			}
-			else
+			else // Give option to add one
 			{
 				ImGui::Spacing(); ImGui::Spacing(); ImGui::Spacing();
 
@@ -639,11 +657,12 @@ void ModuleUI::ShowInspector()
 					{
 						for (std::list<Mesh*>::iterator meshIterator = App->scene_intro->meshesList.begin(); meshIterator != App->scene_intro->meshesList.end(); meshIterator++)
 						{
-							if (ImGui::MenuItem((*meshIterator)->name))
+							if (ImGui::MenuItem((*meshIterator)->name.c_str()))
 							{
 								GameObject* go = (*App->scene_intro->gameObjectSelected.begin());
 								go->meshComponent = (*meshIterator);
-
+								go->isMoved = true;
+								go->meshComponent->isDrawEnabled = true;
 								isAddMeshActive = false;
 							}
 						}
@@ -707,6 +726,7 @@ void ModuleUI::ShowInspector()
 									if (ImGui::MenuItem((*textureIterator)->name))
 									{
 										go->textureComponent = (*textureIterator);
+										go->textureComponent->isActive = true;
 										isChangeTexActive = false;
 									}
 								}
@@ -737,7 +757,7 @@ void ModuleUI::ShowInspector()
 							{
 								GameObject* go = (*App->scene_intro->gameObjectSelected.begin());
 								go->textureComponent = (*textureIterator);
-
+								go->textureComponent->isActive = true;
 								isAddTexActive = false;
 							}
 						}
@@ -824,7 +844,7 @@ void ModuleUI::ShowConsole()
 		ImGui::SetNextWindowSize({ 400, (float)(App->window->screen_surface->h - 240) });
 	}
 
-	ImGui::Begin("Console", &isConsoleActive);
+	ImGui::Begin("Console", &isConsoleActive, ImGuiWindowFlags_HorizontalScrollbar);
 
 	for (std::list<const char*>::iterator consoleOutputs = pendingOutputs.begin(); consoleOutputs != pendingOutputs.end(); consoleOutputs++)
 	{
@@ -832,7 +852,11 @@ void ModuleUI::ShowConsole()
 		ImGui::Spacing(); ImGui::Spacing(); ImGui::Spacing();
 	}
 
-	ImGui::SetScrollHereY(1.0f);
+	if (isNewOutput)
+	{
+		ImGui::SetScrollHereY(1.0f);
+		isNewOutput = false;
+	}
 	ImGui::End();
 }
 
@@ -846,17 +870,90 @@ void ModuleUI::ShowAssets()
 	}
 	ImGui::Begin("Assets", &isAssetsActive);
 
-
-	if (ImGui::TreeNodeEx("Textures"))
+	if (ImGui::TreeNodeEx("Assets"))
 	{
-		for (std::list<Texture*>::iterator textureIterator = App->scene_intro->textureList.begin(); textureIterator != App->scene_intro->textureList.end(); textureIterator++)
+		if (ImGui::TreeNodeEx("Textures"))
 		{
-			if (ImGui::TreeNodeEx((*textureIterator)->name, ImGuiTreeNodeFlags_Leaf))
+			for (std::list<Texture*>::iterator textureIterator = App->scene_intro->textureList.begin(); textureIterator != App->scene_intro->textureList.end(); textureIterator++)
 			{
-				ImGui::TreePop();
+				if (ImGui::TreeNodeEx((*textureIterator)->name, ImGuiTreeNodeFlags_Leaf))
+				{
+					if (ImGui::BeginDragDropSource())
+					{
+						ImGui::SetDragDropPayload("Drag tex", (*textureIterator), sizeof(Texture));
+						draggedTexture = (*textureIterator);
+	
+						ImGui::EndDragDropSource();
+					}
+
+					ImGui::TreePop();
+				}
+			}
+			ImGui::TreePop();
+		}
+
+		if (ImGui::TreeNodeEx("Meshes"))
+		{
+			for (std::list<Mesh*>::iterator meshIterator = App->scene_intro->meshesList.begin(); meshIterator != App->scene_intro->meshesList.end(); meshIterator++)
+			{
+				if (ImGui::TreeNodeEx((*meshIterator)->name.c_str(), ImGuiTreeNodeFlags_Leaf))
+				{
+					if (ImGui::BeginDragDropSource())
+					{
+						ImGui::SetDragDropPayload("Drag mesh", (*meshIterator), sizeof(Mesh));
+						draggedMesh = (*meshIterator);
+
+						ImGui::EndDragDropSource();
+					}
+
+					ImGui::TreePop();
+				}
+			}
+			ImGui::TreePop();
+		}
+
+
+
+		ImGui::TreePop();
+	}
+
+	ImGui::End();
+}
+
+void ModuleUI::ShowDragTarget()
+{
+	ImGui::SetNextWindowSize({ 300, 300 });
+	ImGui::SetNextWindowPos({ 400,  200 });
+	ImGuiWindowFlags flags = ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar;
+
+	ImGui::Begin("a", 0, flags);
+
+	ImGui::Text("\n\n\n\n\n\n\n\n\n\n                  Drop                   \n                  Here                   \n\n\n\n\n\n\n\n\n\n\n");
+
+	if (ImGui::BeginDragDropTarget())
+	{
+		if (ImGui::AcceptDragDropPayload("Drag tex"))
+		{
+			if (!App->scene_intro->gameObjectSelected.empty())
+			{
+				GameObject* go = (*App->scene_intro->gameObjectSelected.begin());
+				go->textureComponent = draggedTexture;
+				go->textureComponent->isActive = true;
 			}
 		}
-		ImGui::TreePop();
+
+		else if (ImGui::AcceptDragDropPayload("Drag mesh"))
+		{
+			if (!App->scene_intro->gameObjectSelected.empty())
+			{
+				GameObject* go = (*App->scene_intro->gameObjectSelected.begin());
+				go->meshComponent = draggedMesh;
+				go->meshComponent->isDrawEnabled = true;
+				go->isMoved = true;
+			}
+		}
+
+		ImGui::EndDragDropTarget();
 	}
 
 	ImGui::End();

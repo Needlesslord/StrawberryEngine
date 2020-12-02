@@ -5,7 +5,8 @@ class GameObject;
 class Mesh
 {
 public:
-	Mesh(char* name = nullptr) { this->name = name; };
+	Mesh() {};
+	Mesh(std::string name) { this->name = name; };
 	~Mesh() {};
 public:
 
@@ -23,15 +24,13 @@ public:
 	bool hasNormals = false;
 	vec3* normals = nullptr;
 
-	uint textureNumber = 999;
-
 	bool isDrawEnabled = true;
 	
 	GameObject* parent = nullptr;
 
 	const char* path = nullptr;
 
-	char* name = nullptr;
+	std::string name;
 
 	AABB localAABB;
 

@@ -437,8 +437,6 @@ Texture* ModuleRenderer3D::CreateCheckersTexture()
 {
 	Texture* ret = new Texture;
 
-	ret->name = "Default Texture";
-
 	GLubyte checkerImage[32][32][4];
 	for (int i = 0; i < 32; i++) {
 		for (int j = 0; j < 32; j++) {
@@ -449,7 +447,8 @@ Texture* ModuleRenderer3D::CreateCheckersTexture()
 			checkerImage[i][j][3] = (GLubyte)255;
 		}
 	}
-
+	ret->w = 32;
+	ret->h = 32;
 	ret->id = 0;
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 	glGenTextures(1, &ret->id);
@@ -462,6 +461,13 @@ Texture* ModuleRenderer3D::CreateCheckersTexture()
 	glBindTexture(GL_TEXTURE_2D, 0);
 
 	App->scene_intro->textureList.push_back(ret);
+
+	ret->name = "Default Texture.png";
+
+	char* buffer;
+	App->importer->textureImporter->Save(ret, &buffer);
+
+	ret->name = "Default Texture";
 
 	return ret;
 }

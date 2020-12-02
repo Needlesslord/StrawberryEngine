@@ -115,7 +115,7 @@ void MeshImporter::RecursiveLoad(const aiScene* scene, GameObject* ret, const ch
 		ourGO->meshComponent = new Mesh(name);
 		ourGO->meshComponent->parent = ourGO;
 
-		LOG("%s is now a child of %s", ourGO->name, ret->name);
+		LOG("%s is now a child of %s", ourGO->name.c_str(), ret->name.c_str());
 
 		aiVector3D translation, scaling;
 		aiQuaternion rotation;
@@ -321,7 +321,7 @@ uint64 MeshImporter::Save(Mesh* ourMesh, char** fileBuffer)
 	//TODO: Save AABB
 
 	char file[250]; 
-	sprintf_s(file, 250, "%s%s.sem", MESHES_PATH, ourMesh->parent->name/*Should be the mesh's name*/);
+	sprintf_s(file, 250, "%s%s.sem", MESHES_PATH, ourMesh->name.c_str()/*Should be the mesh's name*/);
 
 	App->fileSystem->Save(file, *fileBuffer, size);
 

@@ -4,6 +4,7 @@
 #include "TextureImporter.h"
 #include "MeshImporter.h"
 #include "GameObject.h"
+#include "ModuleUI.h"
 
 #define MAX_KEYS 300
 
@@ -92,6 +93,8 @@ update_status ModuleInput::PreUpdate(float dt)
 	SDL_Event e;
 	while(SDL_PollEvent(&e))
 	{
+		App->ui->HandleSDLInput(&e);
+
 		switch(e.type)
 		{
 			case SDL_MOUSEWHEEL:

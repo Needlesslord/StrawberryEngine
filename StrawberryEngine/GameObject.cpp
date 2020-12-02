@@ -5,11 +5,14 @@
 #include "Application.h"
 #include "ModuleImporter.h"
 
-
-
-GameObject::GameObject(char* name)
+GameObject::GameObject()
 {
-	if (name == nullptr)
+	AddDefaultName();
+}
+
+GameObject::GameObject(std::string name)
+{
+	if (name == "")
 	{
 		AddDefaultName();
 	}
@@ -22,7 +25,7 @@ GameObject::~GameObject()
 	
 }
 
-void GameObject::ChangeName(char* newName)
+void GameObject::ChangeName(std::string newName)
 {
 	this->name = newName;
 }
@@ -40,11 +43,8 @@ void GameObject::AddChild(GameObject* go)
 
 void GameObject::AddDefaultName()
 {
-	char* charName = new char[25];
-	std::string stringName = ("Default Game Object (" + std::to_string(App->importer->gameObjectNameIterator) + ")");
-	strcpy(charName, stringName.c_str());
-	ChangeName(charName);
-	charName = nullptr;
+	std::string name = ("Default Game Object (" + std::to_string(App->importer->gameObjectNameIterator) + ")");
+	ChangeName(name);
 	App->importer->gameObjectNameIterator++;
 }
 

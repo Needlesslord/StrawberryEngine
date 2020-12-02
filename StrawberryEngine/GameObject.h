@@ -6,12 +6,12 @@ class Texture;
 class GameObject
 {
 public:
-
-	GameObject(char* name = nullptr);
+	GameObject();
+	GameObject(std::string name);
 	~GameObject();
 
 	void AddDefaultName();
-	void ChangeName(char* newName);
+	void ChangeName(std::string newName = "");
 	void AddMesh(Mesh* m);
 	void AddChild(GameObject* go);
 	void UpdateRotation();
@@ -37,7 +37,8 @@ public:
 
 	float3 previousRotation = { 0,0,0 };
 	
-	char* name;
+	//char* name; // Had to change it cause of the input
+	std::string name;
 
 	Mesh* meshComponent = nullptr; 
 	Texture* textureComponent = nullptr;

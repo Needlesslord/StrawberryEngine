@@ -52,6 +52,9 @@ public:
 	const char* GetTitleName() const;
 	const char* GetOrganizationName() const;
 
+	void SetTitleName(std::string newName);
+	void SetOrganizationName(std::string newName);
+
 private:
 
 	void AddModule(Module* mod);

@@ -33,6 +33,8 @@ public:
 
 	bool CleanUp();
 
+	void HandleSDLInput(SDL_Event* event);
+
 	void Draw();
 
 	void AddConsoleOutput(const char* text);
@@ -46,6 +48,7 @@ public:
 	void ShowConsole();
 	void ShowAbout();
 	void ShowAssets();
+	void ShowDragTarget();
 
 	void CreateHierarchy(GameObject* go);
 
@@ -80,9 +83,11 @@ public:
 	bool isAddTexActive = false;
 	bool isAddMeshActive = false;
 
+	bool isNewOutput = false;
+
 	// Config data
-	char* name = nullptr;
-	char* organization = nullptr;
+	std::string name;
+	std::string organization;
 
 	// Temporary vars
 	float brightness = 1.0f;
@@ -100,6 +105,8 @@ public:
 
 	std::list<const char*> pendingOutputs;
 
+	Texture* draggedTexture = nullptr;
+	Mesh* draggedMesh = nullptr;
 };
 
 #endif // __ModuleUI_H__
