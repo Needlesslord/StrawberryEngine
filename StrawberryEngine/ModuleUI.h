@@ -82,6 +82,7 @@ public:
 	bool isChangeMeshActive = false;
 	bool isAddTexActive = false;
 	bool isAddMeshActive = false;
+	bool isDropTargetActive = false;
 
 	bool isNewOutput = false;
 
@@ -105,6 +106,7 @@ public:
 
 	std::list<const char*> pendingOutputs;
 
+	GameObject* draggedGameObject = nullptr;
 	Texture* draggedTexture = nullptr;
 	Mesh* draggedMesh = nullptr;
 };

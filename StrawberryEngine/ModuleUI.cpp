@@ -129,7 +129,7 @@ update_status ModuleUI::Update(float dt)
 	}
 
 	ImGuiContext& g = *GImGui;
-	if (g.DragDropActive)
+	if (g.DragDropActive && isDropTargetActive)
 	{
 		ShowDragTarget();
 	}
@@ -137,6 +137,7 @@ update_status ModuleUI::Update(float dt)
 	{
 		draggedMesh = nullptr;
 		draggedTexture = nullptr;
+		isDropTargetActive = false;
 	}
 
 	return UPDATE_CONTINUE;
@@ -440,11 +441,31 @@ void ModuleUI::CreateHierarchy(GameObject* go)
 			}
 		}
 
+		if (ImGui::BeginDragDropTarget())
+		{
+			if (ImGui::AcceptDragDropPayload("Drag go"))
+			{
+				draggedGameObject->parent->children.remove(draggedGameObject);
+				go->AddChild(draggedGameObject);
+				draggedGameObject->parent = go;
+				draggedGameObject->isMoved = true;
+				go->isMoved = true;
+			}
+			ImGui::EndDragDropTarget();
+		}
+
+		if (ImGui::BeginDragDropSource() && go != App->scene_intro->rootNode)
+		{
+			ImGui::SetDragDropPayload("Drag go", go, sizeof(GameObject));
+			draggedGameObject = go;
+
+			ImGui::EndDragDropSource();
+		}
+
 		if (ImGui::IsItemClicked(1))
 		{
 			isReparentingActive = true;
 		}
-
 
 		if (isReparentingActive && go->isSelected && go != App->scene_intro->rootNode)
 		{
@@ -882,7 +903,7 @@ void ModuleUI::ShowAssets()
 					{
 						ImGui::SetDragDropPayload("Drag tex", (*textureIterator), sizeof(Texture));
 						draggedTexture = (*textureIterator);
-	
+						isDropTargetActive = true;
 						ImGui::EndDragDropSource();
 					}
 
@@ -902,7 +923,7 @@ void ModuleUI::ShowAssets()
 					{
 						ImGui::SetDragDropPayload("Drag mesh", (*meshIterator), sizeof(Mesh));
 						draggedMesh = (*meshIterator);
-
+						isDropTargetActive = true;
 						ImGui::EndDragDropSource();
 					}
 
