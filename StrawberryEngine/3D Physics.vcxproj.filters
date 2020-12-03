@@ -135,9 +135,6 @@
     <ClInclude Include="Importer.h">
       <Filter>Sources\Importers</Filter>
     </ClInclude>
-    <ClInclude Include="Mesh.h">
-      <Filter>Sources\Components</Filter>
-    </ClInclude>
     <ClInclude Include="Libs\MathGeoLib\include\Algorithm\Random\LCG.h">
       <Filter>Sources\Tools\Libs\MathGeoLib\Algorithm</Filter>
     </ClInclude>
@@ -309,7 +306,13 @@
     <ClInclude Include="Libs\MathGeoLib\include\Math\Polynomial.h">
       <Filter>Sources\Tools\Libs\MathGeoLib\Math</Filter>
     </ClInclude>
-    <ClInclude Include="Texture.h">
+    <ClInclude Include="MeshComponent.h">
+      <Filter>Sources\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureComponent.h">
+      <Filter>Sources\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraComponent.h">
       <Filter>Sources\Components</Filter>
     </ClInclude>
   </ItemGroup>

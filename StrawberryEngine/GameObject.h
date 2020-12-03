@@ -1,8 +1,8 @@
 #include "Libs/MathGeoLib/include/MathBuildConfig.h"
 #include "Libs/MathGeoLib/include/MathGeoLib.h"
 
-class Mesh;
-class Texture;
+class MeshComponent;
+class TextureComponent;
 class GameObject
 {
 public:
@@ -12,7 +12,7 @@ public:
 
 	void AddDefaultName();
 	void ChangeName(std::string newName = "");
-	void AddMesh(Mesh* m);
+	void AddMesh(MeshComponent* m);
 	void AddChild(GameObject* go);
 	void UpdateRotation();
 	void UpdateLocalTransform();
@@ -26,7 +26,7 @@ public:
 	float3 rotation = { 0,0,0 };		// 
 	Quat rotationQuat = Quat::identity;
 
-	float4x4 localTransform = float4x4::identity; // The transform of a game object within the parent
+	float4x4 localTransform = float4x4::identity; 
 	float4x4 globalTransform = float4x4::identity; // The transform of a game object in the world
 
 	OBB obb;
@@ -40,8 +40,8 @@ public:
 	//char* name; // Had to change it cause of the input
 	std::string name;
 
-	Mesh* meshComponent = nullptr; 
-	Texture* textureComponent = nullptr;
+	MeshComponent* meshComponent = nullptr; 
+	TextureComponent* textureComponent = nullptr;
 
 	std::list<GameObject*> children;
 

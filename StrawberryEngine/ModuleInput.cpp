@@ -138,7 +138,7 @@ update_status ModuleInput::PreUpdate(float dt)
 
 					else if (fileType == ".png" || fileType == ".PNG")
 					{
-						Texture* tex = App->importer->textureImporter->LoadTexture(dropped_filedir);
+						TextureComponent* tex = App->importer->textureImporter->LoadTexture(dropped_filedir);
 						if (tex != nullptr)
 						{
 							LOG("Loaded .png");
@@ -158,7 +158,7 @@ update_status ModuleInput::PreUpdate(float dt)
 
 					else if (fileType == ".dds" || fileType == ".DDS")
 					{
-						Texture* tex = App->importer->textureImporter->LoadTexture(dropped_filedir);
+						TextureComponent* tex = App->importer->textureImporter->LoadTexture(dropped_filedir);
 						if (tex != nullptr)
 						{
 							LOG("Loaded .dds");

@@ -1,4 +1,4 @@
-class Texture
+class TextureComponent
 {
 public:
 	uint GetId() { return id; }

@@ -30,7 +30,7 @@ void GameObject::ChangeName(std::string newName)
 	this->name = newName;
 }
 
-void GameObject::AddMesh(Mesh* m)
+void GameObject::AddMesh(MeshComponent* m)
 {
 	this->meshComponent = m;
 }

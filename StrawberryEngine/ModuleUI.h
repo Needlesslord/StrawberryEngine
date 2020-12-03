@@ -11,6 +11,7 @@
 #include "Libs/ImGui/imgui_impl_opengl3.h"
 
 class Application;
+typedef unsigned int GLuint;
 
 class ModuleUI : public Module
 {
@@ -51,6 +52,8 @@ public:
 	void ShowDragTarget();
 
 	void CreateHierarchy(GameObject* go);
+
+	void DrawFrame(GLuint frameBuffer);
 
 public:
 
@@ -107,8 +110,8 @@ public:
 	std::list<const char*> pendingOutputs;
 
 	GameObject* draggedGameObject = nullptr;
-	Texture* draggedTexture = nullptr;
-	Mesh* draggedMesh = nullptr;
+	TextureComponent* draggedTexture = nullptr;
+	MeshComponent* draggedMesh = nullptr;
 };
 
 #endif // __ModuleUI_H__

@@ -82,6 +82,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
+    <ClInclude Include="CameraComponent.h" />
     <ClInclude Include="Color.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="Geometry.h" />
@@ -144,7 +145,7 @@
     <ClInclude Include="Libs\MathGeoLib\include\Math\sse_mathfun.h" />
     <ClInclude Include="Libs\MathGeoLib\include\Math\TransformOps.h" />
     <ClInclude Include="Libs\MathGeoLib\include\Time\Clock.h" />
-    <ClInclude Include="Mesh.h" />
+    <ClInclude Include="MeshComponent.h" />
     <ClInclude Include="Importer.h" />
     <ClInclude Include="Libs\ImGUI\imconfig.h" />
     <ClInclude Include="Libs\ImGUI\imgui.h" />
@@ -166,7 +167,7 @@
     <ClInclude Include="ModuleSceneIntro.h" />
     <ClInclude Include="ModuleWindow.h" />
     <ClInclude Include="PathNode.h" />
-    <ClInclude Include="Texture.h" />
+    <ClInclude Include="TextureComponent.h" />
     <ClInclude Include="TextureImporter.h" />
     <ClInclude Include="Timer.h" />
   </ItemGroup>

@@ -112,7 +112,7 @@ void MeshImporter::RecursiveLoad(const aiScene* scene, GameObject* ret, const ch
 		App->scene_intro->everyGameObjectList.push_back(ourGO);
 		ret->AddChild(ourGO);
 
-		ourGO->meshComponent = new Mesh(name);
+		ourGO->meshComponent = new MeshComponent(name);
 		ourGO->meshComponent->parent = ourGO;
 
 		LOG("%s is now a child of %s", ourGO->name.c_str(), ret->name.c_str());
@@ -140,7 +140,7 @@ void MeshImporter::RecursiveLoad(const aiScene* scene, GameObject* ret, const ch
 		uint numTextures = texture->GetTextureCount(aiTextureType_DIFFUSE);
 		aiString texPath;
 		texture->GetTexture(aiTextureType_DIFFUSE, 0, &texPath);
-		Texture* ourTexture;
+		TextureComponent* ourTexture;
 		if (texPath.C_Str() != nullptr && texPath.length > 0)
 		{
 			std::string texPathString = App->fileSystem->NormalizePath(texPath.C_Str());
@@ -273,7 +273,7 @@ void MeshImporter::Import()
 	//importer = new
 }
 
-uint64 MeshImporter::Save(Mesh* ourMesh, char** fileBuffer)
+uint64 MeshImporter::Save(MeshComponent* ourMesh, char** fileBuffer)
 {
 	// amount of indices / vertices / colors / normals / texture_coords / AABB
 	uint ranges[4] = { ourMesh->num_index, ourMesh->num_vertex, ourMesh->num_vertex/* -(Normals)- */, ourMesh->num_vertex /* -(UVs)- */ };
@@ -330,7 +330,7 @@ uint64 MeshImporter::Save(Mesh* ourMesh, char** fileBuffer)
 	return size;
 }
 
-bool MeshImporter::Load(const char* fileBuffer, Mesh* ourMesh)
+bool MeshImporter::Load(const char* fileBuffer, MeshComponent* ourMesh)
 {
 	const char* cursor = fileBuffer;
 	// amount of indices / vertices / colors / normals / texture_coords

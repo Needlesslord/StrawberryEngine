@@ -643,7 +643,7 @@ void ModuleUI::ShowInspector()
 						{
 							GameObject* go = (*App->scene_intro->gameObjectSelected.begin());
 
-							for (std::list<Mesh*>::iterator meshIterator = App->scene_intro->meshesList.begin(); meshIterator != App->scene_intro->meshesList.end(); meshIterator++)
+							for (std::list<MeshComponent*>::iterator meshIterator = App->scene_intro->meshesList.begin(); meshIterator != App->scene_intro->meshesList.end(); meshIterator++)
 							{
 								if ((*meshIterator) != go->meshComponent)
 								{
@@ -676,7 +676,7 @@ void ModuleUI::ShowInspector()
 					//ImGuiPopupFlags_
 					if (ImGui::BeginPopupContextWindow("Add mesh", ImGuiPopupFlags_MouseButtonLeft))
 					{
-						for (std::list<Mesh*>::iterator meshIterator = App->scene_intro->meshesList.begin(); meshIterator != App->scene_intro->meshesList.end(); meshIterator++)
+						for (std::list<MeshComponent*>::iterator meshIterator = App->scene_intro->meshesList.begin(); meshIterator != App->scene_intro->meshesList.end(); meshIterator++)
 						{
 							if (ImGui::MenuItem((*meshIterator)->name.c_str()))
 							{
@@ -740,7 +740,7 @@ void ModuleUI::ShowInspector()
 						if (ImGui::BeginPopupContextWindow("Change tex", ImGuiPopupFlags_MouseButtonLeft))
 						{
 							GameObject* go = (*App->scene_intro->gameObjectSelected.begin());
-							for (std::list<Texture*>::iterator textureIterator = App->scene_intro->textureList.begin(); textureIterator != App->scene_intro->textureList.end(); textureIterator++)
+							for (std::list<TextureComponent*>::iterator textureIterator = App->scene_intro->textureList.begin(); textureIterator != App->scene_intro->textureList.end(); textureIterator++)
 							{
 								if ((*textureIterator) != go->textureComponent)
 								{
@@ -772,7 +772,7 @@ void ModuleUI::ShowInspector()
 					//ImGuiPopupFlags_
 					if (ImGui::BeginPopupContextWindow("Add tex", ImGuiPopupFlags_MouseButtonLeft))
 					{
-						for (std::list<Texture*>::iterator textureIterator = App->scene_intro->textureList.begin(); textureIterator != App->scene_intro->textureList.end(); textureIterator++)
+						for (std::list<TextureComponent*>::iterator textureIterator = App->scene_intro->textureList.begin(); textureIterator != App->scene_intro->textureList.end(); textureIterator++)
 						{
 							if (ImGui::MenuItem((*textureIterator)->name))
 							{
@@ -895,13 +895,13 @@ void ModuleUI::ShowAssets()
 	{
 		if (ImGui::TreeNodeEx("Textures"))
 		{
-			for (std::list<Texture*>::iterator textureIterator = App->scene_intro->textureList.begin(); textureIterator != App->scene_intro->textureList.end(); textureIterator++)
+			for (std::list<TextureComponent*>::iterator textureIterator = App->scene_intro->textureList.begin(); textureIterator != App->scene_intro->textureList.end(); textureIterator++)
 			{
 				if (ImGui::TreeNodeEx((*textureIterator)->name, ImGuiTreeNodeFlags_Leaf))
 				{
 					if (ImGui::BeginDragDropSource())
 					{
-						ImGui::SetDragDropPayload("Drag tex", (*textureIterator), sizeof(Texture));
+						ImGui::SetDragDropPayload("Drag tex", (*textureIterator), sizeof(TextureComponent));
 						draggedTexture = (*textureIterator);
 						isDropTargetActive = true;
 						ImGui::EndDragDropSource();
@@ -915,13 +915,13 @@ void ModuleUI::ShowAssets()
 
 		if (ImGui::TreeNodeEx("Meshes"))
 		{
-			for (std::list<Mesh*>::iterator meshIterator = App->scene_intro->meshesList.begin(); meshIterator != App->scene_intro->meshesList.end(); meshIterator++)
+			for (std::list<MeshComponent*>::iterator meshIterator = App->scene_intro->meshesList.begin(); meshIterator != App->scene_intro->meshesList.end(); meshIterator++)
 			{
 				if (ImGui::TreeNodeEx((*meshIterator)->name.c_str(), ImGuiTreeNodeFlags_Leaf))
 				{
 					if (ImGui::BeginDragDropSource())
 					{
-						ImGui::SetDragDropPayload("Drag mesh", (*meshIterator), sizeof(Mesh));
+						ImGui::SetDragDropPayload("Drag mesh", (*meshIterator), sizeof(MeshComponent));
 						draggedMesh = (*meshIterator);
 						isDropTargetActive = true;
 						ImGui::EndDragDropSource();
@@ -977,5 +977,13 @@ void ModuleUI::ShowDragTarget()
 		ImGui::EndDragDropTarget();
 	}
 
+	ImGui::End();
+}
+
+void ModuleUI::DrawFrame(GLuint frameBuffer)
+{
+	//ImGui::SetNextWindowSize({ 800, 600 });
+	ImGui::Begin("Scene");
+	ImGui::Image((ImTextureID)frameBuffer, ImVec2( App->window->screen_surface->w, App->window->screen_surface->h ), ImVec2(0, 1), ImVec2(1, 0));
 	ImGui::End();
 }

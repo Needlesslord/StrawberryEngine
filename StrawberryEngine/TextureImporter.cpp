@@ -56,7 +56,7 @@ void TextureImporter::Import()
 	//importer = new
 }
 
-uint64 TextureImporter::Save(const Texture* ourTexture, char** fileBuffer)
+uint64 TextureImporter::Save(const TextureComponent* ourTexture, char** fileBuffer)
 {
 	ILuint size;
 	ILubyte* data;
@@ -80,13 +80,13 @@ uint64 TextureImporter::Save(const Texture* ourTexture, char** fileBuffer)
 	return size;
 }
 
-bool TextureImporter::Load(const char* fileBuffer, Texture* ourTexture)
+bool TextureImporter::Load(const char* fileBuffer, TextureComponent* ourTexture)
 {
 	return true;
 }
 
 
-Texture* TextureImporter::LoadTexture(const char* path)
+TextureComponent* TextureImporter::LoadTexture(const char* path)
 {
 	if (ilLoadImage(path))
 	{
@@ -98,7 +98,7 @@ Texture* TextureImporter::LoadTexture(const char* path)
 		return nullptr;
 	}
 
-	Texture* ret = new Texture;
+	TextureComponent* ret = new TextureComponent;
 	std::string name(path);
 
 	char* p = new char[30];

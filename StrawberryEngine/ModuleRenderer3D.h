@@ -7,7 +7,8 @@
 #define MAX_LIGHTS 8
 
 class GameObject;
-class Texture;
+class TextureComponent;
+typedef unsigned int GLuint;
 
 class ModuleRenderer3D : public Module
 {
@@ -30,7 +31,7 @@ public:
 	void GenerateBuffers();
 	void Draw(GameObject* go);
 
-	Texture* CreateCheckersTexture();
+	TextureComponent* CreateCheckersTexture();
 
 	void ToggleDepthTest(const bool switchTo);
 	void ToggleLighting(const bool switchTo);
@@ -53,5 +54,9 @@ public:
 	uint myId = 0;
 	uint myIndeces = 0;
 
-	
+	GLuint frameBuffer = 0;
+	GLuint texColorBuffer = 0;
+	GLuint rboDepthStencil = 0;
+
+	bool swap = true;
 };

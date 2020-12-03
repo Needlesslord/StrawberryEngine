@@ -2,12 +2,12 @@
 #include "Libs/MathGeoLib/include/MathGeoLib.h"
 
 class GameObject;
-class Mesh
+class MeshComponent
 {
 public:
-	Mesh() {};
-	Mesh(std::string name) { this->name = name; };
-	~Mesh() {};
+	MeshComponent() {};
+	MeshComponent(std::string name) { this->name = name; };
+	~MeshComponent() {};
 public:
 
 	uint id_index = 0; // index in VRAM

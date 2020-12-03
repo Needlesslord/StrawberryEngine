@@ -1,6 +1,6 @@
 #include "Globals.h"
 #include "Importer.h"
-#include "Texture.h"
+#include "TextureComponent.h"
 
 #include "Libs/DevIL/include/IL/il.h"
 
@@ -14,14 +14,14 @@ public:
 	bool Init();
 	bool Start();
 	void Import();
-	uint64 Save(const Texture* ourTexture, char** fileBuffer);
-	bool Load(const char* fileBuffer, Texture* ourTexture);
+	uint64 Save(const TextureComponent* ourTexture, char** fileBuffer);
+	bool Load(const char* fileBuffer, TextureComponent* ourTexture);
 
-	Texture* LoadTexture(const char* path);
+	TextureComponent* LoadTexture(const char* path);
 
 public:
 
-	Texture* defaultTexture = nullptr;
-	Texture* houseTexture = nullptr;
+	TextureComponent* defaultTexture = nullptr;
+	TextureComponent* houseTexture = nullptr;
 
 };

@@ -170,18 +170,20 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 // PostUpdate present buffer to screen
 update_status ModuleRenderer3D::PostUpdate(float dt)
 {
+	//glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
+
 	App->scene_intro->Draw();
-
-
 
 	if (App->ui->isDrawEnabled)
 	{
 		Draw(App->scene_intro->rootNode);
 	}
-	
-	
-	App->ui->Draw();
 
+	// Not working yet
+	//App->ui->DrawFrame(texColorBuffer);
+	//glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	App->ui->Draw();
 	SDL_GL_SwapWindow(App->window->window);
 
 	return UPDATE_CONTINUE;
@@ -193,6 +195,9 @@ bool ModuleRenderer3D::CleanUp()
 	LOG("Destroying 3D Renderer");
 
 	SDL_GL_DeleteContext(context);
+
+	glDeleteFramebuffers(1, &frameBuffer);
+	glDeleteRenderbuffers(1, &rboDepthStencil);
 
 	return true;
 }
@@ -208,6 +213,33 @@ void ModuleRenderer3D::OnResize(int width, int height)
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
+
+
+	// Frame Buffer setup
+	glGenFramebuffers(1, &frameBuffer);
+	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
+
+	glGenTextures(1, &texColorBuffer);
+	glBindTexture(GL_TEXTURE_2D, texColorBuffer);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, App->window->screen_surface->w, App->window->screen_surface->h, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+	glBindTexture(GL_TEXTURE_2D, 0);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texColorBuffer, 0);
+
+	glGenRenderbuffers(1, &rboDepthStencil);
+	glBindRenderbuffer(GL_RENDERBUFFER, rboDepthStencil);
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, App->window->screen_surface->w, App->window->screen_surface->h);
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rboDepthStencil);
+	glBindRenderbuffer(GL_RENDERBUFFER, 0);
+
+	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+	{
+		LOG("Error creating screen buffer");
+	}
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 void ModuleRenderer3D::DrawCubeDirect()
@@ -305,7 +337,7 @@ void ModuleRenderer3D::DrawCubeIndices()
 
 void ModuleRenderer3D::GenerateBuffers()
 {
-	for (std::list<Mesh*>::iterator meshIterator = App->scene_intro->meshesList.begin(); meshIterator != App->scene_intro->meshesList.end(); meshIterator++)
+	for (std::list<MeshComponent*>::iterator meshIterator = App->scene_intro->meshesList.begin(); meshIterator != App->scene_intro->meshesList.end(); meshIterator++)
 	{
 		glGenBuffers(1, (GLuint*) & ((*meshIterator)->id_vertex));
 		glBindBuffer(GL_ARRAY_BUFFER, (*meshIterator)->id_vertex);
@@ -328,7 +360,7 @@ void ModuleRenderer3D::Draw(GameObject* go)
 			glMultMatrixf((GLfloat*)&go->globalTransform.Transposed()); // If it's not transposed the translation goes weird... also, it should be global 
 
 
-			Mesh* mesh = go->meshComponent;
+			MeshComponent* mesh = go->meshComponent;
 
 			glEnableClientState(GL_VERTEX_ARRAY);
 			glEnableClientState(GL_TEXTURE_COORD_ARRAY);
@@ -433,9 +465,9 @@ void ModuleRenderer3D::Draw(GameObject* go)
 
 }
 
-Texture* ModuleRenderer3D::CreateCheckersTexture()
+TextureComponent* ModuleRenderer3D::CreateCheckersTexture()
 {
-	Texture* ret = new Texture;
+	TextureComponent* ret = new TextureComponent;
 
 	GLubyte checkerImage[32][32][4];
 	for (int i = 0; i < 32; i++) {
