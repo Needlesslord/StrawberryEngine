@@ -55,7 +55,7 @@ public:
 
 	void DrawFrame(GLuint frameBuffer);
 
-	bool IsAnyWindowHovered();
+	const bool IsAnyWindowHovered()const;
 
 public:
 

@@ -65,6 +65,7 @@ bool ModuleUI::Start()
 
 	isHierarchyActive = true;
 	isInspectorActive = true;
+	isConsoleActive = false;
 	isAssetsActive = true;
 
 	return ret;
@@ -218,6 +219,8 @@ void ModuleUI::ShowMenuBar()
 			ImGui::Checkbox("Configuration", &isConfigActive);
 			ImGui::Checkbox("Hierarchy", &isHierarchyActive);
 			ImGui::Checkbox("Inspector", &isInspectorActive);
+			ImGui::Checkbox("Console", &isConsoleActive);
+			ImGui::Checkbox("Assets", &isAssetsActive);
 
 			ImGui::EndMenu();
 		}
@@ -1020,7 +1023,7 @@ void ModuleUI::DrawFrame(GLuint frameBuffer)
 	ImGui::End();
 }
 
-bool ModuleUI::IsAnyWindowHovered()
+const bool ModuleUI::IsAnyWindowHovered() const
 {
 	return isAnyWindowHovered;
 }

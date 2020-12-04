@@ -91,49 +91,39 @@ update_status ModuleCamera3D::Update(float dt)
 		int dx = -App->input->GetMouseXMotion();
 		int dy = -App->input->GetMouseYMotion();
 
-		float Sensitivity = 0.10f;
+		float Sensitivity = 0.25f;
 
-		vec3 ref = Reference;
+		Position += newPos;
+		Reference += newPos;
 
-		//Position -= Reference;
+		Position -= Reference;
 
 		if (dx != 0)
 		{
 			float DeltaX = (float)dx * Sensitivity;
 
-			//X = rotate(X, DeltaX, vec3(0.0f, 1.0f, 0.0f));
-			//Y = rotate(Y, DeltaX, vec3(0.0f, 1.0f, 0.0f));
-			//Z = rotate(Z, DeltaX, vec3(0.0f, 1.0f, 0.0f));
-
-			ref.x = Reference.x - DeltaX;
+			X = rotate(X, DeltaX, vec3(0.0f, 1.0f, 0.0f));
+			Y = rotate(Y, DeltaX, vec3(0.0f, 1.0f, 0.0f));
+			Z = rotate(Z, DeltaX, vec3(0.0f, 1.0f, 0.0f));
 		}
 
 		if (dy != 0)
 		{
 			float DeltaY = (float)dy * Sensitivity;
 
-			//Y = rotate(Y, DeltaY, X);
-			//Z = rotate(Z, DeltaY, X);
+			Y = rotate(Y, DeltaY, X);
+			Z = rotate(Z, DeltaY, X);
 
 			if (Y.y < 0.0f)
 			{
-				//Z = vec3(0.0f, Z.y > 0.0f ? 1.0f : -1.0f, 0.0f);
-				//Y = cross(Z, X);
-			}
-
-			if (isYInverted) {
-				ref.y = Reference.y - DeltaY;
-			}
-			else
-			{
-				ref.y = Reference.y + DeltaY;
+				Z = vec3(0.0f, Z.y > 0.0f ? 1.0f : -1.0f, 0.0f);
+				Y = cross(Z, X);
 			}
 		}
 
-		ref.z = Reference.z;
-
-		//Position = Reference + Z * length(Position);
-		LookAt(ref);
+		
+		Position = Reference + Z * length(Position);
+		//LookAt(ref);
 	}
 
 	
@@ -146,7 +136,6 @@ update_status ModuleCamera3D::Update(float dt)
 
 update_status ModuleCamera3D::PostUpdate(float dt)
 {
-
 	vec3 ftov;
 
 		// Alt+Left click should orbit the object.
@@ -158,9 +147,10 @@ update_status ModuleCamera3D::PostUpdate(float dt)
 		float Sensitivity = 0.25f;
 
 		GameObject* ref = (*App->scene_intro->gameObjectSelected.begin());
-		ftov.x = ref->position.x;
-		ftov.y = ref->position.y;
-		ftov.z = ref->position.z;
+		
+		ftov.x = ref->aabb.CenterPoint().x;
+		ftov.y = ref->aabb.CenterPoint().y;
+		ftov.z = ref->aabb.CenterPoint().z;
 
 		Reference = ftov;
 
@@ -200,9 +190,9 @@ update_status ModuleCamera3D::PostUpdate(float dt)
 	if (App->input->GetKey(SDL_SCANCODE_F) == KEY_DOWN && !App->scene_intro->gameObjectSelected.empty())
 	{
 		GameObject* ref = (*App->scene_intro->gameObjectSelected.begin());
-		ftov.x = ref->position.x;
-		ftov.y = ref->position.y;
-		ftov.z = ref->position.z;
+		ftov.x = ref->aabb.CenterPoint().x;
+		ftov.y = ref->aabb.CenterPoint().y;
+		ftov.z = ref->aabb.CenterPoint().z;
 		LookAt(ftov);
 	}
 
