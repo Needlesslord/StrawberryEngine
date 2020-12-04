@@ -4,12 +4,12 @@
 CameraComponent::CameraComponent()
 {
 	frustum.type = FrustumType::PerspectiveFrustum;
-	frustum.pos = float3::zero;
+	frustum.pos = { 0,0,0 };
 	frustum.front = float3::unitZ;
 	frustum.up = float3::unitY;
 	frustum.nearPlaneDistance = 1.0f;
 	frustum.farPlaneDistance = 1000.0f;
-	frustum.verticalFov = DEGTORAD * (60.0f);
+	frustum.verticalFov = DEGTORAD * (55.0f);
 
 	frustum.horizontalFov = 2.0f * atanf(tanf(frustum.verticalFov * 0.5f) * 1.3f);
 }
