@@ -436,6 +436,23 @@ void ModuleUI::CreateHierarchy(GameObject* go)
 	{
 		flags = ImGuiTreeNodeFlags_Leaf;
 	}
+	
+
+	if (!go->isActive)
+	{
+		ImGui::PushStyleColor(ImGuiCol_Text, { 0.5,0.5,0.5,0.5 });
+	}
+	else
+	{
+		ImGui::PushStyleColor(ImGuiCol_Text, { 1,1,1,1 });
+	}
+
+
+	if (go->isSelected)
+	{
+		flags |= ImGuiTreeNodeFlags_Selected;
+	}
+
 
 	if (ImGui::TreeNodeEx(go->name.c_str(), flags))
 	{
@@ -515,6 +532,8 @@ void ModuleUI::CreateHierarchy(GameObject* go)
 		ImGui::TreePop();
 	}
 
+	ImGui::PopStyleColor();
+
 }
 
 void ModuleUI::ShowInspector()
@@ -535,6 +554,11 @@ void ModuleUI::ShowInspector()
 		{
 			std::list<GameObject*>::iterator goIterator = App->scene_intro->gameObjectSelected.begin();
 		
+			if (ImGui::Checkbox("Active", &(*goIterator)->isActive))
+			{
+				(*goIterator)->SetActive((*goIterator)->isActive);
+			}
+			ImGui::SameLine();
 			ImGui::InputText("", (char*)(*goIterator)->name.c_str(), 50);
 			
 			if (ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen))

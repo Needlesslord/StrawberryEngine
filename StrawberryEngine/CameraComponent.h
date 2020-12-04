@@ -1,10 +1,23 @@
-#include "Libs/MathGeoLib/include/MathGeoLib.h"
+#include "Libs/MathGeoLib/include/Geometry/Frustum.h"
+#include "Libs/MathGeoLib/include/Math/float3.h"
+#include "Libs/MathGeoLib/include/Geometry/AABB.h"
+#include "Libs/MathGeoLib/include/Geometry/Plane.h"
+
 class CameraComponent
 {
 public:
-	Frustum frustrum;
+	CameraComponent();
+	~CameraComponent();
+	bool NeedsCulling(AABB& aabb);
 
-	char* name = nullptr;
+public:
+	
+	Frustum frustum;
+
+	std::string name;
 	
 	bool isActive = true;
+
+	bool isDebugEnabled = false;
+
 };

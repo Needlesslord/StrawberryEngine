@@ -3,6 +3,8 @@
 
 class MeshComponent;
 class TextureComponent;
+class CameraComponent;
+
 class GameObject
 {
 public:
@@ -18,6 +20,7 @@ public:
 	void UpdateLocalTransform();
 	void UpdateGlobalTransform();
 	void UpdateAABB();
+	void SetActive(const bool state);
 
 public:
 
@@ -34,7 +37,6 @@ public:
 
 	bool isMoved = false; // this should change to transformUpdated or smthg
 
-
 	float3 previousRotation = { 0,0,0 };
 	
 	//char* name; // Had to change it cause of the input
@@ -42,6 +44,7 @@ public:
 
 	MeshComponent* meshComponent = nullptr; 
 	TextureComponent* textureComponent = nullptr;
+	CameraComponent* cameraComponent = nullptr;
 
 	std::list<GameObject*> children;
 
@@ -51,5 +54,7 @@ public:
 	bool isAABBEnabled = false;
 
 	bool isSelected = false;
+
+	bool isActive = true;
 
 };

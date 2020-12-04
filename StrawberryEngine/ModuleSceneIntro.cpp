@@ -7,6 +7,7 @@
 #include "TextureImporter.h"
 #include "GameObject.h"
 #include "ModuleInput.h"
+#include "CameraComponent.h"
 
 ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
@@ -96,6 +97,11 @@ update_status ModuleSceneIntro::Update(float dt)
 	}
 	if (needToGenBuffers)
 		App->renderer3D->GenerateBuffers();
+
+	if (App->input->GetKey(SDL_SCANCODE_C) == KEY_DOWN)
+	{
+		(*gameObjectSelected.begin())->cameraComponent = new CameraComponent();
+	}
 
 	return UPDATE_CONTINUE;
 }

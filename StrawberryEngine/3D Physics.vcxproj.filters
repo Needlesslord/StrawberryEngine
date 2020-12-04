@@ -488,6 +488,9 @@
     <ClCompile Include="Libs\MathGeoLib\include\Math\Polynomial.cpp">
       <Filter>Sources\Tools\Libs\MathGeoLib\Math</Filter>
     </ClCompile>
+    <ClCompile Include="CameraComponent.cpp">
+      <Filter>Sources\Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Libs\MathGeoLib\include\Geometry\TriangleMesh_IntersectRay_AVX.inl">

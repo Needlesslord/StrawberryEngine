@@ -4,6 +4,8 @@
 #include "ModuleSceneIntro.h"
 #include "Application.h"
 #include "ModuleImporter.h"
+#include "TextureComponent.h"
+#include "CameraComponent.h"
 
 GameObject::GameObject()
 {
@@ -109,5 +111,25 @@ void GameObject::UpdateAABB()
 	for (std::list<GameObject*>::iterator goIterator = children.begin(); goIterator != children.end(); goIterator++)
 	{
 		(*goIterator)->UpdateAABB();
+	}
+}
+
+void GameObject::SetActive(const bool state)
+{
+	isActive = state;
+
+	if (meshComponent)
+	{
+		meshComponent->isDrawEnabled = state;
+	}
+
+	if (textureComponent)
+	{
+		textureComponent->isActive = state;
+	}
+
+	for (std::list<GameObject*>::iterator goIterator = children.begin(); goIterator != children.end(); goIterator++)
+	{
+		(*goIterator)->SetActive(state);
 	}
 }
