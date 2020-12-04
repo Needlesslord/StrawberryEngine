@@ -170,8 +170,9 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 // PostUpdate present buffer to screen
 update_status ModuleRenderer3D::PostUpdate(float dt)
 {
+	
 	//glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
-
+	
 	App->scene_intro->Draw();
 
 	if (App->ui->isDrawEnabled)
@@ -181,7 +182,9 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 
 	// Not working yet
 	//App->ui->DrawFrame(texColorBuffer);
+
 	//glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	
 
 	App->ui->Draw();
 	SDL_GL_SwapWindow(App->window->window);
@@ -236,10 +239,11 @@ void ModuleRenderer3D::OnResize(int width, int height)
 
 	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
 	{
-		LOG("Error creating screen buffer");
+		LOG("Error setting up frame buffer");
 	}
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
 }
 
 void ModuleRenderer3D::DrawCubeDirect()

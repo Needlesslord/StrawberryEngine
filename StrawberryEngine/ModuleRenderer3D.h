@@ -54,9 +54,9 @@ public:
 	uint myId = 0;
 	uint myIndeces = 0;
 
-	GLuint frameBuffer = 0;
-	GLuint texColorBuffer = 0;
-	GLuint rboDepthStencil = 0;
+	uint frameBuffer = 0;
+	uint texColorBuffer = 0;
+	uint rboDepthStencil = 0;
 
 	bool swap = true;
 };

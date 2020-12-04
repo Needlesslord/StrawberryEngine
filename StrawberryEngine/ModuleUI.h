@@ -55,6 +55,8 @@ public:
 
 	void DrawFrame(GLuint frameBuffer);
 
+	bool IsAnyWindowHovered();
+
 public:
 
 	bool done = false;
@@ -112,6 +114,11 @@ public:
 	GameObject* draggedGameObject = nullptr;
 	TextureComponent* draggedTexture = nullptr;
 	MeshComponent* draggedMesh = nullptr;
+
+private:
+
+	bool isAnyWindowHovered;
+
 };
 
 #endif // __ModuleUI_H__

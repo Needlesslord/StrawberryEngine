@@ -73,7 +73,8 @@ update_status ModuleCamera3D::Update(float dt)
 
 		// Mouse wheel should zoom in and out
 	float DeltaZ = App->input->GetMouseZ();
-	if (DeltaZ != 0)
+	bool isHovered = App->ui->IsAnyWindowHovered();
+	if (DeltaZ != 0 && !isHovered)
 	{
 		newPos -= Z * DeltaZ;
 	}

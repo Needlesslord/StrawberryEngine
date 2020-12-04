@@ -93,6 +93,9 @@ update_status ModuleUI::PreUpdate(float dt)
 
 update_status ModuleUI::Update(float dt)
 {
+	
+	isAnyWindowHovered = false;
+	
 	ShowMenuBar();
 
 	if(isDemoActive)
@@ -277,7 +280,10 @@ void ModuleUI::ShowConfig()
 {
 	ImGui::Begin("Configuration", &isConfigActive);
 	{
-
+		if (ImGui::IsWindowHovered())
+		{
+			isAnyWindowHovered = true;
+		}
 		if (ImGui::CollapsingHeader("Application"))
 		{
 			if (ImGui::InputText("Engine Name", (char*)name.c_str(), 32))
@@ -403,6 +409,10 @@ void ModuleUI::ShowHierarchy()
 	}
 
 	ImGui::Begin("Hierarchy", &isHierarchyActive);
+	if (ImGui::IsWindowHovered())
+	{
+		isAnyWindowHovered = true;
+	}
 	CreateHierarchy(App->scene_intro->rootNode);
 	ImGui::End();
 }
@@ -514,7 +524,10 @@ void ModuleUI::ShowInspector()
 	}
 	ImGui::Begin("Inspector", &isInspectorActive);
 	{
-
+		if (ImGui::IsWindowHovered())
+		{
+			isAnyWindowHovered = true;
+		}
 		if (!App->scene_intro->gameObjectSelected.empty())
 		{
 			std::list<GameObject*>::iterator goIterator = App->scene_intro->gameObjectSelected.begin();
@@ -797,6 +810,10 @@ void ModuleUI::ShowAbout()
 {
 	ImGui::Begin("About", &isAboutActive);
 	{
+		if (ImGui::IsWindowHovered())
+		{
+			isAnyWindowHovered = true;
+		}
 		ImGui::Text("Strawberry Engine");
 		ImGui::Text("The sweetest 3D Engine");
 		ImGui::Spacing();
@@ -867,6 +884,11 @@ void ModuleUI::ShowConsole()
 
 	ImGui::Begin("Console", &isConsoleActive, ImGuiWindowFlags_HorizontalScrollbar);
 
+	if (ImGui::IsWindowHovered())
+	{
+		isAnyWindowHovered = true;
+	}
+
 	for (std::list<const char*>::iterator consoleOutputs = pendingOutputs.begin(); consoleOutputs != pendingOutputs.end(); consoleOutputs++)
 	{
 		ImGui::Text((*consoleOutputs));
@@ -890,6 +912,11 @@ void ModuleUI::ShowAssets()
 		ImGui::SetNextWindowSize({ (float)(App->window->screen_surface->w - 690), 200 });
 	}
 	ImGui::Begin("Assets", &isAssetsActive);
+
+	if (ImGui::IsWindowHovered())
+	{
+		isAnyWindowHovered = true;
+	}
 
 	if (ImGui::TreeNodeEx("Assets"))
 	{
@@ -949,6 +976,11 @@ void ModuleUI::ShowDragTarget()
 
 	ImGui::Begin("a", 0, flags);
 
+	if (ImGui::IsWindowHovered())
+	{
+		isAnyWindowHovered = true;
+	}
+
 	ImGui::Text("\n\n\n\n\n\n\n\n\n\n                  Drop                   \n                  Here                   \n\n\n\n\n\n\n\n\n\n\n");
 
 	if (ImGui::BeginDragDropTarget())
@@ -984,6 +1016,11 @@ void ModuleUI::DrawFrame(GLuint frameBuffer)
 {
 	//ImGui::SetNextWindowSize({ 800, 600 });
 	ImGui::Begin("Scene");
-	ImGui::Image((ImTextureID)frameBuffer, ImVec2( App->window->screen_surface->w, App->window->screen_surface->h ), ImVec2(0, 1), ImVec2(1, 0));
+	ImGui::Image((ImTextureID)App->renderer3D->texColorBuffer, ImVec2( App->window->screen_surface->w,App->window->screen_surface->h ), ImVec2(0, 1), ImVec2(1, 0));
 	ImGui::End();
+}
+
+bool ModuleUI::IsAnyWindowHovered()
+{
+	return isAnyWindowHovered;
 }
