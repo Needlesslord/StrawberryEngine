@@ -56,7 +56,7 @@ void TextureImporter::Import()
 	//importer = new
 }
 
-uint64 TextureImporter::Save(const TextureComponent* ourTexture, char** fileBuffer)
+uint64 TextureImporter::Save(const Texture* ourTexture, char** fileBuffer)
 {
 	ILuint size;
 	ILubyte* data;
@@ -70,7 +70,8 @@ uint64 TextureImporter::Save(const TextureComponent* ourTexture, char** fileBuff
 			*fileBuffer = (char*)data;
 
 		std::string ext = "set";
-		std::string pathChanged = App->fileSystem->ChangeExtension(ourTexture->name, ext);
+		const char* name = ourTexture->name.c_str();
+		std::string pathChanged = App->fileSystem->ChangeExtension(name, ext);
 		char file[250];
 		sprintf_s(file, 250, "%s%s", TEXTURES_PATH, pathChanged.c_str());
 		App->fileSystem->Save(file, data, size);
@@ -80,13 +81,13 @@ uint64 TextureImporter::Save(const TextureComponent* ourTexture, char** fileBuff
 	return size;
 }
 
-bool TextureImporter::Load(const char* fileBuffer, TextureComponent* ourTexture)
+bool TextureImporter::Load(const char* fileBuffer, Texture* ourTexture)
 {
 	return true;
 }
 
 
-TextureComponent* TextureImporter::LoadTexture(const char* path)
+Texture* TextureImporter::LoadTexture(const char* path)
 {
 	if (ilLoadImage(path))
 	{
@@ -98,7 +99,7 @@ TextureComponent* TextureImporter::LoadTexture(const char* path)
 		return nullptr;
 	}
 
-	TextureComponent* ret = new TextureComponent;
+	Texture* ret = new Texture;
 	std::string name(path);
 
 	char* p = new char[30];
@@ -134,7 +135,7 @@ TextureComponent* TextureImporter::LoadTexture(const char* path)
 
 	ret->id = id_texture;
 
-	LOG(ret->name);
+	LOG(ret->name.c_str());
 	App->importer->AddTexture(ret);
 
 	char* buffer;

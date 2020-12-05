@@ -80,12 +80,7 @@ bool ModuleImporter::CleanUp()
 	return ret;
 }
 
-void ModuleImporter::AddMesh(MeshComponent* mesh)const
-{
-	App->scene_intro->meshesList.push_back(mesh);
-}
-
-void ModuleImporter::AddTexture(TextureComponent* tex)const
+void ModuleImporter::AddTexture(Texture* tex)const
 {
 	App->scene_intro->textureList.push_back(tex);
 }

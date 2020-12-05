@@ -3,7 +3,6 @@
 #include "TextureImporter.h"
 #include "GameObject.h"
 #include "Importer.h"
-//#include "Mesh.h"
 
 
 #include "Libs/Assimp/include/cimport.h"
@@ -112,8 +111,9 @@ void MeshImporter::RecursiveLoad(const aiScene* scene, GameObject* ret, const ch
 		App->scene_intro->everyGameObjectList.push_back(ourGO);
 		ret->AddChild(ourGO);
 
-		ourGO->meshComponent = new MeshComponent(name);
-		ourGO->meshComponent->parent = ourGO;
+		ourGO->meshComponent = (ComponentMesh*) ourGO->AddComponent(Component::TYPE_MESH);
+		ourGO->meshComponent->mesh = new Mesh;
+		ourGO->meshComponent->name = name;
 
 		LOG("%s is now a child of %s", ourGO->name.c_str(), ret->name.c_str());
 
@@ -140,7 +140,7 @@ void MeshImporter::RecursiveLoad(const aiScene* scene, GameObject* ret, const ch
 		uint numTextures = texture->GetTextureCount(aiTextureType_DIFFUSE);
 		aiString texPath;
 		texture->GetTexture(aiTextureType_DIFFUSE, 0, &texPath);
-		TextureComponent* ourTexture;
+		Texture* ourTexture;
 		if (texPath.C_Str() != nullptr && texPath.length > 0)
 		{
 			std::string texPathString = App->fileSystem->NormalizePath(texPath.C_Str());
@@ -159,34 +159,36 @@ void MeshImporter::RecursiveLoad(const aiScene* scene, GameObject* ret, const ch
 					ourTexture = App->importer->textureImporter->LoadTexture(pathChanged.c_str());
 					if (ourTexture != nullptr)
 					{
-						ourGO->textureComponent = ourTexture;
+						ourGO->textureComponent = (ComponentTexture*)ourGO->AddComponent(Component::TYPE_TEXTURE);
+						ourGO->textureComponent->texture = ourTexture;
 					}
 				}
 			}
 			else
 			{
-				ourGO->textureComponent = ourTexture;
+				ourGO->textureComponent = (ComponentTexture*)ourGO->AddComponent(Component::TYPE_TEXTURE);
+				ourGO->textureComponent->texture = ourTexture;
 			}
 		}
-
-
+		
+		Mesh* ourMesh = ourGO->meshComponent->mesh;
 		// Vertex
-		ourGO->meshComponent->num_vertex = shortcut->mNumVertices;
-		ourGO->meshComponent->vertex = new vec3[ourGO->meshComponent->num_vertex * 3];
-		memcpy(ourGO->meshComponent->vertex, shortcut->mVertices, sizeof(float) * ourGO->meshComponent->num_vertex * 3);
-		LOG("New mesh with %d vertices", ourGO->meshComponent->num_vertex);
+		ourMesh->num_vertex = shortcut->mNumVertices;
+		ourMesh->vertex = new vec3[ourMesh->num_vertex * 3];
+		memcpy(ourMesh->vertex, shortcut->mVertices, sizeof(float) * ourMesh->num_vertex * 3);
+		LOG("New mesh with %d vertices", ourMesh->num_vertex);
 
 
 		// AABB
-		ourGO->meshComponent->localAABB.SetNegativeInfinity();
-		ourGO->meshComponent->localAABB.Enclose((float3*)ourGO->meshComponent->vertex, ourGO->meshComponent->num_vertex);
+		ourMesh->localAABB.SetNegativeInfinity();
+		ourMesh->localAABB.Enclose((float3*)ourMesh->vertex, ourMesh->num_vertex);
 
 
 		// Copy faces
 		if (shortcut->HasFaces())
 		{
-			ourGO->meshComponent->num_index = shortcut->mNumFaces * 3;
-			ourGO->meshComponent->index = new uint[ourGO->meshComponent->num_index]; // assume each face is a triangle
+			ourMesh->num_index = shortcut->mNumFaces * 3;
+			ourMesh->index = new uint[ourMesh->num_index]; // assume each face is a triangle
 			for (uint j = 0; j < shortcut->mNumFaces; j++)
 			{
 				if (shortcut->mFaces[j].mNumIndices != 3)
@@ -195,7 +197,7 @@ void MeshImporter::RecursiveLoad(const aiScene* scene, GameObject* ret, const ch
 				}
 				else
 				{
-					memcpy(&ourGO->meshComponent->index[j * 3], shortcut->mFaces[j].mIndices, 3 * sizeof(uint));
+					memcpy(&ourMesh->index[j * 3], shortcut->mFaces[j].mIndices, 3 * sizeof(uint));
 				}
 			}
 		}
@@ -204,39 +206,35 @@ void MeshImporter::RecursiveLoad(const aiScene* scene, GameObject* ret, const ch
 		// UVs
 		if (shortcut->HasTextureCoords(0))
 		{
-			ourGO->meshComponent->tex_coord = new float[ourGO->meshComponent->num_vertex * 2];
+			ourMesh->tex_coord = new float[ourMesh->num_vertex * 2];
 
-			for (int j = 0; j < ourGO->meshComponent->num_vertex; j++)
+			for (int j = 0; j < ourMesh->num_vertex; j++)
 			{
-				ourGO->meshComponent->tex_coord[j * 2] = shortcut->mTextureCoords[0][j].x;
-				ourGO->meshComponent->tex_coord[(j * 2) + 1] = shortcut->mTextureCoords[0][j].y;
+				ourMesh->tex_coord[j * 2] = shortcut->mTextureCoords[0][j].x;
+				ourMesh->tex_coord[(j * 2) + 1] = shortcut->mTextureCoords[0][j].y;
 			}
 
-			glGenBuffers(1, (GLuint*) & (ourGO->meshComponent->id_tex_coord));
-			glBindBuffer(GL_ARRAY_BUFFER, ourGO->meshComponent->id_tex_coord);
-			glBufferData(GL_ARRAY_BUFFER, sizeof(float) * ourGO->meshComponent->num_vertex * 2, ourGO->meshComponent->tex_coord, GL_STATIC_DRAW);
+			glGenBuffers(1, (GLuint*) & (ourMesh->id_tex_coord));
+			glBindBuffer(GL_ARRAY_BUFFER, ourMesh->id_tex_coord);
+			glBufferData(GL_ARRAY_BUFFER, sizeof(float) * ourMesh->num_vertex * 2, ourMesh->tex_coord, GL_STATIC_DRAW);
 			glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-			ourGO->meshComponent->hasTex_coords = true;
+			ourMesh->hasTex_coords = true;
 		}
 
 
 		// Normals
 		if (shortcut->HasNormals())
 		{
-			ourGO->meshComponent->normals = new vec3[shortcut->mNumVertices];
-			memcpy(ourGO->meshComponent->normals, shortcut->mNormals, sizeof(vec3) * shortcut->mNumVertices);
-			ourGO->meshComponent->hasNormals = true;
+			ourMesh->normals = new vec3[shortcut->mNumVertices];
+			memcpy(ourMesh->normals, shortcut->mNormals, sizeof(vec3) * shortcut->mNumVertices);
+			ourMesh->hasNormals = true;
 		}
 
-		
-
-		ourGO->meshComponent->path = path;
-
-		App->scene_intro->meshesList.push_back(ourGO->meshComponent);
+		App->scene_intro->meshesList.push_back(ourGO->meshComponent->mesh);
 
 		char* buffer;
-		Save(ourGO->meshComponent, &buffer); 
+		Save(ourGO->meshComponent->mesh, &buffer, ourGO->meshComponent->name); 
 
 
 		/*char* goname;
@@ -273,7 +271,7 @@ void MeshImporter::Import()
 	//importer = new
 }
 
-uint64 MeshImporter::Save(MeshComponent* ourMesh, char** fileBuffer)
+uint64 MeshImporter::Save(Mesh* ourMesh, char** fileBuffer, std::string name)
 {
 	// amount of indices / vertices / colors / normals / texture_coords / AABB
 	uint ranges[4] = { ourMesh->num_index, ourMesh->num_vertex, ourMesh->num_vertex/* -(Normals)- */, ourMesh->num_vertex /* -(UVs)- */ };
@@ -321,7 +319,7 @@ uint64 MeshImporter::Save(MeshComponent* ourMesh, char** fileBuffer)
 	//TODO: Save AABB
 
 	char file[250]; 
-	sprintf_s(file, 250, "%s%s.sem", MESHES_PATH, ourMesh->name.c_str()/*Should be the mesh's name*/);
+	sprintf_s(file, 250, "%s%s.sem", MESHES_PATH, name.c_str()/*Should be the mesh's name*/);
 
 	App->fileSystem->Save(file, *fileBuffer, size);
 
@@ -330,7 +328,7 @@ uint64 MeshImporter::Save(MeshComponent* ourMesh, char** fileBuffer)
 	return size;
 }
 
-bool MeshImporter::Load(const char* fileBuffer, MeshComponent* ourMesh)
+bool MeshImporter::Load(const char* fileBuffer, Mesh* ourMesh)
 {
 	const char* cursor = fileBuffer;
 	// amount of indices / vertices / colors / normals / texture_coords

@@ -1,13 +1,11 @@
-#include "vector3.h"
-#include "Libs/MathGeoLib/include/MathGeoLib.h"
+#ifndef __MESH_H__
+#define __MESH_H__
 
-class GameObject;
-class MeshComponent
+#include "Globals.h"
+#include "Libs/MathGeoLib/include/Geometry/AABB.h"
+
+class Mesh
 {
-public:
-	MeshComponent() {};
-	MeshComponent(std::string name) { this->name = name; };
-	~MeshComponent() {};
 public:
 
 	uint id_index = 0; // index in VRAM
@@ -24,14 +22,10 @@ public:
 	bool hasNormals = false;
 	vec3* normals = nullptr;
 
-	bool isDrawEnabled = true;
-	
-	GameObject* parent = nullptr;
-
-	const char* path = nullptr;
-
-	std::string name;
-
 	AABB localAABB;
 
+	std::string name;
+	std::string fileName;
+
 };
+#endif //__MESH_H__

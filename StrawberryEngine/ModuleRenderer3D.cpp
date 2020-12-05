@@ -173,7 +173,10 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	
 	//glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
 	
-	App->scene_intro->Draw();
+	if (App->ui->isGridEnabled)
+	{
+		App->scene_intro->Draw();
+	}
 
 	if (App->ui->isDrawEnabled)
 	{
@@ -182,7 +185,6 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 
 	// Not working yet
 	//App->ui->DrawFrame(texColorBuffer);
-
 	//glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	
 
@@ -341,15 +343,16 @@ void ModuleRenderer3D::DrawCubeIndices()
 
 void ModuleRenderer3D::GenerateBuffers()
 {
-	for (std::list<MeshComponent*>::iterator meshIterator = App->scene_intro->meshesList.begin(); meshIterator != App->scene_intro->meshesList.end(); meshIterator++)
+	for (std::list<Mesh*>::iterator meshIterator = App->scene_intro->meshesList.begin(); meshIterator != App->scene_intro->meshesList.end(); meshIterator++)
 	{
-		glGenBuffers(1, (GLuint*) & ((*meshIterator)->id_vertex));
-		glBindBuffer(GL_ARRAY_BUFFER, (*meshIterator)->id_vertex);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * (*meshIterator)->num_vertex * 3, (*meshIterator)->vertex, GL_STATIC_DRAW);
+		Mesh* mesh = (*meshIterator);
+		glGenBuffers(1, (GLuint*) & (mesh->id_vertex));
+		glBindBuffer(GL_ARRAY_BUFFER, mesh->id_vertex);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * mesh->num_vertex * 3, mesh->vertex, GL_STATIC_DRAW);
 
-		glGenBuffers(1, (GLuint*) & ((*meshIterator)->id_index));
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, (*meshIterator)->id_index);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * (*meshIterator)->num_index, (*meshIterator)->index, GL_STATIC_DRAW);
+		glGenBuffers(1, (GLuint*) & (mesh->id_index));
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->id_index);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * mesh->num_index, mesh->index, GL_STATIC_DRAW);
 	}
 }
 
@@ -357,14 +360,14 @@ void ModuleRenderer3D::Draw(GameObject* go)
 {
 	if (go->meshComponent != nullptr)
 	{
-		if (go->meshComponent->isDrawEnabled)
+		if (go->meshComponent->isActive)
 		{
 
 			glPushMatrix();
 			glMultMatrixf((GLfloat*)&go->globalTransform.Transposed()); // If it's not transposed the translation goes weird... also, it should be global 
 
 
-			MeshComponent* mesh = go->meshComponent;
+			Mesh* mesh = go->meshComponent->mesh;
 
 			glEnableClientState(GL_VERTEX_ARRAY);
 			glEnableClientState(GL_TEXTURE_COORD_ARRAY);
@@ -380,7 +383,7 @@ void ModuleRenderer3D::Draw(GameObject* go)
 				{
 					glBindBuffer(GL_ARRAY_BUFFER, mesh->id_tex_coord);
 
-					glBindTexture(GL_TEXTURE_2D, go->textureComponent->GetId());
+					glBindTexture(GL_TEXTURE_2D, go->textureComponent->texture->GetId());
 					glTexCoordPointer(2, GL_FLOAT, 0, NULL);
 				}
 			}
@@ -469,9 +472,9 @@ void ModuleRenderer3D::Draw(GameObject* go)
 
 }
 
-TextureComponent* ModuleRenderer3D::CreateCheckersTexture()
+Texture* ModuleRenderer3D::CreateCheckersTexture()
 {
-	TextureComponent* ret = new TextureComponent;
+	Texture* ret = new Texture;
 
 	GLubyte checkerImage[32][32][4];
 	for (int i = 0; i < 32; i++) {
@@ -498,12 +501,13 @@ TextureComponent* ModuleRenderer3D::CreateCheckersTexture()
 
 	App->scene_intro->textureList.push_back(ret);
 
-	ret->name = "Default Texture.png";
+	ret->fileName = "Default Texture.png";
+	ret->name = "Default Texture";
 
 	char* buffer;
 	App->importer->textureImporter->Save(ret, &buffer);
 
-	ret->name = "Default Texture";
+	
 
 	return ret;
 }

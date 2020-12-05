@@ -16,9 +16,6 @@
     <Filter Include="Sources\Helpers">
       <UniqueIdentifier>{121f8e6b-df36-4ab0-be0d-601ddfc9e503}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Sources\Modules\Game">
-      <UniqueIdentifier>{83f46af7-e02f-40c0-9e56-41d76082527b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Sources\Tools\Libs">
       <UniqueIdentifier>{6c30a1e3-8479-43e4-a38e-f3a9d7fed055}</UniqueIdentifier>
     </Filter>
@@ -27,9 +24,6 @@
     </Filter>
     <Filter Include="Sources\Importers">
       <UniqueIdentifier>{cb02d89d-2ba0-4be1-9f71-aa33817cea8b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Sources\Components">
-      <UniqueIdentifier>{9be4594c-36a9-4031-9b53-71acc8776a9a}</UniqueIdentifier>
     </Filter>
     <Filter Include="Sources\Tools\Libs\MathGeoLib">
       <UniqueIdentifier>{207b552d-a5ae-475e-8f82-82b8db2c5b7a}</UniqueIdentifier>
@@ -45,6 +39,18 @@
     </Filter>
     <Filter Include="Sources\Tools\Libs\MathGeoLib\Math">
       <UniqueIdentifier>{b3bc97ba-78e0-47ae-a0da-f162e796bde5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Modules\Scene">
+      <UniqueIdentifier>{83f46af7-e02f-40c0-9e56-41d76082527b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\GameObjects">
+      <UniqueIdentifier>{298ba5a3-4fce-4a67-9ce5-0d2504b8ed01}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\GameObjects\Components">
+      <UniqueIdentifier>{9be4594c-36a9-4031-9b53-71acc8776a9a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\GameObjects\Components\Structures">
+      <UniqueIdentifier>{0777217d-d140-4f4a-9c97-6cf95871bc67}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -79,7 +85,7 @@
       <Filter>Sources\Helpers</Filter>
     </ClInclude>
     <ClInclude Include="ModuleSceneIntro.h">
-      <Filter>Sources\Modules\Game</Filter>
+      <Filter>Sources\Modules\Scene</Filter>
     </ClInclude>
     <ClInclude Include="Timer.h">
       <Filter>Sources\Tools</Filter>
@@ -110,12 +116,6 @@
     </ClInclude>
     <ClInclude Include="Libs\ImGUI\imstb_truetype.h">
       <Filter>Sources\Tools\Libs\ImGUI</Filter>
-    </ClInclude>
-    <ClInclude Include="Geometry.h">
-      <Filter>Sources\Modules\Game</Filter>
-    </ClInclude>
-    <ClInclude Include="GameObject.h">
-      <Filter>Sources\Helpers</Filter>
     </ClInclude>
     <ClInclude Include="ModuleFileSystem.h">
       <Filter>Sources\Modules</Filter>
@@ -306,14 +306,26 @@
     <ClInclude Include="Libs\MathGeoLib\include\Math\Polynomial.h">
       <Filter>Sources\Tools\Libs\MathGeoLib\Math</Filter>
     </ClInclude>
-    <ClInclude Include="MeshComponent.h">
-      <Filter>Sources\Components</Filter>
+    <ClInclude Include="GameObject.h">
+      <Filter>Sources\GameObjects</Filter>
     </ClInclude>
-    <ClInclude Include="TextureComponent.h">
-      <Filter>Sources\Components</Filter>
+    <ClInclude Include="Component.h">
+      <Filter>Sources\GameObjects\Components</Filter>
     </ClInclude>
-    <ClInclude Include="CameraComponent.h">
-      <Filter>Sources\Components</Filter>
+    <ClInclude Include="ComponentMesh.h">
+      <Filter>Sources\GameObjects\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>Sources\GameObjects\Components\Structures</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>Sources\GameObjects\Components\Structures</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentTexture.h">
+      <Filter>Sources\GameObjects\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentCamera.h">
+      <Filter>Sources\GameObjects\Components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -351,7 +363,7 @@
       <Filter>Sources\Helpers</Filter>
     </ClCompile>
     <ClCompile Include="ModuleSceneIntro.cpp">
-      <Filter>Sources\Modules\Game</Filter>
+      <Filter>Sources\Modules\Scene</Filter>
     </ClCompile>
     <ClCompile Include="ModuleUI.cpp">
       <Filter>Sources\Modules</Filter>
@@ -373,9 +385,6 @@
     </ClCompile>
     <ClCompile Include="Libs\ImGUI\imgui_widgets.cpp">
       <Filter>Sources\Tools\Libs\ImGUI</Filter>
-    </ClCompile>
-    <ClCompile Include="GameObject.cpp">
-      <Filter>Sources\Helpers</Filter>
     </ClCompile>
     <ClCompile Include="ModuleFileSystem.cpp">
       <Filter>Sources\Modules</Filter>
@@ -488,8 +497,20 @@
     <ClCompile Include="Libs\MathGeoLib\include\Math\Polynomial.cpp">
       <Filter>Sources\Tools\Libs\MathGeoLib\Math</Filter>
     </ClCompile>
-    <ClCompile Include="CameraComponent.cpp">
-      <Filter>Sources\Components</Filter>
+    <ClCompile Include="GameObject.cpp">
+      <Filter>Sources\GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="Component.cpp">
+      <Filter>Sources\GameObjects\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentMesh.cpp">
+      <Filter>Sources\GameObjects\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentTexture.cpp">
+      <Filter>Sources\GameObjects\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentCamera.cpp">
+      <Filter>Sources\GameObjects\Components</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

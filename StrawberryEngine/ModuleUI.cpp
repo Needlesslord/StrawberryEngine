@@ -359,6 +359,11 @@ void ModuleUI::ShowConfig()
 
 			char* a = "on";
 			char* b = "off";
+
+			if (ImGui::Checkbox("Draw Grid", &isGridEnabled))
+			{
+				LOG("Turning grid rendering: %s", isGridEnabled ? a : b);
+			}
 			if (ImGui::Checkbox("Draw Meshes", &isDrawEnabled))
 			{
 				LOG("Turning rendering: %s", isDrawEnabled ? a : b);
@@ -638,7 +643,7 @@ void ModuleUI::ShowInspector()
 				if (ImGui::CollapsingHeader("Mesh Component", ImGuiTreeNodeFlags_DefaultOpen))
 				{
 					ImGui::PushID("MeshActive");
-					ImGui::Checkbox("Active", &(*goIterator)->meshComponent->isDrawEnabled);
+					ImGui::Checkbox("Active", &(*goIterator)->meshComponent->isActive);
 					ImGui::PopID();
 
 					ImGui::SameLine();
@@ -652,17 +657,10 @@ void ModuleUI::ShowInspector()
 					ImGui::PopStyleColor();
 
 
-					if ((*goIterator)->meshComponent->path != nullptr)
-					{
-						ImGui::Spacing();
-						ImGui::Text("Path:");
-						ImGui::TextColored({ 1,0,1,1 }, (*goIterator)->meshComponent->path);
-					}
-
 					ImGui::Spacing();
-					ImGui::Text("Num. of vertices:"); ImGui::SameLine(); ImGui::TextColored({ 1,0,1,1 }, std::to_string((*goIterator)->meshComponent->num_vertex).c_str());
+					ImGui::Text("Num. of vertices:"); ImGui::SameLine(); ImGui::TextColored({ 1,0,1,1 }, std::to_string((*goIterator)->meshComponent->mesh->num_vertex).c_str());
 
-					if ((*goIterator)->meshComponent->hasNormals)
+					if ((*goIterator)->meshComponent->mesh->hasNormals)
 					{
 						ImGui::Spacing();
 						ImGui::Checkbox("Draw Vertex Normals", &(*goIterator)->isVertexNormalsEnabled);
@@ -683,15 +681,15 @@ void ModuleUI::ShowInspector()
 						{
 							GameObject* go = (*App->scene_intro->gameObjectSelected.begin());
 
-							for (std::list<MeshComponent*>::iterator meshIterator = App->scene_intro->meshesList.begin(); meshIterator != App->scene_intro->meshesList.end(); meshIterator++)
+							for (std::list<Mesh*>::iterator meshIterator = App->scene_intro->meshesList.begin(); meshIterator != App->scene_intro->meshesList.end(); meshIterator++)
 							{
-								if ((*meshIterator) != go->meshComponent)
+								if ((*meshIterator) != go->meshComponent->mesh)
 								{
 									if (ImGui::MenuItem((*meshIterator)->name.c_str()))
 									{
-										go->meshComponent = (*meshIterator);
+										go->meshComponent->mesh = (*meshIterator);
 										go->isMoved = true;
-										go->meshComponent->isDrawEnabled = true;
+										go->meshComponent->isActive = true;
 										isChangeMeshActive = false;
 									}
 								}
@@ -716,14 +714,22 @@ void ModuleUI::ShowInspector()
 					//ImGuiPopupFlags_
 					if (ImGui::BeginPopupContextWindow("Add mesh", ImGuiPopupFlags_MouseButtonLeft))
 					{
-						for (std::list<MeshComponent*>::iterator meshIterator = App->scene_intro->meshesList.begin(); meshIterator != App->scene_intro->meshesList.end(); meshIterator++)
+						for (std::list<Mesh*>::iterator meshIterator = App->scene_intro->meshesList.begin(); meshIterator != App->scene_intro->meshesList.end(); meshIterator++)
 						{
 							if (ImGui::MenuItem((*meshIterator)->name.c_str()))
 							{
 								GameObject* go = (*App->scene_intro->gameObjectSelected.begin());
-								go->meshComponent = (*meshIterator);
+								if (go->meshComponent)
+								{
+									go->meshComponent->mesh = (*meshIterator); 
+								}
+								else
+								{
+									go->meshComponent = (ComponentMesh*)go->AddComponent(Component::TYPE_MESH);
+									go->meshComponent->mesh = (*meshIterator);
+								}
 								go->isMoved = true;
-								go->meshComponent->isDrawEnabled = true;
+								go->meshComponent->isActive = true;
 								isAddMeshActive = false;
 							}
 						}
@@ -756,17 +762,11 @@ void ModuleUI::ShowInspector()
 					ImGui::PopStyleColor();
 					ImGui::PopStyleColor();
 
-					if ((*goIterator)->textureComponent->texPath != nullptr && (*goIterator)->textureComponent->texPath != "")
-					{
-						ImGui::Spacing();
-						ImGui::Text("Path:");
-						ImGui::TextColored({ 1,0,1,1 }, (*goIterator)->textureComponent->texPath);
-					}
 
 					ImGui::Spacing();
-					ImGui::Text("Width:"); ImGui::SameLine(); ImGui::TextColored({ 1,0,1,1 }, std::to_string((*goIterator)->textureComponent->w).c_str());
-					ImGui::Text("Height:"); ImGui::SameLine(); ImGui::TextColored({ 1,0,1,1 }, std::to_string((*goIterator)->textureComponent->h).c_str());
-					ImGui::Image((ImTextureID)(*goIterator)->textureComponent->GetId(), { 150,150 });
+					ImGui::Text("Width:"); ImGui::SameLine(); ImGui::TextColored({ 1,0,1,1 }, std::to_string((*goIterator)->textureComponent->texture->w).c_str());
+					ImGui::Text("Height:"); ImGui::SameLine(); ImGui::TextColored({ 1,0,1,1 }, std::to_string((*goIterator)->textureComponent->texture->h).c_str());
+					ImGui::Image((ImTextureID)(*goIterator)->textureComponent->texture->GetId(), { 150,150 });
 
 					ImGui::Spacing();
 					if (ImGui::Button("Change Texture", { 200, 40 }))
@@ -780,13 +780,13 @@ void ModuleUI::ShowInspector()
 						if (ImGui::BeginPopupContextWindow("Change tex", ImGuiPopupFlags_MouseButtonLeft))
 						{
 							GameObject* go = (*App->scene_intro->gameObjectSelected.begin());
-							for (std::list<TextureComponent*>::iterator textureIterator = App->scene_intro->textureList.begin(); textureIterator != App->scene_intro->textureList.end(); textureIterator++)
+							for (std::list<Texture*>::iterator textureIterator = App->scene_intro->textureList.begin(); textureIterator != App->scene_intro->textureList.end(); textureIterator++)
 							{
-								if ((*textureIterator) != go->textureComponent)
+								if ((*textureIterator) != go->textureComponent->texture)
 								{
-									if (ImGui::MenuItem((*textureIterator)->name))
+									if (ImGui::MenuItem((*textureIterator)->name.c_str()))
 									{
-										go->textureComponent = (*textureIterator);
+										go->textureComponent->texture = (*textureIterator);
 										go->textureComponent->isActive = true;
 										isChangeTexActive = false;
 									}
@@ -812,12 +812,20 @@ void ModuleUI::ShowInspector()
 					//ImGuiPopupFlags_
 					if (ImGui::BeginPopupContextWindow("Add tex", ImGuiPopupFlags_MouseButtonLeft))
 					{
-						for (std::list<TextureComponent*>::iterator textureIterator = App->scene_intro->textureList.begin(); textureIterator != App->scene_intro->textureList.end(); textureIterator++)
+						for (std::list<Texture*>::iterator textureIterator = App->scene_intro->textureList.begin(); textureIterator != App->scene_intro->textureList.end(); textureIterator++)
 						{
-							if (ImGui::MenuItem((*textureIterator)->name))
+							if (ImGui::MenuItem((*textureIterator)->name.c_str()))
 							{
 								GameObject* go = (*App->scene_intro->gameObjectSelected.begin());
-								go->textureComponent = (*textureIterator);
+								if (go->textureComponent)
+								{
+									go->textureComponent->texture = (*textureIterator);
+								}
+								else
+								{
+									go->textureComponent = (ComponentTexture*)go->AddComponent(Component::TYPE_TEXTURE);
+									go->textureComponent->texture = (*textureIterator);
+								}
 								go->textureComponent->isActive = true;
 								isAddTexActive = false;
 							}
@@ -949,13 +957,13 @@ void ModuleUI::ShowAssets()
 	{
 		if (ImGui::TreeNodeEx("Textures"))
 		{
-			for (std::list<TextureComponent*>::iterator textureIterator = App->scene_intro->textureList.begin(); textureIterator != App->scene_intro->textureList.end(); textureIterator++)
+			for (std::list<Texture*>::iterator textureIterator = App->scene_intro->textureList.begin(); textureIterator != App->scene_intro->textureList.end(); textureIterator++)
 			{
-				if (ImGui::TreeNodeEx((*textureIterator)->name, ImGuiTreeNodeFlags_Leaf))
+				if (ImGui::TreeNodeEx((*textureIterator)->name.c_str(), ImGuiTreeNodeFlags_Leaf))
 				{
 					if (ImGui::BeginDragDropSource())
 					{
-						ImGui::SetDragDropPayload("Drag tex", (*textureIterator), sizeof(TextureComponent));
+						ImGui::SetDragDropPayload("Drag tex", (*textureIterator), sizeof(Texture));
 						draggedTexture = (*textureIterator);
 						isDropTargetActive = true;
 						ImGui::EndDragDropSource();
@@ -969,13 +977,13 @@ void ModuleUI::ShowAssets()
 
 		if (ImGui::TreeNodeEx("Meshes"))
 		{
-			for (std::list<MeshComponent*>::iterator meshIterator = App->scene_intro->meshesList.begin(); meshIterator != App->scene_intro->meshesList.end(); meshIterator++)
+			for (std::list<Mesh*>::iterator meshIterator = App->scene_intro->meshesList.begin(); meshIterator != App->scene_intro->meshesList.end(); meshIterator++)
 			{
 				if (ImGui::TreeNodeEx((*meshIterator)->name.c_str(), ImGuiTreeNodeFlags_Leaf))
 				{
 					if (ImGui::BeginDragDropSource())
 					{
-						ImGui::SetDragDropPayload("Drag mesh", (*meshIterator), sizeof(MeshComponent));
+						ImGui::SetDragDropPayload("Drag mesh", (*meshIterator), sizeof(ComponentMesh));
 						draggedMesh = (*meshIterator);
 						isDropTargetActive = true;
 						ImGui::EndDragDropSource();
@@ -1017,7 +1025,7 @@ void ModuleUI::ShowDragTarget()
 			if (!App->scene_intro->gameObjectSelected.empty())
 			{
 				GameObject* go = (*App->scene_intro->gameObjectSelected.begin());
-				go->textureComponent = draggedTexture;
+				go->textureComponent->texture = draggedTexture;
 				go->textureComponent->isActive = true;
 			}
 		}
@@ -1027,8 +1035,8 @@ void ModuleUI::ShowDragTarget()
 			if (!App->scene_intro->gameObjectSelected.empty())
 			{
 				GameObject* go = (*App->scene_intro->gameObjectSelected.begin());
-				go->meshComponent = draggedMesh;
-				go->meshComponent->isDrawEnabled = true;
+				go->meshComponent->mesh = draggedMesh;
+				go->meshComponent->isActive = true;
 				go->isMoved = true;
 			}
 		}

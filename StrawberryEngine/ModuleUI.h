@@ -102,6 +102,7 @@ public:
 	bool isWinBorderless;
 	bool isWinFullscreenDesktop;
 
+	bool isGridEnabled = true;
 	bool isDrawEnabled = true;
 	bool isDepthTestEnabled = true;
 	bool isLightingEnabled = true;
@@ -112,8 +113,8 @@ public:
 	std::list<const char*> pendingOutputs;
 
 	GameObject* draggedGameObject = nullptr;
-	TextureComponent* draggedTexture = nullptr;
-	MeshComponent* draggedMesh = nullptr;
+	Texture* draggedTexture = nullptr;
+	Mesh* draggedMesh = nullptr;
 
 private:
 

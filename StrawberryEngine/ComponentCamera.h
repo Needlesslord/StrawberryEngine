@@ -1,23 +1,27 @@
+#ifndef __COMPONENT_CAMERA_H__
+#define __COMPONENT_CAMERA_H__
+
+#include "Component.h"
+
 #include "Libs/MathGeoLib/include/Geometry/Frustum.h"
 #include "Libs/MathGeoLib/include/Math/float3.h"
 #include "Libs/MathGeoLib/include/Geometry/AABB.h"
 #include "Libs/MathGeoLib/include/Geometry/Plane.h"
 
-class CameraComponent
+class ComponentCamera : public Component
 {
 public:
-	CameraComponent();
-	~CameraComponent();
+
+	ComponentCamera(Type type, GameObject* go);
+	~ComponentCamera();
+
 	bool NeedsCulling(AABB& aabb);
 
 public:
 	
 	Frustum frustum;
 
-	std::string name;
-	
-	bool isActive = true;
-
 	bool isDebugEnabled = false;
 
 };
+#endif //__COMPONENT_CAMERA_H__

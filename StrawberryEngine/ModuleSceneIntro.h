@@ -1,9 +1,9 @@
 #pragma once
 #include "Module.h"
 
-class MeshComponent;
 class GameObject;
-class TextureComponent;
+class Texture;
+class Mesh;
 
 class ModuleSceneIntro : public Module
 {
@@ -38,9 +38,9 @@ public:
 	std::list<GameObject*> meshComponentsToDelete;
 	std::list<GameObject*> textureComponentsToDelete;
 
-	std::list<MeshComponent*> meshesList;
+	std::list<Mesh*> meshesList;
 
-	std::list<TextureComponent*> textureList;
+	std::list<Texture*> textureList;
 
 	GameObject* street;
 	GameObject* house;

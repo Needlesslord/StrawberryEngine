@@ -82,10 +82,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
-    <ClInclude Include="CameraComponent.h" />
+    <ClInclude Include="ComponentCamera.h" />
     <ClInclude Include="Color.h" />
+    <ClInclude Include="Component.h" />
+    <ClInclude Include="ComponentTexture.h" />
     <ClInclude Include="GameObject.h" />
-    <ClInclude Include="Geometry.h" />
     <ClInclude Include="glmath.h" />
     <ClInclude Include="Globals.h" />
     <ClInclude Include="Libs\MathGeoLib\include\Algorithm\Random\LCG.h" />
@@ -145,7 +146,7 @@
     <ClInclude Include="Libs\MathGeoLib\include\Math\sse_mathfun.h" />
     <ClInclude Include="Libs\MathGeoLib\include\Math\TransformOps.h" />
     <ClInclude Include="Libs\MathGeoLib\include\Time\Clock.h" />
-    <ClInclude Include="MeshComponent.h" />
+    <ClInclude Include="ComponentMesh.h" />
     <ClInclude Include="Importer.h" />
     <ClInclude Include="Libs\ImGUI\imconfig.h" />
     <ClInclude Include="Libs\ImGUI\imgui.h" />
@@ -156,6 +157,7 @@
     <ClInclude Include="Libs\ImGUI\imstb_textedit.h" />
     <ClInclude Include="Libs\ImGUI\imstb_truetype.h" />
     <ClInclude Include="Light.h" />
+    <ClInclude Include="Mesh.h" />
     <ClInclude Include="ModuleCamera3D.h" />
     <ClInclude Include="MeshImporter.h" />
     <ClInclude Include="ModuleImporter.h" />
@@ -167,14 +169,17 @@
     <ClInclude Include="ModuleSceneIntro.h" />
     <ClInclude Include="ModuleWindow.h" />
     <ClInclude Include="PathNode.h" />
-    <ClInclude Include="TextureComponent.h" />
+    <ClInclude Include="Texture.h" />
     <ClInclude Include="TextureImporter.h" />
     <ClInclude Include="Timer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
-    <ClCompile Include="CameraComponent.cpp" />
+    <ClCompile Include="ComponentCamera.cpp" />
     <ClCompile Include="Color.cpp" />
+    <ClCompile Include="Component.cpp" />
+    <ClCompile Include="ComponentMesh.cpp" />
+    <ClCompile Include="ComponentTexture.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="glmath.cpp" />
     <ClCompile Include="Importer.cpp" />

@@ -1,7 +1,7 @@
 #include "Globals.h"
-#include "CameraComponent.h"
+#include "ComponentCamera.h"
 
-CameraComponent::CameraComponent()
+ComponentCamera::ComponentCamera(Type type, GameObject* go) : Component(type, go)
 {
 	frustum.type = FrustumType::PerspectiveFrustum;
 	frustum.pos = { 0,0,0 };
@@ -14,12 +14,12 @@ CameraComponent::CameraComponent()
 	frustum.horizontalFov = 2.0f * atanf(tanf(frustum.verticalFov * 0.5f) * 1.3f);
 }
 
-CameraComponent::~CameraComponent()
+ComponentCamera::~ComponentCamera()
 {
 
 }
 
-bool CameraComponent::NeedsCulling(AABB& aabb)
+bool ComponentCamera::NeedsCulling(AABB& aabb)
 {
 	float3 vCorner[8];
 	int iTotalIn = 0;

@@ -4,8 +4,10 @@
 #include "ModuleSceneIntro.h"
 #include "Application.h"
 #include "ModuleImporter.h"
-#include "TextureComponent.h"
-#include "CameraComponent.h"
+
+#include "ComponentMesh.h"
+#include "ComponentTexture.h"
+#include "ComponentCamera.h"
 
 GameObject::GameObject()
 {
@@ -32,9 +34,29 @@ void GameObject::ChangeName(std::string newName)
 	this->name = newName;
 }
 
-void GameObject::AddMesh(MeshComponent* m)
+Component* GameObject::AddComponent(Component::Type type)
 {
-	this->meshComponent = m;
+	Component* component = nullptr;
+
+	if (type == Component::TYPE_NONE)
+	{
+		return component;
+	}
+	else if (type == Component::TYPE_MESH)
+	{
+		component = new ComponentMesh(type, this);
+		return component;
+	}
+	else if (type == Component::TYPE_TEXTURE)
+	{
+		component = new ComponentTexture(type, this);
+		return component;
+	}
+	else if (type == Component::TYPE_CAMERA)
+	{
+		component = new ComponentCamera(type, this);
+		return component;
+	}
 }
 
 void GameObject::AddChild(GameObject* go)
@@ -101,7 +123,7 @@ void GameObject::UpdateAABB()
 {
 	if (meshComponent)
 	{
-		obb = meshComponent->localAABB;
+		obb = meshComponent->mesh->localAABB;
 		obb.Transform(globalTransform);
 		// Generate global AABB
 		aabb.SetNegativeInfinity();
@@ -120,7 +142,7 @@ void GameObject::SetActive(const bool state)
 
 	if (meshComponent)
 	{
-		meshComponent->isDrawEnabled = state;
+		meshComponent->isActive = state;
 	}
 
 	if (textureComponent)

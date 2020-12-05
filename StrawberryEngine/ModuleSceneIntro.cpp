@@ -7,7 +7,7 @@
 #include "TextureImporter.h"
 #include "GameObject.h"
 #include "ModuleInput.h"
-#include "CameraComponent.h"
+#include "ComponentCamera.h"
 
 ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
@@ -100,7 +100,7 @@ update_status ModuleSceneIntro::Update(float dt)
 
 	if (App->input->GetKey(SDL_SCANCODE_C) == KEY_DOWN)
 	{
-		(*gameObjectSelected.begin())->cameraComponent = new CameraComponent();
+		(*gameObjectSelected.begin())->cameraComponent = (ComponentCamera*)(*gameObjectSelected.begin())->AddComponent(Component::TYPE_CAMERA);
 	}
 
 	return UPDATE_CONTINUE;
@@ -131,7 +131,7 @@ update_status ModuleSceneIntro::PostUpdate(float dt)
 	{
 		for (std::list<GameObject*>::iterator meshToDelete = meshComponentsToDelete.begin(); meshToDelete != meshComponentsToDelete.end(); meshToDelete++)
 		{
-			(*meshToDelete)->meshComponent = nullptr;
+			RELEASE((*meshToDelete)->meshComponent);
 		}
 		meshComponentsToDelete.clear();
 	}
@@ -140,7 +140,7 @@ update_status ModuleSceneIntro::PostUpdate(float dt)
 	{
 		for (std::list<GameObject*>::iterator textureToDelete = textureComponentsToDelete.begin(); textureToDelete != textureComponentsToDelete.end(); textureToDelete++)
 		{
-			(*textureToDelete)->textureComponent = nullptr;
+			RELEASE((*textureToDelete)->textureComponent);
 		}
 		textureComponentsToDelete.clear();
 	}

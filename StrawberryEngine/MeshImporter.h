@@ -2,7 +2,7 @@
 #define __MeshImporter_H__
 
 #include "Globals.h"
-#include "MeshComponent.h"
+#include "ComponentMesh.h"
 #include "Importer.h"
 #include "scene.h"
 
@@ -18,8 +18,8 @@ public:
 	bool CleanUp();
 
 	void Import();
-	uint64 Save(MeshComponent* ourMesh, char** fileBuffer);
-	bool Load(const char* fileBuffer, MeshComponent* ourMesh);
+	uint64 Save(Mesh* ourMesh, char** fileBuffer, std::string name);
+	bool Load(const char* fileBuffer, Mesh* ourMesh);
 
 	GameObject* LoadMesh(const char* path);
 	void RecursiveLoad(const aiScene* scene, GameObject* ret, const char* path, aiNode* node);

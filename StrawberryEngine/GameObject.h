@@ -1,9 +1,14 @@
+#include <list>
+
+#include "Component.h"
+
 #include "Libs/MathGeoLib/include/MathBuildConfig.h"
 #include "Libs/MathGeoLib/include/MathGeoLib.h"
 
-class MeshComponent;
-class TextureComponent;
-class CameraComponent;
+class ComponentTransform;
+class ComponentMesh;
+class ComponentTexture;
+class ComponentCamera;
 
 class GameObject
 {
@@ -13,8 +18,8 @@ public:
 	~GameObject();
 
 	void AddDefaultName();
-	void ChangeName(std::string newName = "");
-	void AddMesh(MeshComponent* m);
+	void ChangeName(std::string newName);
+	Component* AddComponent(Component::Type type);
 	void AddChild(GameObject* go);
 	void UpdateRotation();
 	void UpdateLocalTransform();
@@ -42,9 +47,9 @@ public:
 	//char* name; // Had to change it cause of the input
 	std::string name;
 
-	MeshComponent* meshComponent = nullptr; 
-	TextureComponent* textureComponent = nullptr;
-	CameraComponent* cameraComponent = nullptr;
+	ComponentMesh* meshComponent = nullptr; 
+	ComponentTexture* textureComponent = nullptr;
+	ComponentCamera* cameraComponent = nullptr;
 
 	std::list<GameObject*> children;
 

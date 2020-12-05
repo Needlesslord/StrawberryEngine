@@ -7,8 +7,8 @@
 class TextureImporter;
 class MeshImporter;
 class GameObject;
-class TextureComponent;
-class MeshComponent;
+class Texture;
+class ComponentMesh;
 
 
 class ModuleImporter : public Module
@@ -22,8 +22,7 @@ public:
 	update_status PreUpdate(float dt);
 	update_status PostUpdate(float dt);
 	bool CleanUp();
-	void AddMesh(MeshComponent* mesh)const;
-	void AddTexture(TextureComponent* tex)const;
+	void AddTexture(Texture* tex)const;
 
 public:
 
