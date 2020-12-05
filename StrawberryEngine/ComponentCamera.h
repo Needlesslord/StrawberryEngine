@@ -15,6 +15,8 @@ public:
 	ComponentCamera(Type type, GameObject* go);
 	~ComponentCamera();
 
+	bool Update();
+
 	bool NeedsCulling(AABB& aabb);
 
 public:

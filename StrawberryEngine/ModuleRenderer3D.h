@@ -8,7 +8,7 @@
 
 class GameObject;
 class Texture;
-typedef unsigned int GLuint;
+class ComponentCamera;
 
 class ModuleRenderer3D : public Module
 {
@@ -27,6 +27,8 @@ public:
 	void DrawCubeDirect();
 	void DrawCubeArray();
 	void DrawCubeIndices();
+
+	void DrawCameraFrustum(ComponentCamera* camera);
 
 	void GenerateBuffers();
 	void Draw(GameObject* go);

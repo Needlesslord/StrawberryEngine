@@ -32,6 +32,9 @@ bool ModuleSceneIntro::Start()
 	street->isMoved = true;
 	street->ChangeName("Street");
 
+	camera01 = AddGameObject("Camera01");
+	camera01->cameraComponent = (ComponentCamera*)camera01->AddComponent(Component::TYPE_CAMERA);
+
 	return ret;
 }
 
@@ -86,10 +89,7 @@ update_status ModuleSceneIntro::Update(float dt)
 	{
 		if ((*goToMove)->isMoved)
 		{
-			(*goToMove)->UpdateRotation();
-			(*goToMove)->UpdateLocalTransform();
-			(*goToMove)->UpdateGlobalTransform();
-			(*goToMove)->UpdateAABB();
+			(*goToMove)->Update();
 
 			(*goToMove)->isMoved = false;
 			needToGenBuffers = true;
@@ -145,6 +145,14 @@ update_status ModuleSceneIntro::PostUpdate(float dt)
 		textureComponentsToDelete.clear();
 	}
 
+	for (std::list<GameObject*>::iterator goToCull = everyGameObjectList.begin(); goToCull != everyGameObjectList.end(); goToCull++)
+	{
+		if ((*goToCull)->isActive && (*goToCull)->meshComponent)
+		{
+			(*goToCull)->isCulled = camera01->cameraComponent->NeedsCulling((*goToCull)->aabb);
+		}
+	}
+
 	return UPDATE_CONTINUE;
 }
 
@@ -177,6 +185,8 @@ GameObject* ModuleSceneIntro::AddGameObject(char* name)
 	rootNode->children.push_back(ret);
 	ret->parent = rootNode;
 	everyGameObjectList.push_back(ret);
+
+	ret->Update();
 
 	return ret;
 }

@@ -8,6 +8,7 @@
 #include "ModuleImporter.h"
 #include "TextureImporter.h"
 #include "MeshImporter.h"
+#include "ComponentCamera.h"
 #include "GameObject.h"
 
 #include "Libs/Glew/include/GL/glew.h"
@@ -178,10 +179,17 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 		App->scene_intro->Draw();
 	}
 
+	if (App->scene_intro->camera01->cameraComponent->isDebugEnabled)
+	{
+		DrawCameraFrustum(App->scene_intro->camera01->cameraComponent);
+	}
+
 	if (App->ui->isDrawEnabled)
 	{
 		Draw(App->scene_intro->rootNode);
 	}
+
+	
 
 	// Not working yet
 	//App->ui->DrawFrame(texColorBuffer);
@@ -358,7 +366,7 @@ void ModuleRenderer3D::GenerateBuffers()
 
 void ModuleRenderer3D::Draw(GameObject* go)
 {
-	if (go->meshComponent != nullptr)
+	if (go->meshComponent != nullptr && !go->isCulled)
 	{
 		if (go->meshComponent->isActive)
 		{
@@ -571,4 +579,59 @@ void ModuleRenderer3D::ToggleWireframe(const bool switchTo)
 	{
 		glDisable(GL_TEXTURE_2D);
 	}
+}
+
+void ModuleRenderer3D::DrawCameraFrustum(ComponentCamera* camera)
+{
+	glLineWidth(2.0f);
+	glBegin(GL_LINES);
+
+	float3 corners[8];
+	camera->frustum.GetCornerPoints(corners);
+
+	glColor3f(1, 0, 1);
+
+	// Left Face
+	glVertex3f(corners[0].x, corners[0].y, corners[0].z);
+	glVertex3f(corners[1].x, corners[1].y, corners[1].z);
+
+	glVertex3f(corners[2].x, corners[2].y, corners[2].z);
+	glVertex3f(corners[3].x, corners[3].y, corners[3].z);
+
+	// Right Face
+	glVertex3f(corners[4].x, corners[4].y, corners[4].z);
+	glVertex3f(corners[5].x, corners[5].y, corners[5].z);
+
+	glVertex3f(corners[6].x, corners[6].y, corners[6].z);
+	glVertex3f(corners[7].x, corners[7].y, corners[7].z);
+
+
+	// Near Plane
+	glVertex3f(corners[0].x, corners[0].y, corners[0].z);
+	glVertex3f(corners[4].x, corners[4].y, corners[4].z);
+
+	glVertex3f(corners[2].x, corners[2].y, corners[2].z);
+	glVertex3f(corners[6].x, corners[6].y, corners[6].z);
+
+	glVertex3f(corners[0].x, corners[0].y, corners[0].z);
+	glVertex3f(corners[2].x, corners[2].y, corners[2].z);
+
+	glVertex3f(corners[4].x, corners[4].y, corners[4].z);
+	glVertex3f(corners[6].x, corners[6].y, corners[6].z);
+
+	// Far Plane
+	glVertex3f(corners[1].x, corners[1].y, corners[1].z);
+	glVertex3f(corners[5].x, corners[5].y, corners[5].z);
+
+	glVertex3f(corners[3].x, corners[3].y, corners[3].z);
+	glVertex3f(corners[7].x, corners[7].y, corners[7].z);
+
+	glVertex3f(corners[1].x, corners[1].y, corners[1].z);
+	glVertex3f(corners[3].x, corners[3].y, corners[3].z);
+
+	glVertex3f(corners[5].x, corners[5].y, corners[5].z);
+	glVertex3f(corners[7].x, corners[7].y, corners[7].z);
+
+	glColor3f(1, 1, 1);
+	glEnd();
 }

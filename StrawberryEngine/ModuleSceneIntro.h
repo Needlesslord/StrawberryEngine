@@ -42,6 +42,8 @@ public:
 
 	std::list<Texture*> textureList;
 
-	GameObject* street;
-	GameObject* house;
+	GameObject* street = nullptr;
+	GameObject* house = nullptr;
+
+	GameObject* camera01 = nullptr;
 };

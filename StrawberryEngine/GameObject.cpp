@@ -59,6 +59,18 @@ Component* GameObject::AddComponent(Component::Type type)
 	}
 }
 
+bool GameObject::Update()
+{
+	bool ret = true;
+
+	UpdateRotation();
+	UpdateLocalTransform();
+	UpdateGlobalTransform();
+	UpdateAABB();
+
+	return ret;
+}
+
 void GameObject::AddChild(GameObject* go)
 {
 	this->children.push_back(go);
@@ -111,6 +123,11 @@ void GameObject::UpdateGlobalTransform()
 	else
 	{
 		globalTransform = localTransform;
+	}
+
+	if (cameraComponent)
+	{
+		cameraComponent->Update();
 	}
 
 	for (std::list<GameObject*>::iterator goIterator = children.begin(); goIterator != children.end(); goIterator++)

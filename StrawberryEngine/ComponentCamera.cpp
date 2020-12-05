@@ -1,22 +1,34 @@
 #include "Globals.h"
 #include "ComponentCamera.h"
+#include "GameObject.h"
 
 ComponentCamera::ComponentCamera(Type type, GameObject* go) : Component(type, go)
 {
 	frustum.type = FrustumType::PerspectiveFrustum;
-	frustum.pos = { 0,0,0 };
-	frustum.front = float3::unitZ;
-	frustum.up = float3::unitY;
+	frustum.pos = gameObject->globalTransform.TranslatePart();
+	frustum.front = gameObject->globalTransform.WorldZ();
+	frustum.up = gameObject->globalTransform.WorldY();
 	frustum.nearPlaneDistance = 1.0f;
 	frustum.farPlaneDistance = 1000.0f;
 	frustum.verticalFov = DEGTORAD * (55.0f);
-
+	
 	frustum.horizontalFov = 2.0f * atanf(tanf(frustum.verticalFov * 0.5f) * 1.3f);
 }
 
 ComponentCamera::~ComponentCamera()
 {
 
+}
+
+bool ComponentCamera::Update()
+{
+	bool ret = true;
+
+	frustum.pos = gameObject->globalTransform.TranslatePart();
+	frustum.front = gameObject->globalTransform.WorldZ();
+	frustum.up = gameObject->globalTransform.WorldY();
+
+	return ret;
 }
 
 bool ComponentCamera::NeedsCulling(AABB& aabb)
@@ -39,10 +51,10 @@ bool ComponentCamera::NeedsCulling(AABB& aabb)
 		}
 		// were all the points outside of plane p?
 		if (iInCount == 0)
-			return false;
+			return true;
 		// check if they were all on the right side of the plane
 		iTotalIn += iPtIn;
 	}
 	// we must be partly in then otherwise
-	return true;
+	return false;
 }

@@ -21,6 +21,7 @@ public:
 	void ChangeName(std::string newName);
 	Component* AddComponent(Component::Type type);
 	void AddChild(GameObject* go);
+	bool Update();
 	void UpdateRotation();
 	void UpdateLocalTransform();
 	void UpdateGlobalTransform();
@@ -30,7 +31,7 @@ public:
 public:
 
 	float3 position = { 0,0,0 };		// 
-	float3 scale = { 0,0,0 };			// they have to be float 3 or we can't use them with matrices :/
+	float3 scale = { 1,1,1 };			// they have to be float 3 or we can't use them with matrices :/
 	float3 rotation = { 0,0,0 };		// 
 	Quat rotationQuat = Quat::identity;
 
@@ -61,5 +62,7 @@ public:
 	bool isSelected = false;
 
 	bool isActive = true;
+
+	bool isCulled = false;
 
 };

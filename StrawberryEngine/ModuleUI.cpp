@@ -6,8 +6,9 @@
 #include "ModuleInput.h"
 #include "ModuleSceneIntro.h"
 #include "ModuleImporter.h"
-#include "TextureImporter.h"
 #include "MeshImporter.h"
+#include "TextureImporter.h"
+#include "ComponentCamera.h"
 #include "GameObject.h"
 
 #include "Libs/DevIL/include/IL/il.h"
@@ -835,6 +836,22 @@ void ModuleUI::ShowInspector()
 					}
 				}
 			}
+
+			
+			
+
+			goIterator = App->scene_intro->gameObjectSelected.begin();
+			if ((*goIterator)->cameraComponent)
+			{
+				ImGui::Spacing(); ImGui::Spacing(); ImGui::Spacing();
+				if (ImGui::CollapsingHeader("Camera Component", ImGuiTreeNodeFlags_DefaultOpen))
+				{
+					
+					ImGui::Checkbox("Debug Frustum", &(*goIterator)->cameraComponent->isDebugEnabled);
+					
+				}
+			}
+
 		}
 	}
 
