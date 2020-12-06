@@ -846,14 +846,61 @@ void ModuleUI::ShowInspector()
 				ImGui::Spacing(); ImGui::Spacing(); ImGui::Spacing();
 				if (ImGui::CollapsingHeader("Camera Component", ImGuiTreeNodeFlags_DefaultOpen))
 				{
-					ImGui::Spacing();
+					ImGui::PushID("CameraActive");
+					if (ImGui::Checkbox("Active", &(*goIterator)->cameraComponent->isActive))
+					{
+						if ((*goIterator)->cameraComponent->isActive)
+						{
+							App->camera->SetActiveCamera((*goIterator)->cameraComponent);
+						}
+					}
+					ImGui::PopID();
+
 					ImGui::Checkbox("Culling", &App->camera->isCullingActive);
 					ImGui::Spacing();
 					ImGui::Checkbox("Debug Frustum", &(*goIterator)->cameraComponent->isDebugEnabled);
-		
+
+
+					ImGui::Spacing();
+					ImGui::SliderFloat("Near Plane Distance", &(*goIterator)->cameraComponent->frustum.nearPlaneDistance, 0.0f, 10.f);
+					ImGui::Spacing();
+					ImGui::SliderFloat("Far Plane Distance", &(*goIterator)->cameraComponent->frustum.farPlaneDistance, 1.0f, 1000.f);
+					if ((*goIterator)->cameraComponent->frustum.farPlaneDistance < (*goIterator)->cameraComponent->frustum.nearPlaneDistance + 1)
+					{
+						(*goIterator)->cameraComponent->frustum.farPlaneDistance = (*goIterator)->cameraComponent->frustum.nearPlaneDistance + 1;
+					}
+
+
+					float newRatio = (*goIterator)->cameraComponent->ratio;
+					ImGui::Spacing();
+					ImGui::SliderFloat("Ratio", &newRatio, 0.1f, 2.5f);
+					if (newRatio != (*goIterator)->cameraComponent->ratio)
+					{
+						(*goIterator)->cameraComponent->ratio = newRatio;
+						(*goIterator)->cameraComponent->frustum.horizontalFov = 2.0f * atanf(tanf((*goIterator)->cameraComponent->frustum.verticalFov * 0.5f) * (*goIterator)->cameraComponent->ratio);
+					}
+
+
+					float fovDeg = (*goIterator)->cameraComponent->frustum.verticalFov / DEGTORAD;
+					ImGui::Spacing();
+					ImGui::SliderFloat("FOV", &fovDeg, 55.0f, 110.f);
+					if (fovDeg * DEGTORAD != (*goIterator)->cameraComponent->frustum.verticalFov)
+					{
+						(*goIterator)->cameraComponent->frustum.verticalFov = fovDeg * DEGTORAD;
+						(*goIterator)->cameraComponent->frustum.horizontalFov = 2.0f * atanf(tanf((*goIterator)->cameraComponent->frustum.verticalFov * 0.5f) * (*goIterator)->cameraComponent->ratio);
+					}
 				}
 			}
+			else if(!(*goIterator)->meshComponent && !(*goIterator)->textureComponent)
+			{
+				ImGui::Spacing(); ImGui::Spacing(); ImGui::Spacing();
 
+				if (ImGui::Button("Add Camera", { 200, 40 }))
+				{
+					(*goIterator)->cameraComponent = (ComponentCamera*)(*goIterator)->AddComponent(Component::TYPE_CAMERA);
+					App->camera->SetActiveCamera((*goIterator)->cameraComponent);
+				}
+			}
 		}
 	}
 

@@ -22,6 +22,7 @@ public:
 public:
 	
 	Frustum frustum;
+	float ratio = 1.3f;
 
 	//bool isCullingActive = false;
 	bool isDebugEnabled = false;

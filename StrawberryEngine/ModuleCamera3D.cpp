@@ -2,6 +2,7 @@
 #include "Application.h"
 #include "ModuleCamera3D.h"
 #include "MeshImporter.h"
+#include "ComponentCamera.h"
 #include "GameObject.h"
 
 ModuleCamera3D::ModuleCamera3D(Application* app, bool start_enabled) : Module(app, start_enabled)
@@ -196,9 +197,6 @@ update_status ModuleCamera3D::PostUpdate(float dt)
 		LookAt(ftov);
 	}
 
-
-
-
 	return UPDATE_CONTINUE;
 }
 
@@ -254,4 +252,14 @@ void ModuleCamera3D::CalculateViewMatrix()
 {
 	ViewMatrix = mat4x4(X.x, Y.x, Z.x, 0.0f, X.y, Y.y, Z.y, 0.0f, X.z, Y.z, Z.z, 0.0f, -dot(X, Position), -dot(Y, Position), -dot(Z, Position), 1.0f);
 	ViewMatrixInverse = inverse(ViewMatrix);
+}
+
+void ModuleCamera3D::SetActiveCamera(ComponentCamera* camera)
+{
+	for (std::list<ComponentCamera*>::iterator cameraIterator = cameras.begin(); cameraIterator != cameras.end(); cameraIterator++)
+	{
+		(*cameraIterator)->isActive = false;
+	}
+	camera->isActive = true;
+	activeCamera = camera;
 }

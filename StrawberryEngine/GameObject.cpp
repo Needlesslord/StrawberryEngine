@@ -55,6 +55,7 @@ Component* GameObject::AddComponent(Component::Type type)
 	else if (type == Component::TYPE_CAMERA)
 	{
 		component = new ComponentCamera(type, this);
+		App->camera->cameras.push_back((ComponentCamera*)component);
 		return component;
 	}
 }

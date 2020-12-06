@@ -34,6 +34,7 @@ bool ModuleSceneIntro::Start()
 
 	camera01 = AddGameObject("Camera01");
 	camera01->cameraComponent = (ComponentCamera*)camera01->AddComponent(Component::TYPE_CAMERA);
+	App->camera->SetActiveCamera(camera01->cameraComponent);
 
 	return ret;
 }
@@ -141,11 +142,14 @@ update_status ModuleSceneIntro::PostUpdate(float dt)
 		textureComponentsToDelete.clear();
 	}
 
-	for (std::list<GameObject*>::iterator goToCull = everyGameObjectList.begin(); goToCull != everyGameObjectList.end(); goToCull++)
+	if (App->camera->activeCamera != nullptr)
 	{
-		if ((*goToCull)->isActive && (*goToCull)->meshComponent)
+		for (std::list<GameObject*>::iterator goToCull = everyGameObjectList.begin(); goToCull != everyGameObjectList.end(); goToCull++)
 		{
-			(*goToCull)->isCulled = camera01->cameraComponent->NeedsCulling((*goToCull)->aabb);
+			if ((*goToCull)->isActive && (*goToCull)->meshComponent)
+			{
+				(*goToCull)->isCulled = App->camera->activeCamera->NeedsCulling((*goToCull)->aabb);
+			}
 		}
 	}
 
@@ -187,11 +191,11 @@ GameObject* ModuleSceneIntro::AddGameObject(char* name)
 	return ret;
 }
 
-GameObject* ModuleSceneIntro::AddEmptyGameObject(GameObject* parent, char* name)
+GameObject* ModuleSceneIntro::AddEmptyGameObject(GameObject* parent)
 {
 	GameObject* ret;
 
-	ret = new GameObject(name);
+	ret = new GameObject();
 
 	if (parent != nullptr)
 	{

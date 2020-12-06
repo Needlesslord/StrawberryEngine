@@ -3,6 +3,8 @@
 #include "Globals.h"
 #include "glmath.h"
 
+class ComponentCamera;
+
 class ModuleCamera3D : public Module
 {
 public:
@@ -19,6 +21,8 @@ public:
 	void Move(const vec3 &Movement);
 	float* GetViewMatrix();
 
+	void SetActiveCamera(ComponentCamera* camera);
+
 private:
 
 	void CalculateViewMatrix();
@@ -30,6 +34,9 @@ public:
 	bool isYInverted = false;
 
 	bool isCullingActive = false;
+
+	ComponentCamera* activeCamera = nullptr;
+	std::list<ComponentCamera*> cameras;
 
 private:
 

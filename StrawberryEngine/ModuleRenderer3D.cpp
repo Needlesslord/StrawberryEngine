@@ -179,9 +179,12 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 		App->scene_intro->Draw();
 	}
 
-	if (App->scene_intro->camera01->cameraComponent->isDebugEnabled)
+	for (std::list<ComponentCamera*>::iterator cameraIterator = App->camera->cameras.begin(); cameraIterator != App->camera->cameras.end(); cameraIterator++)
 	{
-		DrawCameraFrustum(App->scene_intro->camera01->cameraComponent);
+		if ((*cameraIterator)->isDebugEnabled)
+		{
+			DrawCameraFrustum((*cameraIterator));
+		}
 	}
 
 	if (App->ui->isDrawEnabled)

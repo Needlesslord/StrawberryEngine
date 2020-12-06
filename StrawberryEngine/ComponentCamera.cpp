@@ -12,7 +12,7 @@ ComponentCamera::ComponentCamera(Type type, GameObject* go) : Component(type, go
 	frustum.farPlaneDistance = 1000.0f;
 	frustum.verticalFov = DEGTORAD * (55.0f);
 	
-	frustum.horizontalFov = 2.0f * atanf(tanf(frustum.verticalFov * 0.5f) * 1.3f);
+	frustum.horizontalFov = 2.0f * atanf(tanf(frustum.verticalFov * 0.5f) * ratio);
 }
 
 ComponentCamera::~ComponentCamera()

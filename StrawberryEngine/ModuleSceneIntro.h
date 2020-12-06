@@ -22,7 +22,7 @@ public:
 	void Draw();
 
 	GameObject* AddGameObject(char* name = nullptr);
-	GameObject* AddEmptyGameObject(GameObject* parent = nullptr, char* name = nullptr);
+	GameObject* AddEmptyGameObject(GameObject* parent = nullptr);
 	void DeleteGameObject(GameObject* go);
 	void AddChildrenToDeathRow(GameObject* go);
 	void ReparentUp(GameObject* go);
