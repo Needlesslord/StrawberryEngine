@@ -29,6 +29,8 @@ public:
 
 	bool isYInverted = false;
 
+	bool isCullingActive = false;
+
 private:
 
 	mat4x4 ViewMatrix, ViewMatrixInverse;

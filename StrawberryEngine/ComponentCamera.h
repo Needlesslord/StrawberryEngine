@@ -23,6 +23,7 @@ public:
 	
 	Frustum frustum;
 
+	//bool isCullingActive = false;
 	bool isDebugEnabled = false;
 
 };

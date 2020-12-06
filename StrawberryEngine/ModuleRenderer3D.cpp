@@ -366,9 +366,16 @@ void ModuleRenderer3D::GenerateBuffers()
 
 void ModuleRenderer3D::Draw(GameObject* go)
 {
-	if (go->meshComponent != nullptr && !go->isCulled)
+	bool isChecked = true;
+	if (go->meshComponent != nullptr)
 	{
-		if (go->meshComponent->isActive)
+		if (App->camera->isCullingActive)
+		{
+			if (go->isCulled)
+				isChecked = false;
+		}
+
+		if (go->meshComponent->isActive && isChecked)
 		{
 
 			glPushMatrix();

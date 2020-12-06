@@ -846,9 +846,11 @@ void ModuleUI::ShowInspector()
 				ImGui::Spacing(); ImGui::Spacing(); ImGui::Spacing();
 				if (ImGui::CollapsingHeader("Camera Component", ImGuiTreeNodeFlags_DefaultOpen))
 				{
-					
+					ImGui::Spacing();
+					ImGui::Checkbox("Culling", &App->camera->isCullingActive);
+					ImGui::Spacing();
 					ImGui::Checkbox("Debug Frustum", &(*goIterator)->cameraComponent->isDebugEnabled);
-					
+		
 				}
 			}
 
