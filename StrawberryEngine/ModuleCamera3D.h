@@ -31,8 +31,6 @@ public:
 	
 	vec3 X, Y, Z, Position, Reference;
 
-	bool isYInverted = false;
-
 	bool isCullingActive = false;
 
 	ComponentCamera* activeCamera = nullptr;

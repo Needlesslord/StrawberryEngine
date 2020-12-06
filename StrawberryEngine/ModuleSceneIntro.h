@@ -37,6 +37,7 @@ public:
 	std::list<GameObject*> gameObjectsToReparent;
 	std::list<GameObject*> meshComponentsToDelete;
 	std::list<GameObject*> textureComponentsToDelete;
+	std::list<GameObject*> cameraComponentsToDelete;
 
 	std::list<Mesh*> meshesList;
 

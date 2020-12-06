@@ -856,6 +856,16 @@ void ModuleUI::ShowInspector()
 					}
 					ImGui::PopID();
 
+					ImGui::SameLine();
+					ImGui::PushStyleColor(ImGuiCol_ButtonHovered, { 0.5, 0, 0, 0.75 });
+					ImGui::PushStyleColor(ImGuiCol_Button, { 0.85, 0, 0, 1 });
+					if (ImGui::Button("Remove Camera"))
+					{
+						App->scene_intro->cameraComponentsToDelete.push_back(*goIterator);
+					}
+					ImGui::PopStyleColor();
+					ImGui::PopStyleColor();
+
 					ImGui::Checkbox("Culling", &App->camera->isCullingActive);
 					ImGui::Spacing();
 					ImGui::Checkbox("Debug Frustum", &(*goIterator)->cameraComponent->isDebugEnabled);
@@ -864,7 +874,7 @@ void ModuleUI::ShowInspector()
 					ImGui::Spacing();
 					ImGui::SliderFloat("Near Plane Distance", &(*goIterator)->cameraComponent->frustum.nearPlaneDistance, 0.0f, 10.f);
 					ImGui::Spacing();
-					ImGui::SliderFloat("Far Plane Distance", &(*goIterator)->cameraComponent->frustum.farPlaneDistance, 1.0f, 1000.f);
+					ImGui::SliderFloat("Far Plane Distance", &(*goIterator)->cameraComponent->frustum.farPlaneDistance, 1.0f, 250.f);
 					if ((*goIterator)->cameraComponent->frustum.farPlaneDistance < (*goIterator)->cameraComponent->frustum.nearPlaneDistance + 1)
 					{
 						(*goIterator)->cameraComponent->frustum.farPlaneDistance = (*goIterator)->cameraComponent->frustum.nearPlaneDistance + 1;

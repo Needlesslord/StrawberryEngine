@@ -8,8 +8,8 @@ ComponentCamera::ComponentCamera(Type type, GameObject* go) : Component(type, go
 	frustum.pos = gameObject->globalTransform.TranslatePart();
 	frustum.front = gameObject->globalTransform.WorldZ();
 	frustum.up = gameObject->globalTransform.WorldY();
-	frustum.nearPlaneDistance = 1.0f;
-	frustum.farPlaneDistance = 1000.0f;
+	frustum.nearPlaneDistance = 5.0f;
+	frustum.farPlaneDistance = 100.0f;
 	frustum.verticalFov = DEGTORAD * (55.0f);
 	
 	frustum.horizontalFov = 2.0f * atanf(tanf(frustum.verticalFov * 0.5f) * ratio);

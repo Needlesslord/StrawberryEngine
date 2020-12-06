@@ -142,6 +142,15 @@ update_status ModuleSceneIntro::PostUpdate(float dt)
 		textureComponentsToDelete.clear();
 	}
 
+	if (!cameraComponentsToDelete.empty())
+	{
+		for (std::list<GameObject*>::iterator cameraToDelete = cameraComponentsToDelete.begin(); cameraToDelete != cameraComponentsToDelete.end(); cameraToDelete++)
+		{
+			RELEASE((*cameraToDelete)->cameraComponent);
+		}
+		cameraComponentsToDelete.clear();
+	}
+
 	if (App->camera->activeCamera != nullptr)
 	{
 		for (std::list<GameObject*>::iterator goToCull = everyGameObjectList.begin(); goToCull != everyGameObjectList.end(); goToCull++)

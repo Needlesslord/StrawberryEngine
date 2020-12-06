@@ -593,7 +593,7 @@ void ModuleRenderer3D::ToggleWireframe(const bool switchTo)
 
 void ModuleRenderer3D::DrawCameraFrustum(ComponentCamera* camera)
 {
-	glLineWidth(2.0f);
+	glLineWidth(2.0f); // Much better tbh
 	glBegin(GL_LINES);
 
 	float3 corners[8];
@@ -614,7 +614,6 @@ void ModuleRenderer3D::DrawCameraFrustum(ComponentCamera* camera)
 
 	glVertex3f(corners[6].x, corners[6].y, corners[6].z);
 	glVertex3f(corners[7].x, corners[7].y, corners[7].z);
-
 
 	// Near Plane
 	glVertex3f(corners[0].x, corners[0].y, corners[0].z);
@@ -641,6 +640,17 @@ void ModuleRenderer3D::DrawCameraFrustum(ComponentCamera* camera)
 
 	glVertex3f(corners[5].x, corners[5].y, corners[5].z);
 	glVertex3f(corners[7].x, corners[7].y, corners[7].z);
+
+
+
+	float3 a = camera->gameObject->position;
+
+	glVertex3f(a.x, a.y, a.z - 0.1f);
+	glVertex3f(a.x, a.y, a.z + 0.1f);
+	glVertex3f(a.x, a.y + 0.1f, a.z);
+	glVertex3f(a.x, a.y - 0.1f, a.z);
+	glVertex3f(a.x + 0.1f, a.y, a.z);
+	glVertex3f(a.x - 0.1f, a.y, a.z);
 
 	glColor3f(1, 1, 1);
 	glEnd();
