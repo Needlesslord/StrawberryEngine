@@ -13,9 +13,13 @@ class ComponentCamera : public Component
 public:
 
 	ComponentCamera(Type type, GameObject* go);
+	ComponentCamera();
 	~ComponentCamera();
 
 	bool Update();
+
+	float* GetViewMatrix();
+	float* GetProjectionMatrix();
 
 	bool NeedsCulling(AABB& aabb);
 
@@ -23,7 +27,7 @@ public:
 	
 	Frustum frustum;
 	float ratio = 1.3f;
-
+	bool isUpdateMatrix = true;
 	//bool isCullingActive = false;
 	bool isDebugEnabled = false;
 

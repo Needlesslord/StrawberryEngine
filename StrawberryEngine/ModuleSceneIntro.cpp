@@ -23,8 +23,8 @@ bool ModuleSceneIntro::Start()
 	LOG("Loading Intro assets");
 	bool ret = true;
 
-	App->camera->Move(vec3(1.0f, 1.0f, 0.0f));
-	App->camera->LookAt(vec3(0, 0, 0));
+	//App->camera->Move(vec3(1.0f, 1.0f, 0.0f));
+	//App->camera->LookAt(vec3(0, 0, 0));
 
 	//house = App->importer->meshImporter->LoadMesh("Assets/Meshes/BakerHouse.fbx");
 	street = App->importer->meshImporter->LoadMesh("Assets/Meshes/Street environment_V01.FBX");
@@ -34,8 +34,7 @@ bool ModuleSceneIntro::Start()
 
 	camera01 = AddGameObject("Camera01");
 	camera01->cameraComponent = (ComponentCamera*)camera01->AddComponent(Component::TYPE_CAMERA);
-	App->camera->SetActiveCamera(camera01->cameraComponent);
-
+	//App->renderer3D->camera = camera01->cameraComponent;
 	return ret;
 }
 
@@ -151,13 +150,13 @@ update_status ModuleSceneIntro::PostUpdate(float dt)
 		cameraComponentsToDelete.clear();
 	}
 
-	if (App->camera->activeCamera != nullptr)
+	if (App->renderer3D->camera != nullptr)
 	{
 		for (std::list<GameObject*>::iterator goToCull = everyGameObjectList.begin(); goToCull != everyGameObjectList.end(); goToCull++)
 		{
 			if ((*goToCull)->isActive && (*goToCull)->meshComponent)
 			{
-				(*goToCull)->isCulled = App->camera->activeCamera->NeedsCulling((*goToCull)->aabb);
+				(*goToCull)->isCulled = App->renderer3D->camera->NeedsCulling((*goToCull)->aabb);
 			}
 		}
 	}

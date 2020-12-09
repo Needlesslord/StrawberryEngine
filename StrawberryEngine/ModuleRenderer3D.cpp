@@ -111,7 +111,8 @@ bool ModuleRenderer3D::Init()
 		lights[0].diffuse.Set(0.75f, 0.75f, 0.75f, 1.0f);
 		lights[0].SetPos(0.0f, 0.0f, 2.5f);
 		lights[0].Init();
-		
+		lights[0].Active(true);
+
 		GLfloat MaterialAmbient[] = {1.0f, 1.0f, 1.0f, 1.0f};
 		glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, MaterialAmbient);
 
@@ -120,13 +121,11 @@ bool ModuleRenderer3D::Init()
 		
 		glEnable(GL_DEPTH_TEST);
 		glEnable(GL_CULL_FACE);
-		lights[0].Active(true);
 		glEnable(GL_LIGHTING);
 		glEnable(GL_COLOR_MATERIAL);
 		glEnable(GL_TEXTURE_2D);
 	}
 
-	// Projection matrix for
 	OnResize(App->window->screen_surface->w, App->window->screen_surface->h);
 
 
@@ -149,6 +148,19 @@ bool ModuleRenderer3D::Start()
 // PreUpdate: clear buffer
 update_status ModuleRenderer3D::PreUpdate(float dt)
 {
+	if (camera->isUpdateMatrix)
+	{
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+
+		glLoadMatrixf((GLfloat*)camera->GetProjectionMatrix());
+
+		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();
+
+		camera->isUpdateMatrix = false;
+	}
+
 	background = Black;
 	glClearColor(background.r, background.g, background.b, background.a);
 
@@ -156,11 +168,11 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 	glLoadIdentity();
 
 	glMatrixMode(GL_MODELVIEW);
-	glLoadMatrixf(App->camera->GetViewMatrix());
+	glLoadMatrixf((GLfloat*)camera->GetViewMatrix());
 	
 
 	// light 0 on cam pos
-	lights[0].SetPos(App->camera->Position.x, App->camera->Position.y, App->camera->Position.z);
+	lights[0].SetPos(camera->frustum.pos.x,camera->frustum.pos.y, camera->frustum.pos.z);
 
 	for(uint i = 0; i < MAX_LIGHTS; ++i)
 		lights[i].Render();
@@ -224,8 +236,8 @@ void ModuleRenderer3D::OnResize(int width, int height)
 
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	ProjectionMatrix = perspective(60.0f, (float)width / (float)height, 0.125f, 512.0f);
-	glLoadMatrixf(&ProjectionMatrix);
+
+	glLoadMatrixf((GLfloat*)camera->GetProjectionMatrix());
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
@@ -591,13 +603,13 @@ void ModuleRenderer3D::ToggleWireframe(const bool switchTo)
 	}
 }
 
-void ModuleRenderer3D::DrawCameraFrustum(ComponentCamera* camera)
+void ModuleRenderer3D::DrawCameraFrustum(ComponentCamera* cam)
 {
 	glLineWidth(2.0f); // Much better tbh
 	glBegin(GL_LINES);
 
 	float3 corners[8];
-	camera->frustum.GetCornerPoints(corners);
+	cam->frustum.GetCornerPoints(corners);
 
 	glColor3f(1, 0, 1);
 
@@ -643,7 +655,7 @@ void ModuleRenderer3D::DrawCameraFrustum(ComponentCamera* camera)
 
 
 
-	float3 a = camera->gameObject->position;
+	float3 a = cam->gameObject->position;
 
 	glVertex3f(a.x, a.y, a.z - 0.1f);
 	glVertex3f(a.x, a.y, a.z + 0.1f);

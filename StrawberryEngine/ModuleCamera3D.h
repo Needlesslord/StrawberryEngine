@@ -2,6 +2,7 @@
 #include "Module.h"
 #include "Globals.h"
 #include "glmath.h"
+#include "Libs/MathGeoLib/include/Math/float3.h"
 
 class ComponentCamera;
 
@@ -11,17 +12,19 @@ public:
 	ModuleCamera3D(Application* app, bool start_enabled = true);
 	~ModuleCamera3D();
 
+	bool Init();
 	bool Start();
 	update_status Update(float dt);
 	update_status PostUpdate(float dt);
 	bool CleanUp();
 
-	void Look(const vec3 &Position, const vec3 &Reference, bool RotateAroundReference = false);
-	void LookAt(const vec3 &Spot);
-	void Move(const vec3 &Movement);
-	float* GetViewMatrix();
+	void Look(const float3& Position, const float3 &Reference, bool RotateAroundReference = false);
+	void LookAt(const float3& spot);
+	void Move(const float3& Movement);
 
 	void SetActiveCamera(ComponentCamera* camera);
+
+	void OnMouseClick(vec2 mousePos);
 
 private:
 
@@ -29,14 +32,18 @@ private:
 
 public:
 	
-	vec3 X, Y, Z, Position, Reference;
+	//float3 X, Y, Z, Position, Reference;
+	float3 Reference;
+
+	float cameraSpeed = 6.0f;
+	float cameraSensitivity = 0.25f;
 
 	bool isCullingActive = false;
 
-	ComponentCamera* activeCamera = nullptr;
+	ComponentCamera* camera = nullptr;
+
 	std::list<ComponentCamera*> cameras;
 
 private:
 
-	mat4x4 ViewMatrix, ViewMatrixInverse;
 };

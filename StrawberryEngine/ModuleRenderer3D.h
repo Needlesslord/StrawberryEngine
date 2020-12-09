@@ -61,4 +61,7 @@ public:
 	uint rboDepthStencil = 0;
 
 	bool swap = true;
+
+	ComponentCamera* camera = nullptr;
+
 };

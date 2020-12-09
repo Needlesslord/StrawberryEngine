@@ -11,8 +11,21 @@ ComponentCamera::ComponentCamera(Type type, GameObject* go) : Component(type, go
 	frustum.nearPlaneDistance = 5.0f;
 	frustum.farPlaneDistance = 100.0f;
 	frustum.verticalFov = DEGTORAD * (55.0f);
-	
 	frustum.horizontalFov = 2.0f * atanf(tanf(frustum.verticalFov * 0.5f) * ratio);
+}
+
+ComponentCamera::ComponentCamera() : Component(Component::TYPE_CAMERA, nullptr)
+{
+	frustum.type = FrustumType::PerspectiveFrustum;
+
+	frustum.pos = float3(0, 0, 0);
+	frustum.front = float3::unitZ;
+	frustum.up = float3::unitY;
+	
+	frustum.nearPlaneDistance = 1.0f;
+	frustum.farPlaneDistance = 1000.0f;
+	frustum.verticalFov = DEGTORAD * (60.0f);
+	frustum.horizontalFov = 2.0f * atanf(tanf(frustum.verticalFov * 0.5f) * 1.5);
 }
 
 ComponentCamera::~ComponentCamera()
@@ -28,6 +41,7 @@ bool ComponentCamera::Update()
 	frustum.front = gameObject->globalTransform.WorldZ();
 	frustum.up = gameObject->globalTransform.WorldY();
 
+	isUpdateMatrix = true;
 	return ret;
 }
 
@@ -57,4 +71,17 @@ bool ComponentCamera::NeedsCulling(AABB& aabb)
 	}
 	// we must be partly in then otherwise
 	return false;
+}
+
+// -----------------------------------------------------------------
+float* ComponentCamera::GetViewMatrix()
+{
+	return (float*)(float4x4(frustum.ViewMatrix()).Transposed().ptr());// The view matrix is a 3x4!!!!!!
+}
+
+
+// -----------------------------------------------------------------
+float* ComponentCamera::GetProjectionMatrix()
+{
+	return (float*)frustum.ProjectionMatrix().Transposed().ptr();
 }

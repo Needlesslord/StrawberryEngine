@@ -851,7 +851,7 @@ void ModuleUI::ShowInspector()
 					{
 						if ((*goIterator)->cameraComponent->isActive)
 						{
-							App->camera->SetActiveCamera((*goIterator)->cameraComponent);
+							//App->camera->SetActiveCamera((*goIterator)->cameraComponent);
 						}
 					}
 					ImGui::PopID();
@@ -908,7 +908,7 @@ void ModuleUI::ShowInspector()
 				if (ImGui::Button("Add Camera", { 200, 40 }))
 				{
 					(*goIterator)->cameraComponent = (ComponentCamera*)(*goIterator)->AddComponent(Component::TYPE_CAMERA);
-					App->camera->SetActiveCamera((*goIterator)->cameraComponent);
+					//App->camera->SetActiveCamera((*goIterator)->cameraComponent);
 				}
 			}
 		}
