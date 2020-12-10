@@ -1,7 +1,6 @@
 #pragma once
 #include "Module.h"
 #include "Globals.h"
-#include "glmath.h"
 #include "Libs/MathGeoLib/include/Math/float3.h"
 
 class ComponentCamera;
@@ -24,7 +23,7 @@ public:
 
 	void SetActiveCamera(ComponentCamera* camera);
 
-	void OnMouseClick(vec2 mousePos);
+	void OnMouseClick(float2 mousePos);
 
 private:
 

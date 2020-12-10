@@ -11,14 +11,6 @@ ModuleCamera3D::ModuleCamera3D(Application* app, bool start_enabled) : Module(ap
 	camera = new ComponentCamera();
 	camera->frustum.pos = { 0.0f, 5.0f, 8.5f };
 	CalculateViewMatrix();
-
-
-	//X = float3(1.0f, 0.0f, 0.0f);
-	//Y = float3(0.0f, 1.0f, 0.0f);
-	//Z = float3(0.0f, 0.0f, 1.0f);
-	
-	//Position = float3(0.0f, 0.0f, 8.5f);
-	//Reference = float3(0.0f, 0.0f, 0.0f);
 }
 
 ModuleCamera3D::~ModuleCamera3D()
@@ -74,10 +66,13 @@ update_status ModuleCamera3D::Update(float dt)
 	}
 
 
+
+
+
 	// Mouse Picking
 	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN && !App->ui->IsAnyWindowHovered())
 	{
-		vec2 pos = { (float)App->input->GetMouseX(), (float)App->input->GetMouseY() };
+		float2 pos = { (float)App->input->GetMouseX(), (float)App->input->GetMouseY() };
 		OnMouseClick(pos);
 	}
 
@@ -123,6 +118,7 @@ update_status ModuleCamera3D::Update(float dt)
 
 
 	
+
 
 
 		// While Right clicking, free look around must be enabled.
@@ -224,8 +220,6 @@ void ModuleCamera3D::LookAt(const float3 &spot)
 
 	camera->frustum.front = mat.MulDir(camera->frustum.front).Normalized();
 	camera->frustum.up = mat.MulDir(camera->frustum.up).Normalized();
-
-	//CalculateViewMatrix();
 }
 
 
@@ -257,8 +251,63 @@ void ModuleCamera3D::SetActiveCamera(ComponentCamera* camera)
 	App->renderer3D->camera = camera;
 }
 
-void ModuleCamera3D::OnMouseClick(vec2 mousePos)
+void ModuleCamera3D::OnMouseClick(float2 mousePos)
 {
 	mousePos = { mousePos.x / (float)App->window->screen_surface->w * 2.f - 1.f, -(mousePos.y / (float)App->window->screen_surface->h * 2.f - 1.f) };
-	LineSegment picking = App->renderer3D->camera->frustum.UnProjectLineSegment(mousePos.x, mousePos.y);
+	LineSegment picking = camera->frustum.UnProjectLineSegment(mousePos.x, mousePos.y);
+
+	float closestDistance = 999999;
+	GameObject* closest = nullptr;
+
+	for (std::list<GameObject*>::iterator goIterator = App->scene_intro->everyGameObjectList.begin(); goIterator != App->scene_intro->everyGameObjectList.end(); goIterator++)
+	{
+		if (picking.Intersects((*goIterator)->aabb))
+		{
+			LineSegment transformedPicking(picking);
+			transformedPicking.Transform((*goIterator)->globalTransform.Inverted());
+
+			Mesh* mesh = (*goIterator)->meshComponent->mesh;
+			Triangle triangle;
+
+			for (int i = 0; i < mesh->num_index - 3; i += 3)
+			{
+				triangle.a = mesh->vertex[mesh->index[i]];
+				triangle.b = mesh->vertex[mesh->index[i + 1]];
+				triangle.c = mesh->vertex[mesh->index[i + 2]];
+
+				float distance;
+
+				bool aaa = transformedPicking.Intersects(triangle, &distance, nullptr);
+				if (aaa)
+				{
+					if (distance < closestDistance)
+					{
+						closestDistance = distance;
+						closest = *goIterator;
+					}
+				}
+			}
+		}
+	}
+
+	if (!App->scene_intro->gameObjectSelected.empty())
+	{
+		if (closest != (*App->scene_intro->gameObjectSelected.begin()))
+		{
+
+			for (std::list<GameObject*>::iterator goIterator = App->scene_intro->gameObjectSelected.begin(); goIterator != App->scene_intro->gameObjectSelected.end(); goIterator++)
+			{
+				(*goIterator)->isSelected = false;
+			}
+			App->scene_intro->gameObjectSelected.clear();
+		}
+		
+	}
+
+	
+
+	if (closest != nullptr)
+	{
+		closest->isSelected = true;
+	}
 }

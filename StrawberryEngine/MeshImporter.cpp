@@ -174,7 +174,7 @@ void MeshImporter::RecursiveLoad(const aiScene* scene, GameObject* ret, const ch
 		Mesh* ourMesh = ourGO->meshComponent->mesh;
 		// Vertex
 		ourMesh->num_vertex = shortcut->mNumVertices;
-		ourMesh->vertex = new vec3[ourMesh->num_vertex * 3];
+		ourMesh->vertex = new float3[ourMesh->num_vertex * 3];
 		memcpy(ourMesh->vertex, shortcut->mVertices, sizeof(float) * ourMesh->num_vertex * 3);
 		LOG("New mesh with %d vertices", ourMesh->num_vertex);
 
@@ -226,8 +226,8 @@ void MeshImporter::RecursiveLoad(const aiScene* scene, GameObject* ret, const ch
 		// Normals
 		if (shortcut->HasNormals())
 		{
-			ourMesh->normals = new vec3[shortcut->mNumVertices];
-			memcpy(ourMesh->normals, shortcut->mNormals, sizeof(vec3) * shortcut->mNumVertices);
+			ourMesh->normals = new float3[shortcut->mNumVertices];
+			memcpy(ourMesh->normals, shortcut->mNormals, sizeof(float3) * shortcut->mNumVertices);
 			ourMesh->hasNormals = true;
 		}
 
@@ -347,13 +347,13 @@ bool MeshImporter::Load(const char* fileBuffer, Mesh* ourMesh)
 
 	// Load vertices
 	bytes = sizeof(float) * ourMesh->num_vertex * 3;
-	ourMesh->vertex = new vec3[ourMesh->num_vertex]; // Not sure about this
+	ourMesh->vertex = new float3[ourMesh->num_vertex]; // Not sure about this
 	memcpy(ourMesh->vertex, cursor, bytes);
 	cursor += bytes;
 
 	// Load normals
 	bytes = sizeof(float) * ourMesh->num_vertex * 3;
-	ourMesh->normals = new vec3[ourMesh->num_vertex]; // Not sure about this !!!!!!!!!!!!
+	ourMesh->normals = new float3[ourMesh->num_vertex]; // Not sure about this !!!!!!!!!!!!
 	memcpy(ourMesh->normals, cursor, bytes);
 	cursor += bytes;
 	ourMesh->hasNormals = true; // IDK

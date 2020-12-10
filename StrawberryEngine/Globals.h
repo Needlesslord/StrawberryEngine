@@ -10,7 +10,6 @@
 #include <string>
 #include <vector>
 #include <list>
-#include "glmath.h"
 
 #define LIBRARY_PATH "Library/"
 #define FOLDERS_PATH "Library/Folders/"

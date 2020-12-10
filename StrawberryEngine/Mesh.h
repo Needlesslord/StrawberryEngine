@@ -13,14 +13,14 @@ public:
 	uint* index = nullptr;
 	uint id_vertex = 0; // unique vertex in VRAM
 	uint num_vertex = 0;
-	vec3* vertex = nullptr;
+	float3* vertex = nullptr;
 	uint id_tex_coord = 0;
 	float* tex_coord = nullptr;
 
 	bool hasTex_coords = false;
 
 	bool hasNormals = false;
-	vec3* normals = nullptr;
+	float3* normals = nullptr;
 
 	AABB localAABB;
 
