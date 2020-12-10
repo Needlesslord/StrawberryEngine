@@ -34,7 +34,7 @@ bool ModuleSceneIntro::Start()
 
 	camera01 = AddGameObject("Camera01");
 	camera01->cameraComponent = (ComponentCamera*)camera01->AddComponent(Component::TYPE_CAMERA);
-	//App->renderer3D->camera = camera01->cameraComponent;
+	
 	return ret;
 }
 
@@ -51,6 +51,16 @@ bool ModuleSceneIntro::CleanUp()
 update_status ModuleSceneIntro::PreUpdate(float dt)
 {
 	
+	if (App->renderer3D->camera != nullptr)
+	{
+		for (std::list<GameObject*>::iterator goToCull = everyGameObjectList.begin(); goToCull != everyGameObjectList.end(); goToCull++)
+		{
+			if ((*goToCull)->isActive && (*goToCull)->meshComponent)
+			{
+				(*goToCull)->isCulled = App->renderer3D->camera->NeedsCulling((*goToCull)->aabb);
+			}
+		}
+	}
 
 	// Refresh selected mesh list
 	gameObjectSelected.clear();
@@ -148,17 +158,6 @@ update_status ModuleSceneIntro::PostUpdate(float dt)
 			RELEASE((*cameraToDelete)->cameraComponent);
 		}
 		cameraComponentsToDelete.clear();
-	}
-
-	if (App->renderer3D->camera != nullptr)
-	{
-		for (std::list<GameObject*>::iterator goToCull = everyGameObjectList.begin(); goToCull != everyGameObjectList.end(); goToCull++)
-		{
-			if ((*goToCull)->isActive && (*goToCull)->meshComponent)
-			{
-				(*goToCull)->isCulled = App->renderer3D->camera->NeedsCulling((*goToCull)->aabb);
-			}
-		}
 	}
 
 	return UPDATE_CONTINUE;

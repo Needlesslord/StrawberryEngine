@@ -38,7 +38,7 @@ public:
 	float cameraSpeed = 6.0f;
 	float cameraSensitivity = 0.25f;
 
-	bool isCullingActive = false;
+	bool isCullingActive = true;
 
 	ComponentCamera* camera = nullptr;
 

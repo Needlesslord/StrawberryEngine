@@ -12,6 +12,7 @@ ModuleCamera3D::ModuleCamera3D(Application* app, bool start_enabled) : Module(ap
 	camera->frustum.pos = { 0.0f, 5.0f, 8.5f };
 	CalculateViewMatrix();
 
+
 	//X = float3(1.0f, 0.0f, 0.0f);
 	//Y = float3(0.0f, 1.0f, 0.0f);
 	//Z = float3(0.0f, 0.0f, 1.0f);
