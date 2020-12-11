@@ -409,7 +409,7 @@ void ModuleUI::ShowHierarchy()
 	}
 
 	ImGui::Begin("Hierarchy", &isHierarchyActive);
-	if (ImGui::IsWindowHovered())
+	if (ImGui::IsMouseHoveringRect(ImGui::GetWindowPos(), { ImGui::GetWindowPos().x + ImGui::GetWindowSize().x, ImGui::GetWindowPos().y + ImGui::GetWindowSize().y }))
 	{
 		isAnyWindowHovered = true;
 	}
@@ -445,7 +445,7 @@ void ModuleUI::CreateHierarchy(GameObject* go)
 	}
 
 
-	if (go->isSelected)
+	if (go == App->scene_intro->gameObjectSelected)
 	{
 		flags |= ImGuiTreeNodeFlags_Selected;
 	}
@@ -495,6 +495,10 @@ void ModuleUI::CreateHierarchy(GameObject* go)
 			//ImGui::SetNextWindowPos({ 200, 200 });
 			if (ImGui::BeginPopupContextWindow())
 			{
+				if (ImGui::IsItemHovered())
+				{
+					isAnyWindowHovered = true;
+				}
 				if (ImGui::MenuItem("Add Child"))
 				{
 					App->scene_intro->AddEmptyGameObject(go);
@@ -538,7 +542,7 @@ void ModuleUI::ShowInspector()
 	}
 	ImGui::Begin("Inspector", &isInspectorActive);
 	{
-		if (ImGui::IsWindowHovered())
+		if (ImGui::IsMouseHoveringRect(ImGui::GetWindowPos(), {ImGui::GetWindowPos().x + ImGui::GetWindowSize().x, ImGui::GetWindowPos().y + ImGui::GetWindowSize().y }))
 		{
 			isAnyWindowHovered = true;
 		}
@@ -666,12 +670,14 @@ void ModuleUI::ShowInspector()
 					{
 						if (ImGui::BeginPopupContextWindow("Change mesh", ImGuiPopupFlags_MouseButtonLeft))
 						{
+							
 							for (std::list<Mesh*>::iterator meshIterator = App->scene_intro->meshesList.begin(); meshIterator != App->scene_intro->meshesList.end(); meshIterator++)
 							{
 								if ((*meshIterator) != goSelected->meshComponent->mesh)
 								{
 									if (ImGui::MenuItem((*meshIterator)->name.c_str()))
 									{
+
 										goSelected->meshComponent->mesh = (*meshIterator);
 										goSelected->isMoved = true;
 										goSelected->meshComponent->isActive = true;
@@ -1002,7 +1008,7 @@ void ModuleUI::ShowAssets()
 	}
 	ImGui::Begin("Assets", &isAssetsActive);
 
-	if (ImGui::IsWindowHovered())
+	if (ImGui::IsMouseHoveringRect(ImGui::GetWindowPos(), { ImGui::GetWindowPos().x + ImGui::GetWindowSize().x, ImGui::GetWindowPos().y + ImGui::GetWindowSize().y }))
 	{
 		isAnyWindowHovered = true;
 	}
@@ -1105,6 +1111,10 @@ void ModuleUI::DrawFrame(GLuint frameBuffer)
 {
 	//ImGui::SetNextWindowSize({ 800, 600 });
 	ImGui::Begin("Scene");
+	if (ImGui::IsWindowHovered())
+	{
+		isAnyWindowHovered = true;
+	}
 	ImGui::Image((ImTextureID)App->renderer3D->texColorBuffer, ImVec2( App->window->screen_surface->w,App->window->screen_surface->h ), ImVec2(0, 1), ImVec2(1, 0));
 	ImGui::End();
 }

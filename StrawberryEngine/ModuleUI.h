@@ -116,7 +116,7 @@ public:
 
 private:
 
-	bool isAnyWindowHovered;
+	bool isAnyWindowHovered = false;
 
 };
 

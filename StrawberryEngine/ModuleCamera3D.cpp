@@ -70,7 +70,7 @@ update_status ModuleCamera3D::Update(float dt)
 
 
 	// Mouse Picking
-	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN && !App->ui->IsAnyWindowHovered())
+	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN && !App->ui->IsAnyWindowHovered() && App->input->GetKey(SDL_SCANCODE_LALT) != KEY_REPEAT)
 	{
 		float2 pos = { (float)App->input->GetMouseX(), (float)App->input->GetMouseY() };
 		OnMouseClick(pos);
@@ -92,16 +92,32 @@ update_status ModuleCamera3D::Update(float dt)
 	}
 
 
-
+	
+	
 
 		// While Right clicking, “WASD” fps-like movement must be enabled.
 	if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_REPEAT)
 	{
-		if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) camera->frustum.pos.y += speed; 
-		if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) camera->frustum.pos.y -= speed;
-
-		if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) camera->frustum.pos.x += speed;
-		if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) camera->frustum.pos.x -= speed;
+		float3 up(camera->frustum.up);
+		if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT)
+		{
+			//camera->frustum.Translate({ 0.f, speed, 0.f });
+			camera->frustum.Translate(up * speed);
+		}
+		if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT)
+		{
+			//camera->frustum.Translate({ 0.f, -speed, 0.f });
+			camera->frustum.Translate(-up * speed);
+		}
+		float3 worldRight(camera->frustum.WorldRight());
+		if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT)
+		{
+			camera->frustum.Translate(worldRight * speed);
+		}
+		if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT)
+		{
+			camera->frustum.Translate(-worldRight * speed);
+		}
 	}
 
 
@@ -113,7 +129,7 @@ update_status ModuleCamera3D::Update(float dt)
 	bool isHovered = App->ui->IsAnyWindowHovered();
 	if (DeltaZ != 0 && !isHovered)
 	{
-		camera->frustum.pos.z += DeltaZ;
+		camera->frustum.pos += camera->frustum.front * DeltaZ;
 	}
 
 

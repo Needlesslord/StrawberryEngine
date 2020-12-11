@@ -82,6 +82,11 @@ update_status ModuleSceneIntro::Update(float dt)
 		AddChildrenToDeathRow(gameObjectSelected);
 	}
 
+	if (gameObjectSelected != nullptr)
+	{
+		//ImGuizmo::
+	}
+
 	bool needToGenBuffers = false;
 	for (std::list<GameObject*>::iterator goToMove = everyGameObjectList.begin(); goToMove != everyGameObjectList.end(); goToMove++)
 	{
