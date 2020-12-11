@@ -57,9 +57,9 @@ update_status ModuleCamera3D::Update(float dt)
 	float DeltaY = (float)dy * Sensitivity;
 
 	float3 goTarget;
-	if (!App->scene_intro->gameObjectSelected.empty())
+	if (App->scene_intro->gameObjectSelected != nullptr)
 	{
-		GameObject* ref = (*App->scene_intro->gameObjectSelected.begin());
+		GameObject* ref = App->scene_intro->gameObjectSelected;
 		goTarget.x = ref->aabb.CenterPoint().x;
 		goTarget.y = ref->aabb.CenterPoint().y;
 		goTarget.z = ref->aabb.CenterPoint().z;
@@ -151,7 +151,7 @@ update_status ModuleCamera3D::Update(float dt)
 	
 
 	// Alt+Left click should orbit the object.
-	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_REPEAT && App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT && !App->scene_intro->gameObjectSelected.empty())
+	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_REPEAT && App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT && App->scene_intro->gameObjectSelected != nullptr)
 	{
 		float3 length = camera->frustum.pos - goTarget;
 
@@ -175,7 +175,7 @@ update_status ModuleCamera3D::Update(float dt)
 
 
 	// Pressing “f” should focus the camera around the geometry.
-	if (App->input->GetKey(SDL_SCANCODE_F) == KEY_DOWN && !App->scene_intro->gameObjectSelected.empty())
+	if (App->input->GetKey(SDL_SCANCODE_F) == KEY_DOWN && App->scene_intro->gameObjectSelected != nullptr)
 	{
 		LookAt(goTarget);
 	}
@@ -290,24 +290,16 @@ void ModuleCamera3D::OnMouseClick(float2 mousePos)
 		}
 	}
 
-	if (!App->scene_intro->gameObjectSelected.empty())
-	{
-		if (closest != (*App->scene_intro->gameObjectSelected.begin()))
-		{
-
-			for (std::list<GameObject*>::iterator goIterator = App->scene_intro->gameObjectSelected.begin(); goIterator != App->scene_intro->gameObjectSelected.end(); goIterator++)
-			{
-				(*goIterator)->isSelected = false;
-			}
-			App->scene_intro->gameObjectSelected.clear();
-		}
-		
-	}
 
 	
 
 	if (closest != nullptr)
 	{
 		closest->isSelected = true;
+		App->scene_intro->gameObjectSelected = closest;
+	}
+	else
+	{
+		App->scene_intro->gameObjectSelected = nullptr;
 	}
 }

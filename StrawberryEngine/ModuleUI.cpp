@@ -182,15 +182,6 @@ void ModuleUI::AddConsoleOutput(const char* text)
 	isNewOutput = true;
 }
 
-void ModuleUI::UnselectAll()
-{
-	for (std::list<GameObject*>::iterator goIterator = App->scene_intro->gameObjectSelected.begin(); goIterator != App->scene_intro->gameObjectSelected.end(); goIterator++)
-	{
-		(*goIterator)->isSelected = false;
-	}
-	App->scene_intro->gameObjectSelected.clear();
-}
-
 void ModuleUI::ShowMenuBar()
 {
 	ImGui::BeginMainMenuBar();
@@ -463,17 +454,12 @@ void ModuleUI::CreateHierarchy(GameObject* go)
 	if (ImGui::TreeNodeEx(go->name.c_str(), flags))
 	{
 
-		if (ImGui::IsMouseClicked(0) && ImGui::IsWindowHovered())
-		{
-			UnselectAll();
-		}
-
 		if (ImGui::IsItemClicked(0) || ImGui::IsItemClicked(1))
 		{
 			if (!go->isSelected)
 			{
-				UnselectAll();
 				go->isSelected = true;
+				App->scene_intro->gameObjectSelected = go;
 			}
 		}
 
@@ -556,37 +542,37 @@ void ModuleUI::ShowInspector()
 		{
 			isAnyWindowHovered = true;
 		}
-		if (!App->scene_intro->gameObjectSelected.empty())
+		if (App->scene_intro->gameObjectSelected != nullptr)
 		{
-			std::list<GameObject*>::iterator goIterator = App->scene_intro->gameObjectSelected.begin();
+			GameObject* goSelected = App->scene_intro->gameObjectSelected;
 		
-			if (ImGui::Checkbox("Active", &(*goIterator)->isActive))
+			if (ImGui::Checkbox("Active", &goSelected->isActive))
 			{
-				(*goIterator)->SetActive((*goIterator)->isActive);
+				goSelected->SetActive(goSelected->isActive);
 			}
 			ImGui::SameLine();
-			ImGui::InputText("", (char*)(*goIterator)->name.c_str(), 50);
+			ImGui::InputText("", (char*)goSelected->name.c_str(), 50);
 			
 			if (ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen))
 			{
 				ImGui::Spacing();
 				// I'm gonna 'copy' Unity's
 				ImGui::Text("Position"); ImGui::SameLine(); ImGui::Text("X"); ImGui::SameLine(); ImGui::PushItemWidth(75); ImGui::PushID("posX");
-				if (ImGui::DragFloat("", &(*goIterator)->position.x))
+				if (ImGui::DragFloat("", &goSelected->position.x))
 				{
-					(*goIterator)->isMoved = true;
+					goSelected->isMoved = true;
 				}
 				ImGui::PopID();
 				ImGui::SameLine(); ImGui::Text("Y"); ImGui::SameLine(); ImGui::PushItemWidth(75); ImGui::PushID("posY");
-				if (ImGui::DragFloat("", &(*goIterator)->position.y))
+				if (ImGui::DragFloat("", &goSelected->position.y))
 				{
-					(*goIterator)->isMoved = true;
+					goSelected->isMoved = true;
 				}
 				ImGui::PopID();
 				ImGui::SameLine(); ImGui::Text("Z"); ImGui::SameLine(); ImGui::PushItemWidth(75); ImGui::PushID("posZ");
-				if (ImGui::DragFloat("", &(*goIterator)->position.z))
+				if (ImGui::DragFloat("", &goSelected->position.z))
 				{
-					(*goIterator)->isMoved = true;
+					goSelected->isMoved = true;
 				}
 				ImGui::PopID();
 
@@ -595,21 +581,21 @@ void ModuleUI::ShowInspector()
 
 
 				ImGui::Text("Rotation"); ImGui::SameLine(); ImGui::Text("X"); ImGui::SameLine(); ImGui::PushItemWidth(75); ImGui::PushID("rotX");
-				if (ImGui::DragFloat("", &(*goIterator)->rotation.x))
+				if (ImGui::DragFloat("", &goSelected->rotation.x))
 				{
-					(*goIterator)->isMoved = true;
+					goSelected->isMoved = true;
 				}
 				ImGui::PopID();
 				ImGui::SameLine(); ImGui::Text("Y"); ImGui::SameLine(); ImGui::PushItemWidth(75); ImGui::PushID("rotY");
-				if (ImGui::DragFloat("", &(*goIterator)->rotation.y))
+				if (ImGui::DragFloat("", &goSelected->rotation.y))
 				{
-					(*goIterator)->isMoved = true;
+					goSelected->isMoved = true;
 				}
 				ImGui::PopID();
 				ImGui::SameLine(); ImGui::Text("Z"); ImGui::SameLine(); ImGui::PushItemWidth(75); ImGui::PushID("rotZ");
-				if (ImGui::DragFloat("", &(*goIterator)->rotation.z))
+				if (ImGui::DragFloat("", &goSelected->rotation.z))
 				{
-					(*goIterator)->isMoved = true;
+					goSelected->isMoved = true;
 				}
 				ImGui::PopID();
 
@@ -618,33 +604,33 @@ void ModuleUI::ShowInspector()
 
 
 				ImGui::Text("Scale   "); ImGui::SameLine(); ImGui::Text("X"); ImGui::SameLine(); ImGui::PushItemWidth(75); ImGui::PushID("sclX");
-				if (ImGui::DragFloat("", &(*goIterator)->scale.x))
+				if (ImGui::DragFloat("", &goSelected->scale.x))
 				{
-					(*goIterator)->isMoved = true;
+					goSelected->isMoved = true;
 				}
 				ImGui::PopID();
 				ImGui::SameLine(); ImGui::Text("Y"); ImGui::SameLine(); ImGui::PushItemWidth(75); ImGui::PushID("sclY");
-				if (ImGui::DragFloat("", &(*goIterator)->scale.y))
+				if (ImGui::DragFloat("", &goSelected->scale.y))
 				{
-					(*goIterator)->isMoved = true;
+					goSelected->isMoved = true;
 				}
 				ImGui::PopID();
 				ImGui::SameLine(); ImGui::Text("Z"); ImGui::SameLine(); ImGui::PushItemWidth(75); ImGui::PushID("sclZ");
-				if (ImGui::DragFloat("", &(*goIterator)->scale.z))
+				if (ImGui::DragFloat("", &goSelected->scale.z))
 				{
-					(*goIterator)->isMoved = true;
+					goSelected->isMoved = true;
 				}
 				ImGui::PopID();
 
 			}
 
-			if ((*goIterator)->meshComponent != nullptr)
+			if (goSelected->meshComponent != nullptr)
 			{
 				ImGui::Spacing(); ImGui::Spacing(); ImGui::Spacing();
 				if (ImGui::CollapsingHeader("Mesh Component", ImGuiTreeNodeFlags_DefaultOpen))
 				{
 					ImGui::PushID("MeshActive");
-					ImGui::Checkbox("Active", &(*goIterator)->meshComponent->isActive);
+					ImGui::Checkbox("Active", &goSelected->meshComponent->isActive);
 					ImGui::PopID();
 
 					ImGui::SameLine();
@@ -652,23 +638,23 @@ void ModuleUI::ShowInspector()
 					ImGui::PushStyleColor(ImGuiCol_Button, { 0.85, 0, 0, 1 });
 					if (ImGui::Button("Remove Mesh"))
 					{
-						App->scene_intro->meshComponentsToDelete.push_back(*goIterator);
+						App->scene_intro->meshComponentsToDelete.push_back(goSelected);
 					}
 					ImGui::PopStyleColor();
 					ImGui::PopStyleColor();
 
 
 					ImGui::Spacing();
-					ImGui::Text("Num. of vertices:"); ImGui::SameLine(); ImGui::TextColored({ 1,0,1,1 }, std::to_string((*goIterator)->meshComponent->mesh->num_vertex).c_str());
+					ImGui::Text("Num. of vertices:"); ImGui::SameLine(); ImGui::TextColored({ 1,0,1,1 }, std::to_string(goSelected->meshComponent->mesh->num_vertex).c_str());
 
-					if ((*goIterator)->meshComponent->mesh->hasNormals)
+					if (goSelected->meshComponent->mesh->hasNormals)
 					{
 						ImGui::Spacing();
-						ImGui::Checkbox("Draw Vertex Normals", &(*goIterator)->isVertexNormalsEnabled);
+						ImGui::Checkbox("Draw Vertex Normals", &goSelected->isVertexNormalsEnabled);
 					}
 
 					ImGui::Spacing();
-					ImGui::Checkbox("Draw Bounding Boxes", &(*goIterator)->isAABBEnabled);
+					ImGui::Checkbox("Draw Bounding Boxes", &goSelected->isAABBEnabled);
 
 					ImGui::Spacing();
 					if (ImGui::Button("Change Mesh", { 200, 40 }))
@@ -680,17 +666,15 @@ void ModuleUI::ShowInspector()
 					{
 						if (ImGui::BeginPopupContextWindow("Change mesh", ImGuiPopupFlags_MouseButtonLeft))
 						{
-							GameObject* go = (*App->scene_intro->gameObjectSelected.begin());
-
 							for (std::list<Mesh*>::iterator meshIterator = App->scene_intro->meshesList.begin(); meshIterator != App->scene_intro->meshesList.end(); meshIterator++)
 							{
-								if ((*meshIterator) != go->meshComponent->mesh)
+								if ((*meshIterator) != goSelected->meshComponent->mesh)
 								{
 									if (ImGui::MenuItem((*meshIterator)->name.c_str()))
 									{
-										go->meshComponent->mesh = (*meshIterator);
-										go->isMoved = true;
-										go->meshComponent->isActive = true;
+										goSelected->meshComponent->mesh = (*meshIterator);
+										goSelected->isMoved = true;
+										goSelected->meshComponent->isActive = true;
 										isChangeMeshActive = false;
 									}
 								}
@@ -719,18 +703,17 @@ void ModuleUI::ShowInspector()
 						{
 							if (ImGui::MenuItem((*meshIterator)->name.c_str()))
 							{
-								GameObject* go = (*App->scene_intro->gameObjectSelected.begin());
-								if (go->meshComponent)
+								if (goSelected->meshComponent)
 								{
-									go->meshComponent->mesh = (*meshIterator); 
+									goSelected->meshComponent->mesh = (*meshIterator);
 								}
 								else
 								{
-									go->meshComponent = (ComponentMesh*)go->AddComponent(Component::TYPE_MESH);
-									go->meshComponent->mesh = (*meshIterator);
+									goSelected->meshComponent = (ComponentMesh*)goSelected->AddComponent(Component::TYPE_MESH);
+									goSelected->meshComponent->mesh = (*meshIterator);
 								}
-								go->isMoved = true;
-								go->meshComponent->isActive = true;
+								goSelected->isMoved = true;
+								goSelected->meshComponent->isActive = true;
 								isAddMeshActive = false;
 							}
 						}
@@ -743,14 +726,13 @@ void ModuleUI::ShowInspector()
 
 
 
-			goIterator = App->scene_intro->gameObjectSelected.begin();
-			if ((*goIterator)->textureComponent != nullptr)
+			if (goSelected->textureComponent != nullptr)
 			{
 				ImGui::Spacing(); ImGui::Spacing(); ImGui::Spacing();
 				if (ImGui::CollapsingHeader("Texture Component", ImGuiTreeNodeFlags_DefaultOpen))
 				{
 					ImGui::PushID("TexActive");
-					ImGui::Checkbox("Active", &(*goIterator)->textureComponent->isActive);
+					ImGui::Checkbox("Active", &goSelected->textureComponent->isActive);
 					ImGui::PopID();
 
 					ImGui::SameLine();
@@ -758,16 +740,16 @@ void ModuleUI::ShowInspector()
 					ImGui::PushStyleColor(ImGuiCol_Button, { 0.85, 0, 0, 1 });
 					if (ImGui::Button("Remove Texture"))
 					{
-						App->scene_intro->textureComponentsToDelete.push_back(*goIterator);
+						App->scene_intro->textureComponentsToDelete.push_back(goSelected);
 					}
 					ImGui::PopStyleColor();
 					ImGui::PopStyleColor();
 
 
 					ImGui::Spacing();
-					ImGui::Text("Width:"); ImGui::SameLine(); ImGui::TextColored({ 1,0,1,1 }, std::to_string((*goIterator)->textureComponent->texture->w).c_str());
-					ImGui::Text("Height:"); ImGui::SameLine(); ImGui::TextColored({ 1,0,1,1 }, std::to_string((*goIterator)->textureComponent->texture->h).c_str());
-					ImGui::Image((ImTextureID)(*goIterator)->textureComponent->texture->GetId(), { 150,150 });
+					ImGui::Text("Width:"); ImGui::SameLine(); ImGui::TextColored({ 1,0,1,1 }, std::to_string(goSelected->textureComponent->texture->w).c_str());
+					ImGui::Text("Height:"); ImGui::SameLine(); ImGui::TextColored({ 1,0,1,1 }, std::to_string(goSelected->textureComponent->texture->h).c_str());
+					ImGui::Image((ImTextureID)goSelected->textureComponent->texture->GetId(), { 150,150 });
 
 					ImGui::Spacing();
 					if (ImGui::Button("Change Texture", { 200, 40 }))
@@ -780,15 +762,14 @@ void ModuleUI::ShowInspector()
 						//ImGuiPopupFlags_
 						if (ImGui::BeginPopupContextWindow("Change tex", ImGuiPopupFlags_MouseButtonLeft))
 						{
-							GameObject* go = (*App->scene_intro->gameObjectSelected.begin());
 							for (std::list<Texture*>::iterator textureIterator = App->scene_intro->textureList.begin(); textureIterator != App->scene_intro->textureList.end(); textureIterator++)
 							{
-								if ((*textureIterator) != go->textureComponent->texture)
+								if ((*textureIterator) != goSelected->textureComponent->texture)
 								{
 									if (ImGui::MenuItem((*textureIterator)->name.c_str()))
 									{
-										go->textureComponent->texture = (*textureIterator);
-										go->textureComponent->isActive = true;
+										goSelected->textureComponent->texture = (*textureIterator);
+										goSelected->textureComponent->isActive = true;
 										isChangeTexActive = false;
 									}
 								}
@@ -810,24 +791,22 @@ void ModuleUI::ShowInspector()
 
 				if (isAddTexActive)
 				{
-					//ImGuiPopupFlags_
 					if (ImGui::BeginPopupContextWindow("Add tex", ImGuiPopupFlags_MouseButtonLeft))
 					{
 						for (std::list<Texture*>::iterator textureIterator = App->scene_intro->textureList.begin(); textureIterator != App->scene_intro->textureList.end(); textureIterator++)
 						{
 							if (ImGui::MenuItem((*textureIterator)->name.c_str()))
 							{
-								GameObject* go = (*App->scene_intro->gameObjectSelected.begin());
-								if (go->textureComponent)
+								if (goSelected->textureComponent)
 								{
-									go->textureComponent->texture = (*textureIterator);
+									goSelected->textureComponent->texture = (*textureIterator);
 								}
 								else
 								{
-									go->textureComponent = (ComponentTexture*)go->AddComponent(Component::TYPE_TEXTURE);
-									go->textureComponent->texture = (*textureIterator);
+									goSelected->textureComponent = (ComponentTexture*)goSelected->AddComponent(Component::TYPE_TEXTURE);
+									goSelected->textureComponent->texture = (*textureIterator);
 								}
-								go->textureComponent->isActive = true;
+								goSelected->textureComponent->isActive = true;
 								isAddTexActive = false;
 							}
 						}
@@ -840,16 +819,15 @@ void ModuleUI::ShowInspector()
 			
 			
 
-			goIterator = App->scene_intro->gameObjectSelected.begin();
-			if ((*goIterator)->cameraComponent)
+			if (goSelected->cameraComponent)
 			{
 				ImGui::Spacing(); ImGui::Spacing(); ImGui::Spacing();
 				if (ImGui::CollapsingHeader("Camera Component", ImGuiTreeNodeFlags_DefaultOpen))
 				{
 					ImGui::PushID("CameraActive");
-					if (ImGui::Checkbox("Active", &(*goIterator)->cameraComponent->isActive))
+					if (ImGui::Checkbox("Active", &goSelected->cameraComponent->isActive))
 					{
-						if ((*goIterator)->cameraComponent->isActive)
+						if (goSelected->cameraComponent->isActive)
 						{
 							//App->camera->SetActiveCamera((*goIterator)->cameraComponent);
 						}
@@ -861,53 +839,53 @@ void ModuleUI::ShowInspector()
 					ImGui::PushStyleColor(ImGuiCol_Button, { 0.85, 0, 0, 1 });
 					if (ImGui::Button("Remove Camera"))
 					{
-						App->scene_intro->cameraComponentsToDelete.push_back(*goIterator);
+						App->scene_intro->cameraComponentsToDelete.push_back(goSelected);
 					}
 					ImGui::PopStyleColor();
 					ImGui::PopStyleColor();
 
 					ImGui::Checkbox("Culling", &App->camera->isCullingActive);
 					ImGui::Spacing();
-					ImGui::Checkbox("Debug Frustum", &(*goIterator)->cameraComponent->isDebugEnabled);
+					ImGui::Checkbox("Debug Frustum", &goSelected->cameraComponent->isDebugEnabled);
 
 
 					ImGui::Spacing();
-					ImGui::SliderFloat("Near Plane Distance", &(*goIterator)->cameraComponent->frustum.nearPlaneDistance, 0.0f, 10.f);
+					ImGui::SliderFloat("Near Plane Distance", &goSelected->cameraComponent->frustum.nearPlaneDistance, 0.0f, 10.f);
 					ImGui::Spacing();
-					ImGui::SliderFloat("Far Plane Distance", &(*goIterator)->cameraComponent->frustum.farPlaneDistance, 1.0f, 250.f);
-					if ((*goIterator)->cameraComponent->frustum.farPlaneDistance < (*goIterator)->cameraComponent->frustum.nearPlaneDistance + 1)
+					ImGui::SliderFloat("Far Plane Distance", &goSelected->cameraComponent->frustum.farPlaneDistance, 1.0f, 250.f);
+					if (goSelected->cameraComponent->frustum.farPlaneDistance < goSelected->cameraComponent->frustum.nearPlaneDistance + 1)
 					{
-						(*goIterator)->cameraComponent->frustum.farPlaneDistance = (*goIterator)->cameraComponent->frustum.nearPlaneDistance + 1;
+						goSelected->cameraComponent->frustum.farPlaneDistance = goSelected->cameraComponent->frustum.nearPlaneDistance + 1;
 					}
 
 
-					float newRatio = (*goIterator)->cameraComponent->ratio;
+					float newRatio = goSelected->cameraComponent->ratio;
 					ImGui::Spacing();
 					ImGui::SliderFloat("Ratio", &newRatio, 0.1f, 2.5f);
-					if (newRatio != (*goIterator)->cameraComponent->ratio)
+					if (newRatio != goSelected->cameraComponent->ratio)
 					{
-						(*goIterator)->cameraComponent->ratio = newRatio;
-						(*goIterator)->cameraComponent->frustum.horizontalFov = 2.0f * atanf(tanf((*goIterator)->cameraComponent->frustum.verticalFov * 0.5f) * (*goIterator)->cameraComponent->ratio);
+						goSelected->cameraComponent->ratio = newRatio;
+						goSelected->cameraComponent->frustum.horizontalFov = 2.0f * atanf(tanf(goSelected->cameraComponent->frustum.verticalFov * 0.5f) * goSelected->cameraComponent->ratio);
 					}
 
 
-					float fovDeg = (*goIterator)->cameraComponent->frustum.verticalFov / DEGTORAD;
+					float fovDeg = goSelected->cameraComponent->frustum.verticalFov / DEGTORAD;
 					ImGui::Spacing();
 					ImGui::SliderFloat("FOV", &fovDeg, 55.0f, 110.f);
-					if (fovDeg * DEGTORAD != (*goIterator)->cameraComponent->frustum.verticalFov)
+					if (fovDeg * DEGTORAD != goSelected->cameraComponent->frustum.verticalFov)
 					{
-						(*goIterator)->cameraComponent->frustum.verticalFov = fovDeg * DEGTORAD;
-						(*goIterator)->cameraComponent->frustum.horizontalFov = 2.0f * atanf(tanf((*goIterator)->cameraComponent->frustum.verticalFov * 0.5f) * (*goIterator)->cameraComponent->ratio);
+						goSelected->cameraComponent->frustum.verticalFov = fovDeg * DEGTORAD;
+						goSelected->cameraComponent->frustum.horizontalFov = 2.0f * atanf(tanf(goSelected->cameraComponent->frustum.verticalFov * 0.5f) * goSelected->cameraComponent->ratio);
 					}
 				}
 			}
-			else if(!(*goIterator)->meshComponent && !(*goIterator)->textureComponent)
+			else if(!goSelected->meshComponent && !goSelected->textureComponent)
 			{
 				ImGui::Spacing(); ImGui::Spacing(); ImGui::Spacing();
 
 				if (ImGui::Button("Add Camera", { 200, 40 }))
 				{
-					(*goIterator)->cameraComponent = (ComponentCamera*)(*goIterator)->AddComponent(Component::TYPE_CAMERA);
+					goSelected->cameraComponent = (ComponentCamera*)goSelected->AddComponent(Component::TYPE_CAMERA);
 					//App->camera->SetActiveCamera((*goIterator)->cameraComponent);
 				}
 			}
@@ -1098,9 +1076,9 @@ void ModuleUI::ShowDragTarget()
 	{
 		if (ImGui::AcceptDragDropPayload("Drag tex"))
 		{
-			if (!App->scene_intro->gameObjectSelected.empty())
+			if (App->scene_intro->gameObjectSelected != nullptr)
 			{
-				GameObject* go = (*App->scene_intro->gameObjectSelected.begin());
+				GameObject* go = App->scene_intro->gameObjectSelected;
 				go->textureComponent->texture = draggedTexture;
 				go->textureComponent->isActive = true;
 			}
@@ -1108,9 +1086,9 @@ void ModuleUI::ShowDragTarget()
 
 		else if (ImGui::AcceptDragDropPayload("Drag mesh"))
 		{
-			if (!App->scene_intro->gameObjectSelected.empty())
+			if (App->scene_intro->gameObjectSelected != nullptr)
 			{
-				GameObject* go = (*App->scene_intro->gameObjectSelected.begin());
+				GameObject* go = App->scene_intro->gameObjectSelected;
 				go->meshComponent->mesh = draggedMesh;
 				go->meshComponent->isActive = true;
 				go->isMoved = true;

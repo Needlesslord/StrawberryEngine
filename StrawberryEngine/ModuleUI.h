@@ -40,8 +40,6 @@ public:
 
 	void AddConsoleOutput(const char* text);
 
-	void UnselectAll();
-
 	void ShowMenuBar();
 	void ShowConfig();
 	void ShowHierarchy();

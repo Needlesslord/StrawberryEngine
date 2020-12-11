@@ -12,6 +12,7 @@
 ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
 	rootNode = new GameObject("RootNode");
+	ImGuizmo::Enable(true);
 }
 
 ModuleSceneIntro::~ModuleSceneIntro()
@@ -62,14 +63,11 @@ update_status ModuleSceneIntro::PreUpdate(float dt)
 		}
 	}
 
-	// Refresh selected mesh list
-	gameObjectSelected.clear();
-	for (std::list<GameObject*>::iterator goToSelect = everyGameObjectList.begin(); goToSelect != everyGameObjectList.end(); goToSelect++)
+	for (std::list<GameObject*>::iterator goIterator = everyGameObjectList.begin(); goIterator != everyGameObjectList.end(); goIterator++)
 	{
-		if ((*goToSelect)->isSelected)
-		{
-			gameObjectSelected.push_back(*goToSelect);
-		}
+		(*goIterator)->isSelected = false;
+		if (gameObjectSelected != nullptr)
+			gameObjectSelected->isSelected = true;
 	}
 
 	return UPDATE_CONTINUE;
@@ -79,19 +77,9 @@ update_status ModuleSceneIntro::PreUpdate(float dt)
 update_status ModuleSceneIntro::Update(float dt)
 {
 
-	if (App->input->GetKey(SDL_SCANCODE_DELETE) == KEY_DOWN)
+	if (App->input->GetKey(SDL_SCANCODE_DELETE) == KEY_DOWN && gameObjectSelected != nullptr)
 	{
-		for (std::list<GameObject*>::iterator goIterator = gameObjectSelected.begin(); goIterator != gameObjectSelected.end(); goIterator++)
-		{
-			if (!(*goIterator)->children.empty())
-			{
-				AddChildrenToDeathRow(*goIterator);
-			}
-			else
-			{
-				gameObjectsToDelete.push_back(*goIterator);
-			}
-		}
+		AddChildrenToDeathRow(gameObjectSelected);
 	}
 
 	bool needToGenBuffers = false;
@@ -225,7 +213,7 @@ void ModuleSceneIntro::DeleteGameObject(GameObject* go)
 	
 	if (go->isSelected)
 	{
-		gameObjectSelected.remove(go);
+		gameObjectSelected = nullptr;
 	}
 
 	everyGameObjectList.remove(go);

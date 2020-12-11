@@ -52,6 +52,9 @@
     <Filter Include="Sources\GameObjects\Components\Structures">
       <UniqueIdentifier>{0777217d-d140-4f4a-9c97-6cf95871bc67}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\Tools\Libs\ImGuizmo">
+      <UniqueIdentifier>{e5106809-b145-48c6-b2c2-bb9ae9d9a5f1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Module.h">
@@ -327,6 +330,9 @@
     <ClInclude Include="ComponentCamera.h">
       <Filter>Sources\GameObjects\Components</Filter>
     </ClInclude>
+    <ClInclude Include="Libs\ImGuizmo\ImGuizmo.h">
+      <Filter>Sources\Tools\Libs\ImGuizmo</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleCamera3D.cpp">
@@ -511,6 +517,9 @@
     </ClCompile>
     <ClCompile Include="ComponentCamera.cpp">
       <Filter>Sources\GameObjects\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Libs\ImGuizmo\ImGuizmo.cpp">
+      <Filter>Sources\Tools\Libs\ImGuizmo</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

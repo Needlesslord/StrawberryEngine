@@ -1,5 +1,6 @@
 #pragma once
 #include "Module.h"
+#include "Libs/ImGuizmo/ImGuizmo.h"
 
 class GameObject;
 class Texture;
@@ -30,9 +31,10 @@ public:
 public:
 
 	GameObject* rootNode = nullptr;
+	GameObject* gameObjectSelected = nullptr;
+
 	//std::list<GameObject*> gameObjectList; // main game objects, not counting their children  --->> moveing this  to the RootNode's children' list
 	std::list<GameObject*> everyGameObjectList; // all game objects
-	std::list<GameObject*> gameObjectSelected;
 	std::list<GameObject*> gameObjectsToDelete;
 	std::list<GameObject*> gameObjectsToReparent;
 	std::list<GameObject*> meshComponentsToDelete;
