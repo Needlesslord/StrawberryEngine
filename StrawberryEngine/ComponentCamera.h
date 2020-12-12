@@ -30,6 +30,7 @@ public:
 	bool isUpdateMatrix = true;
 	//bool isCullingActive = false;
 	bool isDebugEnabled = false;
+	bool isTestView = false;
 
 };
 #endif //__COMPONENT_CAMERA_H__

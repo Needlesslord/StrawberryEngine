@@ -277,7 +277,7 @@ void ModuleSceneIntro::DrawGuizmo()
 
 	if (ImGuizmo::IsUsing() == true)
 	{
-		go->localTransform = go->parent->globalTransform.Inverted()* matrix.Transposed();
+		go->localTransform = go->parent->globalTransform.Inverted() * matrix.Transposed();
 		go->UpdateGlobalTransform();
 		go->UpdateAABB();
 		go->localTransform.Decompose(go->position, go->rotationQuat, go->scale);

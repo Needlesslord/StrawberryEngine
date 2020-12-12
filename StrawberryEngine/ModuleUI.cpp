@@ -472,8 +472,12 @@ void ModuleUI::CreateHierarchy(GameObject* go)
 				draggedGameObject->parent->children.remove(draggedGameObject);
 				go->AddChild(draggedGameObject);
 				draggedGameObject->parent = go;
-				draggedGameObject->isMoved = true;
-				go->isMoved = true;
+				draggedGameObject->localTransform = go->globalTransform.Inverted() * draggedGameObject->globalTransform;
+				draggedGameObject->UpdateGlobalTransform();
+
+				draggedGameObject->localTransform.Decompose(draggedGameObject->position, draggedGameObject->rotationQuat, draggedGameObject->scale);
+				draggedGameObject->rotation = draggedGameObject->rotationQuat.ToEulerXYZ();
+				draggedGameObject->UpdateRotation();
 			}
 			ImGui::EndDragDropTarget();
 		}
@@ -852,11 +856,22 @@ void ModuleUI::ShowInspector()
 					ImGui::PopStyleColor();
 					ImGui::PopStyleColor();
 
+					ImGui::Spacing();
 					ImGui::Checkbox("Culling", &App->camera->isCullingActive);
 					ImGui::Spacing();
 					ImGui::Checkbox("Debug Frustum", &goSelected->cameraComponent->isDebugEnabled);
-
-
+					ImGui::Spacing();
+					if (ImGui::Checkbox("Test view", &goSelected->cameraComponent->isTestView))
+					{
+						if (goSelected->cameraComponent->isTestView)
+						{
+							App->renderer3D->camera = goSelected->cameraComponent;
+						}
+						else
+						{
+							App->renderer3D->camera = App->camera->camera;
+						}
+					}
 					ImGui::Spacing();
 					ImGui::SliderFloat("Near Plane Distance", &goSelected->cameraComponent->frustum.nearPlaneDistance, 0.0f, 10.f);
 					ImGui::Spacing();
