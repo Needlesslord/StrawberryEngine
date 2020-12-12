@@ -50,7 +50,7 @@ bool ModuleSceneIntro::CleanUp()
 
 update_status ModuleSceneIntro::PreUpdate(float dt)
 {
-	
+	// Culling
 	if (App->renderer3D->camera != nullptr)
 	{
 		for (std::list<GameObject*>::iterator goToCull = everyGameObjectList.begin(); goToCull != everyGameObjectList.end(); goToCull++)
@@ -62,6 +62,22 @@ update_status ModuleSceneIntro::PreUpdate(float dt)
 		}
 	}
 
+	// Debug culling
+	for (std::list<ComponentCamera*>::iterator cameraIterator = cameras.begin(); cameraIterator != cameras.end(); cameraIterator++)
+	{
+		if ((*cameraIterator)->isCullingActive)
+		{
+			for (std::list<GameObject*>::iterator goToCull = everyGameObjectList.begin(); goToCull != everyGameObjectList.end(); goToCull++)
+			{
+				if ((*goToCull)->isActive && (*goToCull)->meshComponent)
+				{
+					(*goToCull)->isCulled = (*cameraIterator)->NeedsCulling((*goToCull)->aabb);
+				}
+			}
+		}
+	}
+
+	// Make sure only one game object is selected at a time and that we have a pointer to it
 	for (std::list<GameObject*>::iterator goIterator = everyGameObjectList.begin(); goIterator != everyGameObjectList.end(); goIterator++)
 	{
 		(*goIterator)->isSelected = false;
@@ -265,7 +281,7 @@ void ModuleSceneIntro::DrawGuizmo()
 	// Draw guizmos axis
 	ImGuiIO& io = ImGui::GetIO();
 	ImGuizmo::SetRect(0, 0, io.DisplaySize.x, io.DisplaySize.y);
-
+	
 	float4x4 matrix;
 	GameObject* go = gameObjectSelected;
 

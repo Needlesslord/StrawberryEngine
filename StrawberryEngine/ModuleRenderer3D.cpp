@@ -191,7 +191,7 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 		App->scene_intro->Draw();
 	}
 
-	for (std::list<ComponentCamera*>::iterator cameraIterator = App->camera->cameras.begin(); cameraIterator != App->camera->cameras.end(); cameraIterator++)
+	for (std::list<ComponentCamera*>::iterator cameraIterator = App->scene_intro->cameras.begin(); cameraIterator != App->scene_intro->cameras.end(); cameraIterator++)
 	{
 		if ((*cameraIterator)->isDebugEnabled)
 		{
@@ -235,6 +235,11 @@ bool ModuleRenderer3D::CleanUp()
 
 void ModuleRenderer3D::OnResize(int width, int height)
 {
+	App->window->screen_surface->w = width;
+	App->window->screen_surface->h = height;
+
+	App->ui->ResetWindowInits();
+
 	glViewport(0, 0, width, height);
 
 	glMatrixMode(GL_PROJECTION);

@@ -27,10 +27,14 @@ public:
 	
 	Frustum frustum;
 	float ratio = 1.3f;
+
 	bool isUpdateMatrix = true;
-	//bool isCullingActive = false;
-	bool isDebugEnabled = false;
-	bool isTestView = false;
+
+	bool isCullingActive = false; // Simply for debug purposes
+
+	bool isDebugEnabled = false; // Frustum debug
+
+	bool isTestView = false; // To swap into this camera's view
 
 };
 #endif //__COMPONENT_CAMERA_H__

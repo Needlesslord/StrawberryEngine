@@ -41,7 +41,7 @@ public:
 	void AddConsoleOutput(const char* text);
 
 	void ShowMenuBar();
-	void ShowConfig();
+	void ShowConfig(float dt);
 	void ShowHierarchy();
 	void ShowInspector();
 	void ShowConsole();
@@ -55,30 +55,13 @@ public:
 
 	const bool IsAnyWindowHovered()const;
 
+	void ResetWindowInits();
+
 public:
 
 	bool done = false;
 
-	// Windows shown bools
-	bool isDemoActive = false;
-
-	bool isConfigActive = false;
-	bool isConfigInit = false;
-
-	bool isAboutActive = false;
-	bool isAboutInit = false;
-
-	bool isHierarchyActive = false;
-	bool isHierarchyInit = false;
-
-	bool isInspectorActive = false;
-	bool isInspectorInit = false;
-
-	bool isConsoleActive = true;
-	bool isConsoleInit = false;
-
-	bool isAssetsActive = true;
-	bool isAssetsInit = false;
+	
 
 	bool isReparentingActive = false;
 	bool isChangeTexActive = false;
@@ -115,6 +98,27 @@ public:
 	Mesh* draggedMesh = nullptr;
 
 private:
+	// Windows shown bools
+	bool isDemoActive = false;
+
+	bool isConfigActive = false;
+	bool isConfigInit = false;
+
+	bool isAboutActive = false;
+	bool isAboutInit = false;
+
+	bool isHierarchyActive = false;
+	bool isHierarchyInit = false;
+
+	bool isInspectorActive = false;
+	bool isInspectorInit = false;
+
+	bool isConsoleActive = true;
+	bool isConsoleInit = false;
+
+	bool isAssetsActive = true;
+	bool isAssetsInit = false;
+
 
 	bool isAnyWindowHovered = false;
 

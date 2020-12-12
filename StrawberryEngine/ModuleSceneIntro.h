@@ -5,6 +5,7 @@
 class GameObject;
 class Texture;
 class Mesh;
+class ComponentCamera;
 
 class ModuleSceneIntro : public Module
 {
@@ -43,8 +44,9 @@ public:
 	std::list<GameObject*> cameraComponentsToDelete;
 
 	std::list<Mesh*> meshesList;
-
 	std::list<Texture*> textureList;
+	std::list<ComponentCamera*> cameras; // All camera component (not the editor camera though)
+
 
 	GameObject* street = nullptr;
 	GameObject* house = nullptr;

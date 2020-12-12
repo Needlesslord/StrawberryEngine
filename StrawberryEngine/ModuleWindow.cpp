@@ -105,10 +105,16 @@ void ModuleWindow::SetFullscreen(bool *fullscreen)
 	{
 		App->ui->isWinFullscreenDesktop = false;
 		SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN);
+		screen_surface = SDL_GetWindowSurface(window);
+		App->renderer3D->OnResize(screen_surface->w, screen_surface->h);
 	}
 
 	else if (!*fullscreen)
+	{
 		SDL_SetWindowFullscreen(window, !SDL_WINDOW_FULLSCREEN);
+		screen_surface = SDL_GetWindowSurface(window);
+		App->renderer3D->OnResize(screen_surface->w, screen_surface->h);
+	}
 }
 
 void ModuleWindow::SetResizable(bool* resizable)
@@ -149,9 +155,15 @@ void ModuleWindow::SetFullDesktop(bool* fullDesktop)
 	{
 		App->ui->isWinFullscreen = false;
 		SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN_DESKTOP);
+		screen_surface = SDL_GetWindowSurface(window);
+		App->renderer3D->OnResize(screen_surface->w, screen_surface->h);
 	}
 	else if (!*fullDesktop)
+	{
 		SDL_SetWindowFullscreen(window, !SDL_WINDOW_FULLSCREEN_DESKTOP);
+		screen_surface = SDL_GetWindowSurface(window);
+		App->renderer3D->OnResize(screen_surface->w, screen_surface->h);
+	}
 }
 
 void ModuleWindow::ResizeScreen() 

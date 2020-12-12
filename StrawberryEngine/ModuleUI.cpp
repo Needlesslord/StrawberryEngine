@@ -67,7 +67,7 @@ bool ModuleUI::Start()
 
 	isHierarchyActive = true;
 	isInspectorActive = true;
-	isConsoleActive = false;
+	isConsoleActive = true;
 	isAssetsActive = true;
 
 	return ret;
@@ -107,7 +107,7 @@ update_status ModuleUI::Update(float dt)
 
 	if (isConfigActive)
 	{
-		ShowConfig();
+		ShowConfig(dt);
 	}
 
 	if (isHierarchyActive) 
@@ -273,7 +273,7 @@ void ModuleUI::ShowMenuBar()
 	ImGui::EndMainMenuBar();
 }
 
-void ModuleUI::ShowConfig()
+void ModuleUI::ShowConfig(float dt)
 {
 	ImGui::Begin("Configuration", &isConfigActive);
 	{
@@ -290,10 +290,11 @@ void ModuleUI::ShowConfig()
 			ImGui::InputText("Organization", (char*)organization.c_str(), 32);
 			ImGui::SliderInt("Max FPS", &App->maxFps, 0, 200);
 			ImGui::Text("Limit Framerate: %d", App->maxFps);
+			ImGui::Text("Refresh rate:"); ImGui::SameLine(); ImGui::Text(std::to_string(dt).c_str());
 			//
 			ImGui::Spacing(); ImGui::Spacing(); ImGui::Spacing(); ImGui::Spacing();
 			//
-
+		
 			char title[25];
 			sprintf_s(title, 25, "Framerate %.1f", App->fps[App->fps.size() - 1]);
 			ImGui::PlotHistogram("##framerate", &App->fps[0], App->fps.size(), 0, title, 0.0f, 200.0f, ImVec2(310, 100));
@@ -305,12 +306,23 @@ void ModuleUI::ShowConfig()
 
 		if (ImGui::CollapsingHeader("Window"))
 		{
-			ImGui::Text("Icon:    *default*");
 			if (ImGui::SliderFloat("Brightness", &brightness, 0.01f, 1.0f))
 				App->window->SetBrightness(&brightness);
-			ImGui::SliderInt("Width", &App->window->screen_surface->w, 700.0f, 1550);
-			ImGui::SliderInt("Height", &App->window->screen_surface->h, 500.0f, 800);
-			ImGui::Text("Refresh rate: 59"); // Idk what to put here
+
+			if (!isWinFullscreen && !isWinFullscreenDesktop)
+			{
+				if (ImGui::SliderInt("Width", &App->window->screen_surface->w, 700.0f, 1536))
+				{
+					App->renderer3D->OnResize(App->window->screen_surface->w, App->window->screen_surface->h);
+				}
+
+				if (ImGui::SliderInt("Height", &App->window->screen_surface->h, 500.0f, 864))
+				{
+					App->renderer3D->OnResize(App->window->screen_surface->w, App->window->screen_surface->h);
+				}
+			}			
+
+
 			if (ImGui::Checkbox("Fullscreen", &isWinFullscreen))
 				App->window->SetFullscreen(&isWinFullscreen);
 			ImGui::SameLine();
@@ -406,11 +418,11 @@ void ModuleUI::ShowHierarchy()
 	if (!isHierarchyInit)
 	{
 		isHierarchyInit = true;
-		ImGui::SetNextWindowPos({ 10, 30 });
-		ImGui::SetNextWindowSize({ 250, (float)(App->window->screen_surface->h - 40) });
+		ImGui::SetNextWindowPos({ 0, 20 });
+		ImGui::SetNextWindowSize({ (float)(App->window->screen_surface->w * 0.20f), (float)(App->window->screen_surface->h * 0.60f - 20) });
 	}
 
-	ImGui::Begin("Hierarchy", &isHierarchyActive);
+	ImGui::Begin("Hierarchy", &isHierarchyActive, ImGuiWindowFlags_HorizontalScrollbar);
 	if (ImGui::IsMouseHoveringRect(ImGui::GetWindowPos(), { ImGui::GetWindowPos().x + ImGui::GetWindowSize().x, ImGui::GetWindowPos().y + ImGui::GetWindowSize().y }))
 	{
 		isAnyWindowHovered = true;
@@ -543,10 +555,10 @@ void ModuleUI::ShowInspector()
 	if (!isInspectorInit)
 	{
 		isInspectorInit = true;
-		ImGui::SetNextWindowPos({ (float)App->window->screen_surface->w - 410, 30 });
-		ImGui::SetNextWindowSize({ 400, (float)(App->window->screen_surface->h - 40) });
+		ImGui::SetNextWindowPos({ (float)(App->window->screen_surface->w * 0.70f), 20 });
+		ImGui::SetNextWindowSize({ (float)(App->window->screen_surface->w * 0.30f), (float)(App->window->screen_surface->h - 20) });
 	}
-	ImGui::Begin("Inspector", &isInspectorActive);
+	ImGui::Begin("Inspector", &isInspectorActive, ImGuiWindowFlags_HorizontalScrollbar);
 	{
 		if (ImGui::IsMouseHoveringRect(ImGui::GetWindowPos(), {ImGui::GetWindowPos().x + ImGui::GetWindowSize().x, ImGui::GetWindowPos().y + ImGui::GetWindowSize().y }))
 		{
@@ -857,7 +869,7 @@ void ModuleUI::ShowInspector()
 					ImGui::PopStyleColor();
 
 					ImGui::Spacing();
-					ImGui::Checkbox("Culling", &App->camera->isCullingActive);
+					ImGui::Checkbox("Culling", &goSelected->cameraComponent->isCullingActive);
 					ImGui::Spacing();
 					ImGui::Checkbox("Debug Frustum", &goSelected->cameraComponent->isDebugEnabled);
 					ImGui::Spacing();
@@ -873,9 +885,15 @@ void ModuleUI::ShowInspector()
 						}
 					}
 					ImGui::Spacing();
-					ImGui::SliderFloat("Near Plane Distance", &goSelected->cameraComponent->frustum.nearPlaneDistance, 0.0f, 10.f);
+					if (ImGui::SliderFloat("Near Plane Distance", &goSelected->cameraComponent->frustum.nearPlaneDistance, 0.0f, 10.f))
+					{
+						goSelected->cameraComponent->isUpdateMatrix = true;
+					}
 					ImGui::Spacing();
-					ImGui::SliderFloat("Far Plane Distance", &goSelected->cameraComponent->frustum.farPlaneDistance, 1.0f, 250.f);
+					if(ImGui::SliderFloat("Far Plane Distance", &goSelected->cameraComponent->frustum.farPlaneDistance, 1.0f, 1000.f))
+					{
+						goSelected->cameraComponent->isUpdateMatrix = true;
+					}
 					if (goSelected->cameraComponent->frustum.farPlaneDistance < goSelected->cameraComponent->frustum.nearPlaneDistance + 1)
 					{
 						goSelected->cameraComponent->frustum.farPlaneDistance = goSelected->cameraComponent->frustum.nearPlaneDistance + 1;
@@ -889,6 +907,7 @@ void ModuleUI::ShowInspector()
 					{
 						goSelected->cameraComponent->ratio = newRatio;
 						goSelected->cameraComponent->frustum.horizontalFov = 2.0f * atanf(tanf(goSelected->cameraComponent->frustum.verticalFov * 0.5f) * goSelected->cameraComponent->ratio);
+						goSelected->cameraComponent->isUpdateMatrix = true;
 					}
 
 
@@ -899,6 +918,7 @@ void ModuleUI::ShowInspector()
 					{
 						goSelected->cameraComponent->frustum.verticalFov = fovDeg * DEGTORAD;
 						goSelected->cameraComponent->frustum.horizontalFov = 2.0f * atanf(tanf(goSelected->cameraComponent->frustum.verticalFov * 0.5f) * goSelected->cameraComponent->ratio);
+						goSelected->cameraComponent->isUpdateMatrix = true;
 					}
 				}
 			}
@@ -990,8 +1010,8 @@ void ModuleUI::ShowConsole()
 	if (!isConsoleInit)
 	{
 		isConsoleInit = true;
-		ImGui::SetNextWindowPos({ (float)App->window->screen_surface->w - 410, 230 });
-		ImGui::SetNextWindowSize({ 400, (float)(App->window->screen_surface->h - 240) });
+		ImGui::SetNextWindowPos({ (float)(App->window->screen_surface->w * 0.20f), (float)(App->window->screen_surface->h * 0.80f) });
+		ImGui::SetNextWindowSize({ (float)(App->window->screen_surface->w * 0.50f), (float)(App->window->screen_surface->h * 0.20f) });
 	}
 
 	ImGui::Begin("Console", &isConsoleActive, ImGuiWindowFlags_HorizontalScrollbar);
@@ -1020,8 +1040,8 @@ void ModuleUI::ShowAssets()
 	if (!isAssetsInit)
 	{
 		isAssetsInit = true;
-		ImGui::SetNextWindowPos({ 270, (float)(App->window->screen_surface->h - 210) });
-		ImGui::SetNextWindowSize({ (float)(App->window->screen_surface->w - 690), 200 });
+		ImGui::SetNextWindowPos({ 0, (float)(App->window->screen_surface->h * 0.60f) });
+		ImGui::SetNextWindowSize({ (float)(App->window->screen_surface->w * 0.20f), (float)(App->window->screen_surface->h * 0.40f) });
 	}
 	ImGui::Begin("Assets", &isAssetsActive);
 
@@ -1029,7 +1049,6 @@ void ModuleUI::ShowAssets()
 	{
 		isAnyWindowHovered = true;
 	}
-
 	if (ImGui::TreeNodeEx("Assets"))
 	{
 		if (ImGui::TreeNodeEx("Textures"))
@@ -1139,4 +1158,14 @@ void ModuleUI::DrawFrame(GLuint frameBuffer)
 const bool ModuleUI::IsAnyWindowHovered() const
 {
 	return isAnyWindowHovered;
+}
+
+void ModuleUI::ResetWindowInits()
+{
+	isConfigInit = false;
+	isAboutInit = false;
+	isHierarchyInit = false;
+	isInspectorInit = false;
+	isConsoleInit = false;
+	isAssetsInit = false;
 }

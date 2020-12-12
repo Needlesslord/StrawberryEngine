@@ -37,11 +37,9 @@ public:
 	float cameraSpeed = 6.0f;
 	float cameraSensitivity = 0.25f;
 
-	bool isCullingActive = true;
+	bool isCullingActive = true; // General culling, not debug
 
-	ComponentCamera* camera = nullptr;
-
-	std::list<ComponentCamera*> cameras;
+	ComponentCamera* camera = nullptr; // Editor camera
 
 	bool isPickingRequired = false; // Let's try one frame late
 

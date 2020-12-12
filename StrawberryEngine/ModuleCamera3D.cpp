@@ -268,7 +268,7 @@ void ModuleCamera3D::CalculateViewMatrix()
 
 void ModuleCamera3D::SetActiveCamera(ComponentCamera* camera)
 {
-	for (std::list<ComponentCamera*>::iterator cameraIterator = cameras.begin(); cameraIterator != cameras.end(); cameraIterator++)
+	for (std::list<ComponentCamera*>::iterator cameraIterator = App->scene_intro->cameras.begin(); cameraIterator != App->scene_intro->cameras.end(); cameraIterator++)
 	{
 		(*cameraIterator)->isActive = false;
 	}
