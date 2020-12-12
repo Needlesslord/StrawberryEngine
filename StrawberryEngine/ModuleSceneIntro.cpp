@@ -86,12 +86,12 @@ update_status ModuleSceneIntro::Update(float dt)
 		currentOperation = ImGuizmo::OPERATION::TRANSLATE;
 		currentMode = ImGuizmo::MODE::WORLD;
 	}
-	else if(App->input->GetKey(SDL_SCANCODE_R) == KEY_DOWN && App->input->GetMouseButton(SDL_BUTTON_RIGHT) != KEY_REPEAT)
+	else if(App->input->GetKey(SDL_SCANCODE_E) == KEY_DOWN && App->input->GetMouseButton(SDL_BUTTON_RIGHT) != KEY_REPEAT)
 	{
 		currentOperation = ImGuizmo::OPERATION::ROTATE;
 		currentMode = ImGuizmo::MODE::WORLD;
 	}
-	else if (App->input->GetKey(SDL_SCANCODE_T) == KEY_DOWN && App->input->GetMouseButton(SDL_BUTTON_RIGHT) != KEY_REPEAT)
+	else if (App->input->GetKey(SDL_SCANCODE_R) == KEY_DOWN && App->input->GetMouseButton(SDL_BUTTON_RIGHT) != KEY_REPEAT)
 	{
 		currentOperation = ImGuizmo::OPERATION::SCALE;
 		currentMode = ImGuizmo::MODE::LOCAL;
@@ -277,7 +277,6 @@ void ModuleSceneIntro::DrawGuizmo()
 
 	if (ImGuizmo::IsUsing() == true)
 	{
-		//go->globalTransform = matrix.Transposed();
 		go->localTransform = go->parent->globalTransform.Inverted()* matrix.Transposed();
 		go->UpdateGlobalTransform();
 		go->UpdateAABB();
@@ -285,7 +284,6 @@ void ModuleSceneIntro::DrawGuizmo()
 		go->rotation = go->rotationQuat.ToEulerXYZ();
 		go->UpdateRotation();
 
-		//gameObjectSelected->isMoved = true;
 		App->camera->isPickingRequired = false;
 	}
 	
