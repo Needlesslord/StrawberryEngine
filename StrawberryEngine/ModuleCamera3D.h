@@ -43,6 +43,8 @@ public:
 
 	std::list<ComponentCamera*> cameras;
 
+	bool isPickingRequired = false; // Let's try one frame late
+
 private:
 
 };

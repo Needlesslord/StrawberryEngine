@@ -27,6 +27,7 @@ public:
 	void DeleteGameObject(GameObject* go);
 	void AddChildrenToDeathRow(GameObject* go);
 	void ReparentUp(GameObject* go);
+	void DrawGuizmo();
 
 public:
 
@@ -49,4 +50,7 @@ public:
 	GameObject* house = nullptr;
 
 	GameObject* camera01 = nullptr;
+
+	ImGuizmo::OPERATION currentOperation = ImGuizmo::OPERATION::TRANSLATE; // default
+	ImGuizmo::MODE currentMode = ImGuizmo::MODE::WORLD;
 };

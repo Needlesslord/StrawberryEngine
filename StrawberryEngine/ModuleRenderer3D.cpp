@@ -209,7 +209,10 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	// Not working yet
 	//App->ui->DrawFrame(texColorBuffer);
 	//glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	
+	if (App->scene_intro->gameObjectSelected != nullptr)
+	{
+		App->scene_intro->DrawGuizmo();
+	}
 
 	App->ui->Draw();
 	SDL_GL_SwapWindow(App->window->window);

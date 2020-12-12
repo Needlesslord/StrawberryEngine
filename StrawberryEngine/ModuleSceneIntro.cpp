@@ -12,7 +12,6 @@
 ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
 	rootNode = new GameObject("RootNode");
-	ImGuizmo::Enable(true);
 }
 
 ModuleSceneIntro::~ModuleSceneIntro()
@@ -82,9 +81,20 @@ update_status ModuleSceneIntro::Update(float dt)
 		AddChildrenToDeathRow(gameObjectSelected);
 	}
 
-	if (gameObjectSelected != nullptr)
+	if (App->input->GetKey(SDL_SCANCODE_W) == KEY_DOWN && App->input->GetMouseButton(SDL_BUTTON_RIGHT) != KEY_REPEAT)
 	{
-		//ImGuizmo::
+		currentOperation = ImGuizmo::OPERATION::TRANSLATE;
+		currentMode = ImGuizmo::MODE::WORLD;
+	}
+	else if(App->input->GetKey(SDL_SCANCODE_R) == KEY_DOWN && App->input->GetMouseButton(SDL_BUTTON_RIGHT) != KEY_REPEAT)
+	{
+		currentOperation = ImGuizmo::OPERATION::ROTATE;
+		currentMode = ImGuizmo::MODE::WORLD;
+	}
+	else if (App->input->GetKey(SDL_SCANCODE_T) == KEY_DOWN && App->input->GetMouseButton(SDL_BUTTON_RIGHT) != KEY_REPEAT)
+	{
+		currentOperation = ImGuizmo::OPERATION::SCALE;
+		currentMode = ImGuizmo::MODE::LOCAL;
 	}
 
 	bool needToGenBuffers = false;
@@ -248,4 +258,35 @@ void ModuleSceneIntro::ReparentUp(GameObject* go)
 		go->parent->parent->children.push_back(go);
 		go->parent = go->parent->parent;
 	}
+}
+
+void ModuleSceneIntro::DrawGuizmo()
+{
+	// Draw guizmos axis
+	ImGuiIO& io = ImGui::GetIO();
+	ImGuizmo::SetRect(0, 0, io.DisplaySize.x, io.DisplaySize.y);
+
+	float4x4 matrix;
+	GameObject* go = gameObjectSelected;
+
+	matrix = go->globalTransform.Transposed();
+	float4x4 viewMatrix = App->renderer3D->camera->frustum.ViewMatrix();
+	float4x4 projectionMatrix = App->renderer3D->camera->frustum.ProjectionMatrix();
+
+	ImGuizmo::Manipulate(viewMatrix.Transposed().ptr(), projectionMatrix.Transposed().ptr(), currentOperation, currentMode, (float*)matrix.ptr());
+
+	if (ImGuizmo::IsUsing() == true)
+	{
+		//go->globalTransform = matrix.Transposed();
+		go->localTransform = go->parent->globalTransform.Inverted()* matrix.Transposed();
+		go->UpdateGlobalTransform();
+		go->UpdateAABB();
+		go->localTransform.Decompose(go->position, go->rotationQuat, go->scale);
+		go->rotation = go->rotationQuat.ToEulerXYZ();
+		go->UpdateRotation();
+
+		//gameObjectSelected->isMoved = true;
+		App->camera->isPickingRequired = false;
+	}
+	
 }

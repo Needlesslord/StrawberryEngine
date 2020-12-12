@@ -47,6 +47,11 @@ bool ModuleCamera3D::CleanUp()
 // -----------------------------------------------------------------
 update_status ModuleCamera3D::Update(float dt)
 {
+	if (ImGuizmo::IsUsing() == true)
+	{
+		return UPDATE_CONTINUE;
+	}
+
 	// Data init
 	float3 newPos(0,0,0);
 	float speed = cameraSpeed * dt;
@@ -68,16 +73,20 @@ update_status ModuleCamera3D::Update(float dt)
 
 
 
-
-	// Mouse Picking
-	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN && !App->ui->IsAnyWindowHovered() && App->input->GetKey(SDL_SCANCODE_LALT) != KEY_REPEAT)
+	if (isPickingRequired)
 	{
 		float2 pos = { (float)App->input->GetMouseX(), (float)App->input->GetMouseY() };
 		OnMouseClick(pos);
+		isPickingRequired = false;
+	}
+	// Mouse Picking
+	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN && !App->ui->IsAnyWindowHovered() && App->input->GetKey(SDL_SCANCODE_LALT) != KEY_REPEAT)
+	{
+		isPickingRequired = true;
 	}
 
 
-
+	
 
 
 
