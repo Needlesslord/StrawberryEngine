@@ -14,6 +14,9 @@ This is Strawberry Engine's base. It includes basic features such as:
 - GameObject hierarchy + Component Pattern
 - Unity-like camera controls
 - Editor tools (main menu and windows)
+- Own file format 
+- Mesh display
+- Manage objects
 
 It is developed under the MIT License.
 
