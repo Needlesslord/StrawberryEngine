@@ -12,7 +12,7 @@ This is Strawberry Engine's base. It includes basic features such as:
 - Model Import w/ Drag & Drop
 - Texture Import w/ Drag & Drop
 - GameObject hierarchy + Component Pattern
-- Unity-like camera controls
+- Unity-like camera controls, improved
 - Editor tools (main menu and windows)
 - Own file format 
 - Mesh display
