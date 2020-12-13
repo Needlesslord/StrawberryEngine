@@ -47,10 +47,6 @@ bool ModuleCamera3D::CleanUp()
 // -----------------------------------------------------------------
 update_status ModuleCamera3D::Update(float dt)
 {
-	if (ImGuizmo::IsUsing() == true)
-	{
-		return UPDATE_CONTINUE;
-	}
 
 	// Data init
 	float3 newPos(0,0,0);
@@ -72,7 +68,7 @@ update_status ModuleCamera3D::Update(float dt)
 
 
 
-
+	// This is so that it happens a frame later so it won't conflict with the Guizmo :)
 	if (isPickingRequired)
 	{
 		float2 pos = { (float)App->input->GetMouseX(), (float)App->input->GetMouseY() };
@@ -105,7 +101,7 @@ update_status ModuleCamera3D::Update(float dt)
 	
 
 		// While Right clicking, “WASD” fps-like movement must be enabled.
-	if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_REPEAT)
+	if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_REPEAT && !App->ui->IsAnyWindowHovered())
 	{
 		float3 up(camera->frustum.up);
 		if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT)
@@ -147,7 +143,7 @@ update_status ModuleCamera3D::Update(float dt)
 
 
 		// While Right clicking, free look around must be enabled.
-	if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_REPEAT)
+	if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_REPEAT && !App->ui->IsAnyWindowHovered())
 	{
 
 		if (dx != 0)
@@ -176,7 +172,7 @@ update_status ModuleCamera3D::Update(float dt)
 	
 
 	// Alt+Left click should orbit the object.
-	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_REPEAT && App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT && App->scene_intro->gameObjectSelected != nullptr)
+	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_REPEAT && App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT && App->scene_intro->gameObjectSelected != nullptr && !App->ui->IsAnyWindowHovered())
 	{
 		float3 length = camera->frustum.pos - goTarget;
 

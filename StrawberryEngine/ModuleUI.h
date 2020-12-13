@@ -69,6 +69,7 @@ public:
 	bool isAddTexActive = false;
 	bool isAddMeshActive = false;
 	bool isDropTargetActive = false;
+	bool isDeletePopUpActive = false;
 
 	bool isNewOutput = false;
 

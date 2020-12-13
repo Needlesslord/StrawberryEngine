@@ -37,11 +37,12 @@ public:
 
 	//std::list<GameObject*> gameObjectList; // main game objects, not counting their children  --->> moveing this  to the RootNode's children' list
 	std::list<GameObject*> everyGameObjectList; // all game objects
-	std::list<GameObject*> gameObjectsToDelete;
-	std::list<GameObject*> gameObjectsToReparent;
-	std::list<GameObject*> meshComponentsToDelete;
-	std::list<GameObject*> textureComponentsToDelete;
-	std::list<GameObject*> cameraComponentsToDelete;
+	std::list<GameObject*> gameObjectsToDelete;							//
+	std::list<GameObject*> gameObjectsToReparent;						//
+	std::list<GameObject*> meshComponentsToDelete;						// All these lists are to modify things on post update so the current frame ends normally
+	std::list<GameObject*> textureComponentsToDelete;					//
+	std::list<GameObject*> cameraComponentsToDelete;					//
+	std::list<Texture*> texturesToDelete;								//
 
 	std::list<Mesh*> meshesList;
 	std::list<Texture*> textureList;

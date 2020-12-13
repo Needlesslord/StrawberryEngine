@@ -46,14 +46,12 @@ bool TextureImporter::Start()
 {
 	bool ret = true;
 
-	houseTexture = LoadTexture("Assets/Textures/Baker_House.png");
-
 	return ret;
 }
 
 void TextureImporter::Import()
 {
-	//importer = new
+	
 }
 
 uint64 TextureImporter::Save(const Texture* ourTexture, char** fileBuffer)
@@ -108,13 +106,14 @@ Texture* TextureImporter::LoadTexture(const char* path)
 
 	uint a = name.find_last_of("\\/");
 	name = name.substr(a + 1);
-	char* n = new char[30];
-	strcpy(n, name.c_str());
-	ret->name = n;
+	ret->name = name;
 
 	ret->id = ilutGLBindTexImage();
 	ret->w = ilGetInteger(IL_IMAGE_WIDTH);
 	ret->h = ilGetInteger(IL_IMAGE_HEIGHT);
+
+	if (ret->id == 0 || ret->w == 0 || ret->h == 0)
+		return ret;
 
 	ILinfo ImgInfo;
 	iluGetImageInfo(&ImgInfo);
@@ -129,7 +128,7 @@ Texture* TextureImporter::LoadTexture(const char* path)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-	glTexImage2D(GL_TEXTURE_2D, 0, ilGetInteger(IL_IMAGE_FORMAT), ret->w, ret->h, 0, ilGetInteger(IL_IMAGE_FORMAT), GL_UNSIGNED_BYTE, ilGetData());
+	glTexImage2D(GL_TEXTURE_2D, 0, ilGetInteger(IL_IMAGE_FORMAT), ret->w, ret->h, 0, (uint)ilGetInteger(IL_IMAGE_FORMAT), GL_UNSIGNED_BYTE, ilGetData());
 	glGenerateMipmap(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, 0);
 

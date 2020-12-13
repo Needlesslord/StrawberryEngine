@@ -172,6 +172,7 @@ void MeshImporter::RecursiveLoad(const aiScene* scene, GameObject* ret, const ch
 		}
 		
 		Mesh* ourMesh = ourGO->meshComponent->mesh;
+		ourMesh->name = ourGO->meshComponent->name;
 		// Vertex
 		ourMesh->num_vertex = shortcut->mNumVertices;
 		ourMesh->vertex = new float3[ourMesh->num_vertex * 3];

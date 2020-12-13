@@ -1064,6 +1064,34 @@ void ModuleUI::ShowAssets()
 						isDropTargetActive = true;
 						ImGui::EndDragDropSource();
 					}
+					if (ImGui::IsItemClicked(1))
+					{
+						isDeletePopUpActive = true;
+					}
+
+					if (isDeletePopUpActive && ImGui::IsWindowHovered())
+					{
+
+						if (ImGui::BeginPopupContextWindow("Delete tex", ImGuiPopupFlags_MouseButtonRight))
+						{
+							if (ImGui::MenuItem("Delete Texture"))
+							{
+								App->scene_intro->texturesToDelete.push_back(*textureIterator);
+								//isDeletePopUpActive = false;
+							}
+							if (ImGui::MenuItem("Delete Texe"))
+							{
+								App->scene_intro->texturesToDelete.push_back(*textureIterator);
+								//isDeletePopUpActive = false;
+							}
+							if (ImGui::MenuItem("Delete ture"))
+							{
+								App->scene_intro->texturesToDelete.push_back(*textureIterator);
+								//isDeletePopUpActive = false;
+							}
+							ImGui::EndPopup();
+						}
+					}
 
 					ImGui::TreePop();
 				}
