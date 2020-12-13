@@ -105,6 +105,8 @@ _Additional funcionalities in the engine._
 
 You can dynamically change the texture of any meshes you select, including the default "checkers" texture (will work with ImGui::Combo() in the future)
 
+# [LATEST RELEASE](https://github.com/Needlesslord/StrawberryEngine/releases/tag/v0.5)
+
 
 
 
