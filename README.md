@@ -108,7 +108,6 @@ You can dynamically change the texture of any meshes you select, including the d
 
 
 
-
 ## Take into account...
 _Additional comments to understand some parts of the engine._
 
