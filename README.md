@@ -54,6 +54,7 @@ _How to use the engine, detailing the controls and any specific action._
 	- Help: list of links to our web page, to report bugs and to open the about window with information about the software and the hardware.
 	- Basic Shapes: offers the option to import 4 basic shapes (cube, cylinder, sphere and cone).
 - Configuration window: The configuration window gives information about the application and hardware and has several options for render, textures and window preferences.
+- Assets window: show all the assets
 
 
 ### Included files
@@ -61,7 +62,6 @@ _Files you will find in the .zip._
 
 - *StrawberryEngine (main folder)*
 	- Assets/Resources
-		+ Baker_house.FBX
 	- .dll files
 	- StrawberryEngine.exe
 - *README.md* (StrawberryEngine's key information)
@@ -76,13 +76,13 @@ _Base funcionalities in the engine for it to work properly._
 
 - It allows to drag and drop FBX files from anywhere in the Hard Drive.
 - It allows to drag and drop DDS/PNG files from anywhere in the Hard Drive (And it applies the texture to the selected GameObject).
-- Game Object structure for each loaded mesh: available 3 display-only components: Transform, Mesh and Texture. 
+- Game Object structure: 4 different display-only components: Transform, Mesh, Texture and Camera, all of which can be modified in the inspector window. 
 - Unity-like camera controls:
 	+ While Right clicking, “WASD” fps-like movement and free look around is enabled.
 	+ Mouse wheel zooms in and out.
 	+ Alt+Left click orbit around the object.
 	+ Pressing “f” focuses the camera around the geometry.
-	+ Holding SHIFT duplicates movement speed.
+	+ Holding SHIFT doubles camera movement speed.
 - Editor Windows:
 	+ Console: the window LOGs the geometry loading process from ASSIMP and the external libraries initialization process.
 	+ Configuration:
@@ -96,14 +96,21 @@ _Base funcionalities in the engine for it to work properly._
 		- Texture: displays texture size and path. There is an option to view the selected GameObject with the checkers texture.
 	+ There is a general menu with an option to quit, visit the github page and get info about the engine (“About”). It is also able to turn on/off editor windows.
 	+ There is a menu to load your own basic shapes.
-
+	+ Assets: A window that shows all user assets through which the user can drop any to the scene.
+- You can select a gameobject by picking them on the scene or by selecting them on the hierarchy.
+- You can change the mesh and/or texture of a selected gameobject through the inspector
+or by dragging a mesh/texture from the assets window into the scene
+- You can reparent up GOs, delete them, create empty ones and manually drag one into another to reparent them 
+in the hierarchy
+- You can have more than one camera component added into the scene and you can have a preview of that camera.
+- You can also modify the values of the camera components in the inspector, visuallize its frustum and see the culling in action.
+- All meshes use a bounding volume (AABB) and can be discarded using Frustum Culling. 
+- Meshes and textures are saved to our own format under “Library” folder.
 
 
 
 ### Extra functionalities (innovation)
 _Additional funcionalities in the engine._
-
-You can dynamically change the texture of any meshes you select, including the default "checkers" texture (will work with ImGui::Combo() in the future)
 
 
 

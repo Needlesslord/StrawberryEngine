@@ -512,7 +512,7 @@ void ModuleRenderer3D::Draw(GameObject* go)
 
 Texture* ModuleRenderer3D::CreateCheckersTexture()
 {
-	Texture* ret = new Texture;
+	Texture* ret = new Texture();
 
 	GLubyte checkerImage[32][32][4];
 	for (int i = 0; i < 32; i++) {
