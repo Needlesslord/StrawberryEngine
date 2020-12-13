@@ -105,9 +105,6 @@ _Additional funcionalities in the engine._
 
 You can dynamically change the texture of any meshes you select, including the default "checkers" texture (will work with ImGui::Combo() in the future)
 
-# [LATEST RELEASE](https://github.com/Needlesslord/StrawberryEngine/releases/tag/v0.5)
-
-
 
 
 
@@ -115,10 +112,16 @@ You can dynamically change the texture of any meshes you select, including the d
 _Additional comments to understand some parts of the engine._
 
 
+
+
 ## Credits 
 
 - 3D Models: [free3d.com](https://free3d.com/3d-models/fbx-textures)
 
+
+
+
+# [LATEST RELEASE](https://github.com/Needlesslord/StrawberryEngine/releases/tag/v0.5)
 
 
 
