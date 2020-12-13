@@ -54,7 +54,7 @@ _How to use the engine, detailing the controls and any specific action._
 	- Help: list of links to our web page, to report bugs and to open the about window with information about the software and the hardware.
 	- Basic Shapes: offers the option to import 4 basic shapes (cube, cylinder, sphere and cone).
 - Configuration window: The configuration window gives information about the application and hardware and has several options for render, textures and window preferences.
-- Assets window: show all the assets
+- Assets window: shows all the assets
 
 
 ### Included files
