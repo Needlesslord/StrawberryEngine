@@ -117,10 +117,10 @@ _Additional comments to understand some parts of the engine._
 - 3D Models: [free3d.com](https://free3d.com/3d-models/fbx-textures)
 
 
-
+***
 
 # [LATEST RELEASE](https://github.com/Needlesslord/StrawberryEngine/releases/tag/v0.5)
 
-
+***
 
 
