@@ -22,6 +22,8 @@ It is developed under the MIT License.
 
 - _To go to the Engine's **RELEASES** click [here](https://github.com/Needlesslord/StrawberryEngine/releases)._
 
+- _To go to the Engine's **LATEST RELEASE** click [here](https://github.com/Needlesslord/StrawberryEngine/releases/tag/v0.61)._
+
 - _To go to the **GITHUB REPOSITORY** click [here](https://github.com/Needlesslord/StrawberryEngine)._
 
 - _To go to the **WEB PAGE** click [here](https://needlesslord.github.io/StrawberryEngine/)._
@@ -121,6 +123,8 @@ _Additional funcionalities in the engine._
 
 ## Take into account...
 _Additional comments to understand some parts of the engine._
+
+[LICENSE](https://github.com/Needlesslord/StrawberryEngine/blob/master/LICENSE.md)
 
 
 ## Credits 
